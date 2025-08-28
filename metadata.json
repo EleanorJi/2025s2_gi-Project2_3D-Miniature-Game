@@ -1,0 +1,27 @@
+{
+  "repoUrl": "https://github.com/feit-comp30019/2025s2-project-2-vme50.git",
+  "teamName": "vme50",
+  "teamMembers": [
+    {
+      "name": "Ruonan Xiong",
+      "github": "ruonannn",
+      "email": "xionrx@student.unimelb.edu.au"
+    },
+    {
+      "name": "Hanyu Ji",
+      "github": "EleanorJi",
+      "email": "hanyuj2@student.unimelb.edu.au"
+    },
+    {
+      "name": "Naixin Zhang",
+      "github": "JolyneZh421",
+      "email": "naixinzhang@student.unimelb.edu.au"
+    },
+    {
+      "name": "Zixin Xia",
+      "github": "litax1",
+      "email": "zixxia@student.unimelb.edu.au"
+    }
+
+  ]
+}
