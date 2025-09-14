@@ -190,28 +190,61 @@ With a 2.5D design, the gameplay takes place on a two-dimensional plane but is r
 ### Art Style
 
 -   **Main Art Style:**
+    - Stylized cartoon realism with semi-realistic textures to highlight the miniature perspective of ants in a human-scale world.
 -   **Game outlook:**
+    - 2.5D side-scroller platformer rendered with 3D assets; environments and hazards appear oversized compared to the ant protagonist, emphasizing scale contrast.
 -   **Art**
     -   **Color**
+        - **Kitchen**: warm tones (wood, metal gray, yellow lighting)
+        - **Street**: muted browns and grays with neon accents
+        - **Sewer**: dark greens and browns with reflective wet surfaces
+        - **Rooftop**: sharp contrast of blue sky, gray concrete, and pigeon feathers
     -   **Shape**
+        - Rounded and exaggerated for safe/interactive objects; jagged and sharp for hazards like knives, claws, and debris.
     -   **Texture**
+        - Hand-painted textures for food and collectibles; semi-realistic metallic, wet, or rough surfaces for props and environments.
 -   **Aesthetic:**
+    - A balance of playful exploration and tense survival. Levels shift in mood from warm domestic spaces to dark sewers and dramatic rooftop boss fights.
 -   **Concept art:**
+    - Ant protagonist with customizable skins, oversized kitchen props as platforms, sewer dripping pipes, rooftop pigeon boss scene.
 -   **Similar art styles:**
+    - Grounded, Hollow Knight, Little Nightmares.
 
 ### Sound and Music
 
 -   **Sound Design:**
+    - Dynamic ambient layers (kitchen clinks, sewer drips, rooftop wind) combined with responsive character and hazard sounds.
 -   **Basic sound effects:**
+    - Footsteps, jumps, collisions, knife slashes, dripping water, bubble pops, insect buzzes, pigeon screeches.
 -   **Fitness:**
+    - SFX provide clear cues for danger (e.g., knife swing “whoosh”), reward feedback for collection, and tactile reinforcement for platforming.
 -   **Music used:**
+    - **Kitchen**: playful orchestral with plucked strings
+    - **Street**: rhythmic percussion with urban ambience
+    - **Sewer**: low drones with water echoes
+    - **Rooftop/Boss**: tense orchestral build with layered intensity
 -   **Fitness:**
+    - Adaptive music system that changes with player state (exploration, hazard, boss fight) to maintain immersion and tension.
 
 ### Assets
 
 -   **Artistic assets:**
+    - Ant character models (base + skins)
+    - Kitchen props (knives, spoons, pots, bubbles)
+    - Street props (crates, bottles, trash)
+    - Sewer props (pipes, slime, movable debris)
+    - Rooftop props (antenna, pigeon nest, concrete ledges)
+    - Enemies (bees, rats, pigeon boss)
+    - Collectibles (food crumbs, summon shards, glowing tokens)
+    - VFX (bubble teleport, splash, wind gusts, feather scatter)
 -   **Create source:**
+    - Blender/Maya (3D models)
+    - Substance Painter/Photoshop (textures)
+    - Unity Particle System (VFX)
+    - GrageBand
+    - Musescore
 -   **List of candidate assets**
+    - Kitchen tableware, street signage, sewer ladders, rooftop antennas, environmental hazards, insect NPCs, boss animations.
 
 ---
 
@@ -270,7 +303,17 @@ How UI elements respond to user input.
 
 ## Technology and Tools
 
-*(Please add details here)*
+**Game Engine**: Unity (C# scripting, 2.5D platforming workflow)
+
+**Physics & Animation**: Unity Physics2D, Mecanim Animator, Particle System
+
+**Art Tools**: Blender, Maya, Substance Painter, Photoshop, Illustrator
+
+**Audio Tools**: Audacity, FL Studio, Logic Pro
+
+**Collaboration Tools**: GitHub (version control), Jira/Confluence (management), Slack/Discord (team communication)
+
+**Extra Middleware**: FMOD or Wwise for adaptive sound; ProBuilder for rapid prototyping
 
 ---
 
