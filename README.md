@@ -1,5 +1,39 @@
 # Game Design Document
 
+### Table of Contents
+
+- [Game Overview](#game-overview)
+  - [Core Concept](#core-concept)
+  - [Related Genre](#related-genre)
+  - [Target Audience](#target-audience)
+  - [Unique Selling Points (USPs)](#unique-selling-points-usps)
+- [Story and Narrative](#story-and-narrative)
+  - [Backstory](#backstory)
+  - [Characters](#characters)
+- [Gameplay and Mechanics](#gameplay-and-mechanics)
+  - [Player Perspective](#player-perspective)
+  - [Controls](#controls)
+  - [Progression](#progression)
+  - [Gameplay Mechanics](#gameplay-mechanics)
+- [Levels and World Design](#levels-and-world-design)
+  - [Game World](#game-world)
+  - [Objects](#objects)
+  - [Physics](#physics)
+- [Art and Audio](#art-and-audio)
+  - [Art Style](#art-style)
+  - [Sound and Music](#sound-and-music)
+  - [Assets](#assets)
+- [UI](#ui)
+  - [UI/UX Flow](#uiux-flow)
+  - [In-Game HUD (Heads-Up Display)](#in-game-hud-heads-up-display)
+  - [Menu Details](#menu-details)
+  - [Interaction & Feedback](#interaction--feedback)
+- [Technology and Tools](#technology-and-tools)
+- [Team Communication, Timelines and Task Assignment](#team-communication-timelines-and-task-assignment)
+- [Possible Challenges](#possible-challenges)
+
+---
+
 ## Game Overview
 
 ### Core Concept
@@ -107,10 +141,16 @@ With a 2.5D design, the gameplay takes place on a two-dimensional plane but is r
 ### Objects
 
 -   **player (ant):**
-    ![Player Ant](images/ant_image.png)
+    <p align="center">
+      <img src="images/ant_image.png" alt="Player Ant" width="400">
+    </p>
 -   **The first level (kitchen):**
-    ![Kitchen Level 1](images/kitchen.png)
-    ![Kitchen Level 2](images/bathroom.png)
+    <p align="center">
+      <img src="images/kitchen.png" alt="Kitchen Level 1" width="400">
+    </p>
+    <p align="center">
+      <img src="images/bathroom.png" alt="Kitchen Level 2" width="400">
+    </p>
     -   **Static obstacles:** Sink, kitchenware (requiring detour or jumping over)
     -   **Dynamic obstacles:**
         -   Rolling pin (moving along a fixed path)
@@ -118,14 +158,18 @@ With a 2.5D design, the gameplay takes place on a two-dimensional plane but is r
     -   **Interactive elements:**
         -   Honey Zone: After entering, the speed slows down and remains at that level for a period.
 -   **Second Level (Outdoor Comprehensive):**
-    ![Outdoor Level](images/outdoor.png)
+    <p align="center">
+      <img src="images/outdoor.png" alt="Outdoor Level" width="400">
+    </p>
     -   **Collection item:** Food scraps
     -   **Summoning Point:** Fixed location, capable of summoning worker ants or assembly ants
     -   **Environmental challenges:**
         -   Small puddle: Requires assembly ants to build a bridge
         -   Mobility obstacle: Insects with simple path movement capabilities
 -   **The third level (Boss battle at the dock):**
-    ![Dock Level](images/dock.png)
+    <p align="center">
+      <img src="images/dock.png" alt="Dock Level" width="400">
+    </p>
     -   **Boss Attack Mode:**
         -   Wings flap the air: This phenomenon occurs periodically and requires hiding behind a fixed object.
     -   **Resource Management:** During the Boss battle, food crumbs will drop. Need to collect them in time to maintain the summoning ability.
@@ -177,8 +221,12 @@ With a 2.5D design, the gameplay takes place on a two-dimensional plane but is r
 -   **UI resource:**
     -   **icon:** [Vector Icons and Stickers - PNG, SVG, EPS, PSD and CSS](https://www.flaticon.com/free-icons/ant)
 -   **UI Mockups:**
-    ![UI Interface](images/interface.png)
-    ![UI Components](images/component.png)
+    <p align="center">
+      <img src="images/interface.png" alt="UI Interface" width="500">
+    </p>
+    <p align="center">
+      <img src="images/component.png" alt="UI Components" width="500">
+    </p>
 
 ### UI/UX Flow
 A visual or descriptive flowchart of the user's navigation through the game's interfaces.
