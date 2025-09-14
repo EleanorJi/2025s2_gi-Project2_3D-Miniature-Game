@@ -192,7 +192,7 @@ With a 2.5D design, the gameplay takes place on a two-dimensional plane but is r
 -   **Main Art Style:**
     - Stylized cartoon realism with semi-realistic textures to highlight the miniature perspective of ants in a human-scale world.
 -   **Game outlook:**
-    - 2.5D side-scroller platformer rendered with 3D assets; environments and hazards appear oversized compared to the ant protagonist, emphasizing scale contrast.
+    - 3D side-scroller platformer rendered with 3D assets; environments and hazards appear oversized compared to the ant protagonist, emphasizing scale contrast.
 -   **Art**
     -   **Color**
         - **Kitchen**: warm tones (wood, metal gray, yellow lighting)
