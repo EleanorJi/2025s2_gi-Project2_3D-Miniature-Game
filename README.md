@@ -1,4 +1,4 @@
-# Game Design Document
+# Antventure: Game Design Document
 
 ### Table of Contents
 
@@ -38,7 +38,7 @@
 
 ### Core Concept
 
-The player takes on the role of a brave little ant on a quest to reclaim a stolen French fry from a greedy seagull. From the perspective of an insect, everyday environments become giant and dangerous playgrounds. Players must traverse kitchens, streets, and outdoor areas, overcoming hazards and using the unique ability to summon fellow ants to solve puzzles, cross obstacles, and ultimately confront the seagull in a final showdown.
+The player takes on the role of a brave little ant on a quest to reclaim a stolen French fry from a greedy seagull. From the perspective of an insect, everyday environments become giant and dangerous playgrounds. Players must traverse kitchens, streets, and outdoor areas, overcoming hazards and using the unique ability to summon fellow ants to solve puzzles, cross obstacles, and ultimately confront the seagull in a final showdown. The game's title, *Antventure*, is a portmanteau of "Ant" and "Adventure," reflecting the grand journey of our tiny protagonist.
 
 ### Related Genre
 
