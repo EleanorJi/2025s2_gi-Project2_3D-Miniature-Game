@@ -304,15 +304,10 @@ How UI elements respond to user input.
 ## Technology and Tools
 
 **Game Engine**: Unity (C# scripting, 2.5D platforming workflow)
-
 **Physics & Animation**: Unity Physics2D, Mecanim Animator, Particle System
-
 **Art Tools**: Blender, Maya, Substance Painter, Photoshop, Illustrator
-
 **Audio Tools**: Audacity, FL Studio, Logic Pro
-
 **Collaboration Tools**: GitHub (version control), Jira/Confluence (management), Slack/Discord (team communication)
-
 **Extra Middleware**: FMOD or Wwise for adaptive sound; ProBuilder for rapid prototyping
 
 ---
