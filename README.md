@@ -136,7 +136,7 @@ The game adopts a dynamic third-person perspective. The player need to control t
 
 ### Game World
 
-With a 2.5D design, the gameplay takes place on a two-dimensional plane but is rendered using 3D models. Each level follows a linear progression structure, but there are a few branching paths for exploration. There is no mini map, but visual cues about the level layout assist in navigation.
+The game is set in a fully 3D environment, but with level design that encourages movement and gameplay primarily on a two-dimensional plane, creating a 2.5D-style experience. Each level follows a linear progression structure, but there are a few branching paths for exploration. There is no mini map, but visual cues about the level layout assist in navigation.
 
 ### Objects
 
@@ -326,4 +326,5 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 ## Possible Challenges
 
 -   It's not easy to find a suitable model.
+
 -   Time limit: too many idea need to complete
