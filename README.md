@@ -311,7 +311,7 @@ How UI elements respond to user input.
 - **Physics & Animation**: Unity Physics3D, Mecanim Animator, Particle System
 - **Art Tools**: Blender, Maya, Substance Painter, Photoshop, Illustrator
 - **Audio Tools**: MuseScore, GrageBand
-- **Collaboration Tools**: GitHub (version control), Jira/Confluence (management), Slack/Discord (team communication)
+- **Collaboration Tools**: GitHub (version control), Monday (management), Slack/WeChat (team communication)
 - **Extra Middleware**: FMOD or Wwise for adaptive sound; ProBuilder for rapid prototyping
 
 
@@ -333,4 +333,5 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
 
