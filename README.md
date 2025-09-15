@@ -196,15 +196,15 @@ The game is set in a fully 3D environment, but with level design that encourages
 -   **Art**
     -   **Color**
         - **Kitchen**: warm tones (wood, metal gray, yellow lighting)
-        - **Street**: muted browns and grays with neon accents
-        - **Sewer**: dark greens and browns with reflective wet surfaces
-        - **Rooftop**: sharp contrast of blue sky, gray concrete, and pigeon feathers
+        - **Bushes**: lush greens, earthy browns, soft sunlight filtering
+        - **Road**: dark asphalt gray with white/yellow lines, muted city colors
+        - **Dock**: cool grays and blues, wooden planks, reflective water surfaces
     -   **Shape**
         - Rounded and exaggerated for safe/interactive objects; jagged and sharp for hazards like knives, claws, and debris.
     -   **Texture**
-        - Hand-painted textures for food and collectibles; semi-realistic metallic, wet, or rough surfaces for props and environments.
+        - Hand-painted textures for food scraps and natural elements; semi-realistic surfaces for metal, stone, and water.
 -   **Aesthetic:**
-    - A balance of playful exploration and tense survival. Levels shift in mood from warm domestic spaces to dark sewers and dramatic rooftop boss fights.
+    - Each stage contrasts domestic, natural, and urban-industrial environments. The progression blends playful exploration with increasing danger, culminating in large-scale boss encounters.
 -   **Concept art:**
     - Ant protagonist with customizable skins, oversized kitchen props as platforms, sewer dripping pipes, rooftop pigeon boss scene.
 -   **Similar art styles:**
@@ -220,9 +220,9 @@ The game is set in a fully 3D environment, but with level design that encourages
     - SFX provide clear cues for danger (e.g., knife swing “whoosh”), reward feedback for collection, and tactile reinforcement for platforming.
 -   **Music used:**
     - **Kitchen**: playful orchestral with plucked strings
-    - **Street**: rhythmic percussion with urban ambience
-    - **Sewer**: low drones with water echoes
-    - **Rooftop/Boss**: tense orchestral build with layered intensity
+    - **Bushes**: light woodwinds and ambient forest soundscape
+    - **Road**: rhythmic percussion with low urban ambience, tense buildup
+    - **Dock/Boss**: dramatic orchestral with heavy percussion and tension-filled crescendos
 -   **Fitness:**
     - Adaptive music system that changes with player state (exploration, hazard, boss fight) to maintain immersion and tension.
 
@@ -231,9 +231,9 @@ The game is set in a fully 3D environment, but with level design that encourages
 -   **Artistic assets:**
     - Ant character models (base + skins)
     - Kitchen props (knives, spoons, pots, bubbles)
-    - Street props (crates, bottles, trash)
-    - Sewer props (pipes, slime, movable debris)
-    - Rooftop props (antenna, pigeon nest, concrete ledges)
+    - Bush assets (leaves, branches, insect NPCs)
+    - Road assets (cars, streetlights, traffic signs, trash)
+    - Dock assets (wooden planks, crates, water surface, pigeon boss model)
     - Enemies (bees, rats, pigeon boss)
     - Collectibles (food crumbs, summon shards, glowing tokens)
     - VFX (bubble teleport, splash, wind gusts, feather scatter)
@@ -244,7 +244,8 @@ The game is set in a fully 3D environment, but with level design that encourages
     - GrageBand
     - Musescore
 -   **List of candidate assets**
-    - Kitchen tableware, street signage, sewer ladders, rooftop antennas, environmental hazards, insect NPCs, boss animations.
+    - Kitchen tableware, bush foliage, street props, dockside cranes, insect enemies, pigeon animations, hazard effects.
+
 
 ---
 
@@ -303,12 +304,13 @@ How UI elements respond to user input.
 
 ## Technology and Tools
 
-- **Game Engine**: Unity (C# scripting, 2.5D platforming workflow)
-- **Physics & Animation**: Unity Physics2D, Mecanim Animator, Particle System
+- **Game Engine**: Unity (C# scripting, 3D platforming workflow)
+- **Physics & Animation**: Unity Physics3D, Mecanim Animator, Particle System
 - **Art Tools**: Blender, Maya, Substance Painter, Photoshop, Illustrator
-- **Audio Tools**: Audacity, FL Studio, Logic Pro
+- **Audio Tools**: MuseScore, GrageBand
 - **Collaboration Tools**: GitHub (version control), Jira/Confluence (management), Slack/Discord (team communication)
 - **Extra Middleware**: FMOD or Wwise for adaptive sound; ProBuilder for rapid prototyping
+
 
 ---
 
