@@ -151,6 +151,7 @@ The game is set in a fully 3D environment, but with level design that encourages
     <p align="center">
       <img src="images/bathroom.png" alt="Kitchen Level 2" width="400">
     </p>
+    
     -   **Static obstacles:** Sink, kitchenware (requiring detour or jumping over)
     -   **Dynamic obstacles:**
         -   Rolling pin (moving along a fixed path)
@@ -161,6 +162,7 @@ The game is set in a fully 3D environment, but with level design that encourages
     <p align="center">
       <img src="images/outdoor.png" alt="Outdoor Level" width="400">
     </p>
+    
     -   **Collection item:** Food scraps
     -   **Summoning Point:** Fixed location, capable of summoning worker ants or assembly ants
     -   **Environmental challenges:**
@@ -170,6 +172,7 @@ The game is set in a fully 3D environment, but with level design that encourages
     <p align="center">
       <img src="images/dock.png" alt="Dock Level" width="400">
     </p>
+    
     -   **Boss Attack Mode:**
         -   Wings flap the air: This phenomenon occurs periodically and requires hiding behind a fixed object.
     -   **Resource Management:** During the Boss battle, food crumbs will drop. Need to collect them in time to maintain the summoning ability.
@@ -330,3 +333,4 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
