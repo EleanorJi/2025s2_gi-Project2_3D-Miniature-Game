@@ -455,6 +455,32 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e935124e6e9f184ea5f3ac146630c4f, type: 3}
+--- !u!1 &1158418099 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1339993415770861960, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
+  m_PrefabInstance: {fileID: 2084935174}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1158418103
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158418099}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 149.99998, y: 140.0004, z: 4.921235}
+  m_Center: {x: -2911.2356, y: -1278.6354, z: 293.46875}
 --- !u!1001 &1197734756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -660,6 +686,7 @@ GameObject:
   - component: {fileID: 1456422302}
   - component: {fileID: 1456422301}
   - component: {fileID: 1456422300}
+  - component: {fileID: 1456422303}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -741,6 +768,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1456422303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456422299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c191920dabd8c3940a231760b1d1bea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1723249848}
+  offset: {x: 0, y: 2, z: -5}
+  smoothSpeed: 5
+  mouseSensitivity: 3
+  minPitch: -35
+  maxPitch: 60
 --- !u!1 &1723249846
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +797,7 @@ GameObject:
   - component: {fileID: 1723249848}
   - component: {fileID: 1723249847}
   - component: {fileID: 1723249849}
+  - component: {fileID: 1723249850}
   m_Layer: 0
   m_Name: ant_col
   m_TagString: Untagged
@@ -825,6 +871,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1723249850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723249846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01fa993979308240ab611c72b23ebe5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  jumpForce: 7
 --- !u!1 &1785137158 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -9027310826451842299, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
@@ -960,6 +1020,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 214729480}
     m_Modifications:
+    - target: {fileID: -9027310826451842299, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: -6689036041284674117, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
       propertyPath: m_Name
       value: kitchen
@@ -1015,6 +1079,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -9027310826451842299, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1785137161}
+    - targetCorrespondingSourceObject: {fileID: 1339993415770861960, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1158418103}
   m_SourcePrefab: {fileID: -5645937942226959685, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
 --- !u!4 &2084935175 stripped
 Transform:
