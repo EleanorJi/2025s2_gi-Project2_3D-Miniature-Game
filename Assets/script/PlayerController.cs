@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("移动与跳跃参数")]
     // 移动速度
     public float moveSpeed = 5f;
     // 跳跃力度
@@ -42,17 +43,16 @@ public class PlayerController : MonoBehaviour
         // 基于摄像机方向计算移动方向
         Vector3 cameraForward = mainCamera.transform.forward;
         Vector3 cameraRight = mainCamera.transform.right;
-        
-        // 忽略摄像机的Y轴旋转，使移动保持水平
+
+        // 忽略摄像机的Y分量
         cameraForward.y = 0f;
         cameraRight.y = 0f;
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        // 计算最终的移动方向
+        // 计算移动方向
         Vector3 movement = (cameraForward * verticalInput) + (cameraRight * horizontalInput);
-        
-        // 标准化向量以确保斜向移动不会更快
+
         if (movement.magnitude > 1f)
         {
             movement.Normalize();
@@ -61,20 +61,17 @@ public class PlayerController : MonoBehaviour
         // 应用移动速度
         movement *= moveSpeed;
 
-        // 保持Y轴速度不变（保留重力和跳跃的影响）
+        // 保留Y速度（重力 & 跳跃）
         movement.y = rb.linearVelocity.y;
 
-        // 应用速度到刚体
+        // 设置刚体速度
         rb.linearVelocity = movement;
 
-        // 可选：让角色面向移动方向（如果喜欢可以保留）
-        if (movement.magnitude > 0.1f)
+        // 让角色面向移动方向
+        if (new Vector3(movement.x, 0f, movement.z).magnitude > 0.1f)
         {
             Vector3 lookDirection = new Vector3(movement.x, 0f, movement.z);
-            if (lookDirection != Vector3.zero)
-            {
-                transform.forward = lookDirection.normalized;
-            }
+            transform.forward = lookDirection.normalized;
         }
     }
 
