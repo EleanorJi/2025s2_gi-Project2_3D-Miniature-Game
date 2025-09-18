@@ -1,110 +1,337 @@
-# Game Design Document (GDD)
+# Antventure: Game Design Document
 
-Read the [project specification](https://github.com/feit-comp30019/project-2-specification) for details on what _actually_ needs to be covered here. While you should (obviously) delete everything here and replace it with an actual GDD before submitting your project, you may wish to keep a copy of it as a cheat sheet for how to use "GitHub flavoured markdown".
+### Table of Contents
 
-Ensure that _your game design document_ is `well written` and formatted **appropriately**.
-Below are examples of markdown features available on GitHub that might be useful, though this is not an exhaustive list, nor is it required that you use all of these features.
+- [Game Overview](#game-overview)
+  - [Core Concept](#core-concept)
+  - [Related Genre](#related-genre)
+  - [Target Audience](#target-audience)
+  - [Unique Selling Points (USPs)](#unique-selling-points-usps)
+- [Story and Narrative](#story-and-narrative)
+  - [Backstory](#backstory)
+  - [Characters](#characters)
+- [Gameplay and Mechanics](#gameplay-and-mechanics)
+  - [Player Perspective](#player-perspective)
+  - [Controls](#controls)
+  - [Progression](#progression)
+  - [Gameplay Mechanics](#gameplay-mechanics)
+- [Levels and World Design](#levels-and-world-design)
+  - [Game World](#game-world)
+  - [Objects](#objects)
+  - [Physics](#physics)
+- [Art and Audio](#art-and-audio)
+  - [Art Style](#art-style)
+  - [Sound and Music](#sound-and-music)
+  - [Assets](#assets)
+- [UI](#ui)
+  - [UI/UX Flow](#uiux-flow)
+  - [In-Game HUD (Heads-Up Display)](#in-game-hud-heads-up-display)
+  - [Menu Details](#menu-details)
+  - [Interaction & Feedback](#interaction--feedback)
+- [Technology and Tools](#technology-and-tools)
+- [Team Communication, Timelines and Task Assignment](#team-communication-timelines-and-task-assignment)
+- [Possible Challenges](#possible-challenges)
 
-### Table of contents
+---
 
-- [Introduction](#introduction)
-- [Emojis and Icons :boom:](#emojis-and-icons)
-- [Using Images](#using-images)
-- [Code Snipets](#code-snippets)
-- [Tables and Lists](#tables-and-lists)
-- [Maths and Diagrams](#maths-and-diagrams)
-- [References](#references)
+## Game Overview
 
-### Introduction
+### Core Concept
 
-_Exciting title_ is a first-person shooter (FPS) set in... we're not sure yet. It's a bit like _Doom_ meets _Animal Crossing_, but with a twist. The player must...
+The player takes on the role of a brave little ant on a quest to reclaim a stolen French fry from a greedy seagull. From the perspective of an insect, everyday environments become giant and dangerous playgrounds. Players must traverse kitchens, streets, and outdoor areas, overcoming hazards and using the unique ability to summon fellow ants to solve puzzles, cross obstacles, and ultimately confront the seagull in a final showdown. The game's title, *Antventure*, is a portmanteau of "Ant" and "Adventure," reflecting the grand journey of our tiny protagonist.
 
-> "This is a quote from the game designer, explaining why this game is going to be the best thing since sliced bread." - Game Designer
+### Related Genre
 
-### Emojis and Icons
+1.  3D platformer + light puzzle adventure
+2.  Inspirations include *Pikmin* (group coordination), *It Takes Two* (creative level design), and *Grounded* (miniature perspective).
+3.  Unlike these titles, our game emphasizes **Melbourne’s cultural** elements (seagulls, trams, café tables) while delivering a short, focused experience (~10 minutes) built around the summoning mechanic.
 
-Check out [this page](https://github-emoji-picker.rickstaa.dev/) for a list of emojis/icons that you can use in your markdown. For example, you can use :sparkles: to make things sparkle! Use them sparingly and selectively, as too many emojis can be distracting, and some aren't super appropriate for a GDD. :wink: :wink: :wink:
+### Target Audience
 
-### Using Images
+*(Please fill in details about the target audience)*
 
-Remember that your GDD should be a very visual document! It's easy to include images or gifs in your markdown, like this:
+### Unique Selling Points (USPs)
 
-<p align="center">
-  <img src="Images/sample.gif" width="300">
-</p>
+-   **Summoning Mechanic:** Collect fry crumbs to summon different types of ants (workers for carrying, builders for bridges/ladders, soldiers for defense). This introduces strategy and variety within a short playtime.
+-   **Creative Environmental Interactions:** Each level features unique obstacles: bubble machines in the kitchen, car traffic and shoe gaps on the street, puddles requiring bridges, and fishing lines or water spouts during the boss fight.
+-   **Miniature Melbourne Setting:** The game is built with recognizable Melbourne landmarks (streets, cafés, seaside piers), turning the familiar into adventurous landscapes.
 
-### Code Snippets
+---
 
-Code is unlikely to be needed much (if at all) in your GDD, but it's still handy to know how to embed it. If you do include any `code snippets`, be sure to explain them properly.
+## Story and Narrative
 
-```c#
-public class CameraController : MonoBehaviour
-{
-    void Start ()
-    {
-        // Do something...
-    }
-}
-```
+### Backstory
 
-### Tables and Lists
+In the hidden corners of Melbourne lies a world unnoticed by humans—the kingdom of ants. Within this miniature realm, a single ordinary French fry is like a legendary treasure bestowed by the gods, capable of altering the fate of an entire ant colony.
 
-You can create tables using markdown, though it's a bit fiddly and not super customisable. Here's an example:
+The story begins on a tranquil morning. The protagonist is a small ant, stubborn and brave. It stumbles upon a fallen French fry on the kitchen counter—a “golden feast” in ant terms. Just as it prepares to feast, a cunning seagull swoops through the window, snatching the fry and leaving scattered crumbs behind. To humans, this is an insignificant scene, but in the eyes of the little ant, it is a challenge from fate and a call to adventure.
 
-| Column 1 | Column 2 | Column 3 |
-| -------- | -------- | -------- |
-| Row 1    | Row 1    | Row 1    |
-| Row 2    | Row 2    | Row 2    |
-| Row 3    | Row 3    | Row 3    |
+In the ants' worldview, human kitchens, streets, cafes, and docks are not ordinary spaces, but towering labyrinths and turbulent battlefields. Tableware becomes colossal obstacles, human footsteps on the streets feel like impending doom, and a single drop of coffee could drown an entire squad.
 
-You can also create lists, like this:
+To reclaim its precious french fry, the little ant embarks on a journey of pursuit and resistance. It is not alone: food scraps gathered along the way summon companions. Ants unite to carry burdens, build bridges, and ward off dangers. Through this journey, the protagonist evolves into a leader—no longer merely a food-seeking individual, but a vanguard guiding its colony toward glory.
 
-- Item 1
-- Item 2
-- Item 3
+The ultimate adversary is the tyrannical seagull—a “dragon” in the ant world, symbolizing the oppression and arrogance of the outside world. Only by defeating it can the little ant prove that even the most insignificant life can leave its own mark of victory in the vast world.
 
-Or like this:
+### Characters
 
-1. Item 1
-2. Item 2
-3. Item 3
+*(Please add character details here)*
 
-Or even nested lists like this:
+---
 
-1. Item 1
-   - Item 1.1
-   - Item 1.2
-2. Item 2
-   - Item 2.1
-   - Item 2.2
+## Gameplay and Mechanics
 
-### Maths and Diagrams
+### Player Perspective
 
-Like code, maths probably won't feature much in your GDD, but it's worth knowing that you can use LaTeX to write equations, and have them automatically render in your markdown:
+The game adopts a dynamic third-person perspective. The player need to control the ant character, and this character is always visible in the center of the screen. The camera system will adjust according to the environment. Provide the standard following view in flat terrain. In special scenarios (such as the vertical wall of a kitchen), the viewing angle will automatically rotate , thereby creating an immersive spatial experience. The character is designed in a polygonal form, which not only retains the basic features of an ant but also avoids any potentially uncomfortable realistic details through cartoonish treatment.
 
-$$\left( \sum_{k=1}^n a_k b_k \right)^2 \leq \left( \sum_{k=1}^n a_k^2 \right) \left( \sum_{k=1}^n b_k^2 \right)$$
+### Controls
 
-... [look here](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions) if you want to learn more about this.
+-   **Movement control:** WASD keys control the character's movement in all directions.
+-   **Jumping action:** Pressing the space will perform a normal jump.
+-   **Environmental Interaction:** The “E” key is used for interacting with scene objects and summoning points.
+-   **Acceleration capability:** The “Shift” key triggers a short-term acceleration movement. There is a cooling mechanism in place to prevent abuse.
+-   **Viewpoint control:** Adjust the camera direction by moving the mouse.
+-   **Special operation:** When close to the wall, press the space bar to activate the wall-following movement mode.
 
-It's also possible to [create diagrams](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams) via GitHub flavoured markdown using an integrated tool called Mermaid. This is a pretty powerful tool, and it's worth checking out [this](https://mermaid.js.org/intro/) guide for more information on what it can do. As a quick example, here's a flowchart:
+### Progression
 
-```mermaid
-graph LR
-    A[Hard edge] -->|Link text| B(Round edge)
-    B --> C{Decision}
-    C -->|One| D[Result one]
-    C -->|Two| E[Result two]
-```
+-   **Level structure:**
+    -   **Teaching level (kitchen area) 1.5-2min:** Gradually guide players to master movement, jumping and basic interaction.
+    -   **Main level (outdoor mixed environment) 4-6min :** Integrates shrubbery and street elements, and introduces a complete summoning mechanism
+    -   **Ultimate Challenge (Dock Boss Battle) 2-4min:** Requires the comprehensive application of all the skills learned so far
+-   **Difficulty assessment:**
+    -   Gradual introduction of new mechanisms.
+    -   Each mechanism offers ample opportunities for practice.
+    -   The Boss battle focuses on strategy rather than operational difficulty.
+-   **Failure and Renewal:**
+    -   **Failure conditions:** Being attacked by enemies (such as being pecked by pigeons) or coming into contact with dangerous environments (such as falling into water)
+    -   Using the checkpoint respawn system, after death, one can quickly restart from the most recent node.
+    -   Simplify the health system and adopt a one-hit-death mechanism but combine it with quick respawn to maintain the game pace.
+-   **Continuous play motivation comes from:**
+    -   Collect food scraps to unlock the skin color of the new ant character.
+    -   Set several hidden collectibles for each level to encourage exploration.
+    -   The time record function for completing the game can be considered to encourage repeated challenges.
 
-Pretty neat, huh? You can also create sequence diagrams, Gantt charts, class diagrams, and more. Check out the [Mermaid Live Editor](https://mermaid-js.github.io/mermaid-live-editor/) to see what's possible.
+### Gameplay Mechanics
 
-### References
+-   **Core mechanism:**
+    -   **Basic movement system:** Running, jumping, wall-climbing movement
+    -   **Environmental Interaction:**
+        -   Interact with the preset trigger point
+        -   Interacting with dynamic obstacles (such as moving chopsticks, dripping faucets)
+    -   **Team collaboration:** Summon a limited number of ants to assist in completing the mission.
+-   **Summoning Skill:**
+    -   **Summoning Resources:** Food scraps need to be collected as the summoning energy. Each summoning consumes one scrap.
+    -   **Type of helper ants:**
+        -   **Worker ants:** Transport small objects, activate mechanisms, assist in defeating the boss.
+        -   **Assembly ants:** Constructing simple bridges and stairs
+    -   The summoning point is fixed at a specific location and requires sufficient debris to be gathered before it can be summoned.
+-   **Physical system:**
+    -   Implementing the standard gravity model and collision detection
+    -   Obstacles move along the predetermined path.
 
-Need more help? Check out these resources, which everything in this document is based on:
+---
 
-- [GitHub Flavoured Markdown](https://guides.github.com/features/mastering-markdown/) (official guide)
-- [GitHub LaTeX](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/writing-mathematical-expressions)
-- [GitHub Diagrams](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-diagrams)
-- [Mermaid Docs](https://mermaid-js.github.io/mermaid/#/)
-- [Mermaid Live Editor](https://mermaid-js.github.io/mermaid-live-editor/)
-- [Emoji Picker](https://github-emoji-picker.rickstaa.dev/)
+## Levels and World Design
+
+### Game World
+
+The game is set in a fully 3D environment, but with level design that encourages movement and gameplay primarily on a two-dimensional plane, creating a 2.5D-style experience. Each level follows a linear progression structure, but there are a few branching paths for exploration. There is no mini map, but visual cues about the level layout assist in navigation.
+
+### Objects
+
+-   **player (ant):**
+    <p align="center">
+      <img src="images/ant_image.png" alt="Player Ant" width="400">
+    </p>
+-   **The first level (kitchen):**
+    <p align="center">
+      <img src="images/kitchen.png" alt="Kitchen Level 1" width="400">
+    </p>
+    <p align="center">
+      <img src="images/bathroom.png" alt="Kitchen Level 2" width="400">
+    </p>
+    
+    -   **Static obstacles:** Sink, kitchenware (requiring detour or jumping over)
+    -   **Dynamic obstacles:**
+        -   Rolling pin (moving along a fixed path)
+        -   Intermittent water droplets (triggered regularly)
+    -   **Interactive elements:**
+        -   Honey Zone: After entering, the speed slows down and remains at that level for a period.
+-   **Second Level (Outdoor Comprehensive):**
+    <p align="center">
+      <img src="images/outdoor.png" alt="Outdoor Level" width="400">
+    </p>
+    
+    -   **Collection item:** Food scraps
+    -   **Summoning Point:** Fixed location, capable of summoning worker ants or assembly ants
+    -   **Environmental challenges:**
+        -   Small puddle: Requires assembly ants to build a bridge
+        -   Mobility obstacle: Insects with simple path movement capabilities
+-   **The third level (Boss battle at the dock):**
+    <p align="center">
+      <img src="images/dock.png" alt="Dock Level" width="400">
+    </p>
+    
+    -   **Boss Attack Mode:**
+        -   Wings flap the air: This phenomenon occurs periodically and requires hiding behind a fixed object.
+    -   **Resource Management:** During the Boss battle, food crumbs will drop. Need to collect them in time to maintain the summoning ability.
+    -   **Interaction mechanism:**
+        -   Trap the boss: Press E to let the worker ants to trap.
+        -   Water faucet: Worker ant interaction, triggers water spraying animation.
+
+### Physics
+
+-   Basic gravity simulation and collision detection
+-   The jumping action is influenced by the gravitational acceleration.
+-   The motion of objects follows simplified physical laws.
+
+---
+
+## Art and Audio
+
+### Art Style
+
+-   **Main Art Style:**
+    - Stylized cartoon realism with semi-realistic textures to highlight the miniature perspective of ants in a human-scale world.
+-   **Game outlook:**
+    - 3D side-scroller platformer rendered with 3D assets; environments and hazards appear oversized compared to the ant protagonist, emphasizing scale contrast.
+-   **Art**
+    -   **Color**
+        - **Kitchen**: warm tones (wood, metal gray, yellow lighting)
+        - **Bushes**: lush greens, earthy browns, soft sunlight filtering
+        - **Road**: dark asphalt gray with white/yellow lines, muted city colors
+        - **Dock**: cool grays and blues, wooden planks, reflective water surfaces
+    -   **Shape**
+        - Rounded and exaggerated for safe/interactive objects; jagged and sharp for hazards like knives, claws, and debris.
+    -   **Texture**
+        - Hand-painted textures for food scraps and natural elements; semi-realistic surfaces for metal, stone, and water.
+-   **Aesthetic:**
+    - Each stage contrasts domestic, natural, and urban-industrial environments. The progression blends playful exploration with increasing danger, culminating in large-scale boss encounters.
+-   **Concept art:**
+    - Ant protagonist with customizable skins, oversized kitchen props as platforms, sewer dripping pipes, rooftop pigeon boss scene.
+-   **Similar art styles:**
+    - Grounded, Hollow Knight, Little Nightmares.
+
+### Sound and Music
+
+-   **Sound Design:**
+    - Dynamic ambient layers (kitchen clinks, sewer drips, rooftop wind) combined with responsive character and hazard sounds.
+-   **Basic sound effects:**
+    - Footsteps, jumps, collisions, knife slashes, dripping water, bubble pops, insect buzzes, pigeon screeches.
+-   **Fitness:**
+    - SFX provide clear cues for danger (e.g., knife swing “whoosh”), reward feedback for collection, and tactile reinforcement for platforming.
+-   **Music used:**
+    - **Kitchen**: playful orchestral with plucked strings
+    - **Bushes**: light woodwinds and ambient forest soundscape
+    - **Road**: rhythmic percussion with low urban ambience, tense buildup
+    - **Dock/Boss**: dramatic orchestral with heavy percussion and tension-filled crescendos
+-   **Fitness:**
+    - Adaptive music system that changes with player state (exploration, hazard, boss fight) to maintain immersion and tension.
+
+### Assets
+
+-   **Artistic assets:**
+    - Ant character models (base + skins)
+    - Kitchen props (knives, spoons, pots, bubbles)
+    - Bush assets (leaves, branches, insect NPCs)
+    - Road assets (cars, streetlights, traffic signs, trash)
+    - Dock assets (wooden planks, crates, water surface, pigeon boss model)
+    - Enemies (bees, rats, pigeon boss)
+    - Collectibles (food crumbs, summon shards, glowing tokens)
+    - VFX (bubble teleport, splash, wind gusts, feather scatter)
+-   **Create source:**
+    - Blender/Maya (3D models)
+    - Substance Painter/Photoshop (textures)
+    - Unity Particle System (VFX)
+    - GrageBand
+    - Musescore
+-   **List of candidate assets**
+    - Kitchen tableware, bush foliage, street props, dockside cranes, insect enemies, pigeon animations, hazard effects.
+
+
+---
+
+## UI
+
+-   **UI tool：** Figma, Photoshop
+-   **UI resource:**
+    -   **icon:** [Vector Icons and Stickers - PNG, SVG, EPS, PSD and CSS](https://www.flaticon.com/free-icons/ant)
+-   **UI Mockups:**
+    <p align="center">
+      <img src="images/interface.png" alt="UI Interface" width="500">
+    </p>
+    <p align="center">
+      <img src="images/component.png" alt="UI Components" width="500">
+    </p>
+
+### UI/UX Flow
+A visual or descriptive flowchart of the user's navigation through the game's interfaces.
+*(A visual flowchart will be added here.)*
+*   **Example Flow:** `Main Menu` -> `(Level Select)` -> `Loading Screen` -> `In-Game HUD` -> `Pause Menu` -> `Level Complete/Fail Screen` -> `Return to Main Menu`
+
+### In-Game HUD (Heads-Up Display)
+Core information displayed on-screen during gameplay.
+*(A visual mockup of the HUD will be added here.)*
+*   **Fry Crumb Counter:** Clearly displays the quantity of the summoning resource.
+*   **Summoned/Available Ants:** Shows the types and number of ants currently available.
+*   **Ability Cooldowns:** Visual indicator for skills like Sprint.
+*   **Interaction Prompts:** Contextual prompts like "Press E to Interact" when near objects.
+*   **Objective Reminder:** A simple text reminder of the current goal (e.g., "Reclaim the French fry!").
+
+### Menu Details
+Detailed breakdown of what each menu contains.
+*(Visual mockups for these menus will be added as they are designed.)*
+*   **Pause Menu:**
+    *   `Resume`
+    *   `Restart Level`
+    *   `Options`
+    *   `Back to Main Menu`
+*   **Options Menu:**
+    *   `Audio Settings`: Sliders/toggles for master, music, and SFX volume.
+    *   `Graphics Settings`: Options for quality (Low, Medium, High).
+    *   `Controls`: Display of keybindings.
+*   **Level Complete Screen:**
+    *   `Time Taken`
+    *   `Collectibles Found` (e.g., Total fry crumbs)
+    *   Buttons for `Next Level` or `Replay`.
+
+### Interaction & Feedback
+How UI elements respond to user input.
+*(Examples of these states will be visualized later.)*
+*   **Button States:** Visual changes for `Hover`, `Clicked`, and `Disabled` states.
+*   **Feedback on Collection:** A brief animation or sound effect when picking up fry crumbs.
+*   **Summoning Feedback:** Visual and audio cues to confirm an ant has been successfully summoned.
+
+---
+
+## Technology and Tools
+
+- **Game Engine**: Unity (C# scripting, 3D platforming workflow)
+- **Physics & Animation**: Unity Physics3D, Mecanim Animator, Particle System
+- **Art Tools**: Blender, Maya, Substance Painter, Photoshop, Illustrator
+- **Audio Tools**: MuseScore, GrageBand
+- **Collaboration Tools**: GitHub (version control), Monday (management), Slack/WeChat (team communication)
+- **Extra Middleware**: FMOD or Wwise for adaptive sound; ProBuilder for rapid prototyping
+
+
+---
+
+## Team Communication, Timelines and Task Assignment
+
+We primarily use WeChat for daily communication and quick updates, while Slack is used for structured discussions and file sharing. For task allocation and timeline tracking, we rely on Monday.com to assign responsibilities, set deadlines, and monitor progress.
+
+-   **Communication Tool:**
+    -   Wechat
+    -   Slack
+-   **Timeline Management:** [https://student493091.monday.com/boards/2072589284](https://student493091.monday.com/boards/2072589284)
+
+---
+
+## Possible Challenges
+
+-   It's not easy to find a suitable model.
+
+-   Time limit: too many idea need to complete
+
+
