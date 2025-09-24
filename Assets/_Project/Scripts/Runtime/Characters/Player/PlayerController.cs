@@ -147,6 +147,18 @@ public class PlayerController : MonoBehaviour
                 Die();
             }
         }
+
+        // 新增：检测与灶台的碰撞
+        else if (collision.gameObject.CompareTag("Stove"))
+        {
+            isGrounded = true;
+            StoveDangerZone stove = collision.gameObject.GetComponent<StoveDangerZone>();
+            if (stove != null)
+            {
+                stove.OnPlayerEnter(this);
+            }
+        }
+
     }
 
     void OnCollisionExit(Collision collision)
@@ -159,7 +171,7 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Pickup"))
+        if (other.CompareTag("Pickup") || other.CompareTag("Sugar"))
         {
             nearbyItem = other.gameObject;
             Debug.Log("Nearby item: " + nearbyItem.name);
@@ -168,14 +180,14 @@ public class PlayerController : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Pickup") && other.gameObject == nearbyItem)
+        if ((other.CompareTag("Pickup") || other.CompareTag("Sugar")) && other.gameObject == nearbyItem)
         {
             Debug.Log("Left item: " + other.name);
             nearbyItem = null;
         }
     }
 
-    void Die()
+    public void Die()
     {
         Debug.Log("Player died!");
         rb.linearVelocity = Vector3.zero; // 重置速度

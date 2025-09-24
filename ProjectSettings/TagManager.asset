@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Pickup
+  - Sugar
+  - Stove
   layers:
   - Default
   - TransparentFX
@@ -15,7 +17,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - ButtonTrigger
   - 
   - 
   - 
