@@ -2,11 +2,23 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("移动与跳跃参数")]
     // 移动速度
     public float moveSpeed = 5f;
     // 跳跃力度
     public float jumpForce = 7f;
-    
+
+    [Header("拾取参数")]
+    public Transform carryPoint;   // 背上挂载点
+    private GameObject carriedItem;
+    private GameObject nearbyItem;
+
+    [Header("死亡与重生参数")]
+    public float maxSafeFallDistance = 5f; // 下落速度阈值
+    public Transform respawnPoint;           // 存档点
+    private float lastAirY;   // 玩家上一次离开地面时的Y
+    private bool wasGrounded; // 用于检测刚刚落地
+
     // 引用刚体组件
     private Rigidbody rb;
     // 引用主摄像机
@@ -25,6 +37,13 @@ public class PlayerController : MonoBehaviour
     {
         // 处理跳跃输入
         HandleJump();
+        HandlePickup();
+        // 记录离开地面瞬间的高度
+        if (!isGrounded && wasGrounded)
+        {
+            lastAirY = transform.position.y;
+        }
+        wasGrounded = isGrounded;
     }
 
     void FixedUpdate()
@@ -42,17 +61,16 @@ public class PlayerController : MonoBehaviour
         // 基于摄像机方向计算移动方向
         Vector3 cameraForward = mainCamera.transform.forward;
         Vector3 cameraRight = mainCamera.transform.right;
-        
-        // 忽略摄像机的Y轴旋转，使移动保持水平
+
+        // 忽略摄像机的Y分量
         cameraForward.y = 0f;
         cameraRight.y = 0f;
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        // 计算最终的移动方向
+        // 计算移动方向
         Vector3 movement = (cameraForward * verticalInput) + (cameraRight * horizontalInput);
-        
-        // 标准化向量以确保斜向移动不会更快
+
         if (movement.magnitude > 1f)
         {
             movement.Normalize();
@@ -61,20 +79,17 @@ public class PlayerController : MonoBehaviour
         // 应用移动速度
         movement *= moveSpeed;
 
-        // 保持Y轴速度不变（保留重力和跳跃的影响）
+        // 保留Y速度（重力 & 跳跃）
         movement.y = rb.linearVelocity.y;
 
-        // 应用速度到刚体
+        // 设置刚体速度
         rb.linearVelocity = movement;
 
-        // 可选：让角色面向移动方向（如果喜欢可以保留）
-        if (movement.magnitude > 0.1f)
+        // 让角色面向移动方向
+        if (new Vector3(movement.x, 0f, movement.z).magnitude > 0.1f)
         {
             Vector3 lookDirection = new Vector3(movement.x, 0f, movement.z);
-            if (lookDirection != Vector3.zero)
-            {
-                transform.forward = lookDirection.normalized;
-            }
+            transform.forward = lookDirection.normalized;
         }
     }
 
@@ -89,13 +104,61 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // 检测是否接触地面
+    void HandlePickup()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (carriedItem == null && nearbyItem != null)
+            {
+                carriedItem = nearbyItem;
+                carriedItem.transform.SetParent(carryPoint);
+                carriedItem.transform.localPosition = Vector3.zero;
+                carriedItem.transform.localRotation = Quaternion.identity;
+
+                Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
+                if (itemRb) itemRb.isKinematic = true;
+
+                Debug.Log("Picked up: " + carriedItem.name);
+            }
+            else if (carriedItem != null)
+            {
+                carriedItem.transform.SetParent(null);
+                Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
+                if (itemRb) itemRb.isKinematic = false;
+
+                Debug.Log("Dropped: " + carriedItem.name);
+                carriedItem = null;
+            }
+        }
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+
+
+            // 计算落下高度
+            float fallDistance = lastAirY - transform.position.y;
+            Debug.Log("lastAirY: " + lastAirY + ", fallDistance: " + fallDistance);
+            if (fallDistance > maxSafeFallDistance) // 阈值，单位根据场景调节
+            {
+                Die();
+            }
         }
+
+        // 新增：检测与灶台的碰撞
+        else if (collision.gameObject.CompareTag("Stove"))
+        {
+            isGrounded = true;
+            StoveDangerZone stove = collision.gameObject.GetComponent<StoveDangerZone>();
+            if (stove != null)
+            {
+                stove.OnPlayerEnter(this);
+            }
+        }
+
     }
 
     void OnCollisionExit(Collision collision)
@@ -104,5 +167,30 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
         }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Pickup") || other.CompareTag("Sugar"))
+        {
+            nearbyItem = other.gameObject;
+            Debug.Log("Nearby item: " + nearbyItem.name);
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if ((other.CompareTag("Pickup") || other.CompareTag("Sugar")) && other.gameObject == nearbyItem)
+        {
+            Debug.Log("Left item: " + other.name);
+            nearbyItem = null;
+        }
+    }
+
+    public void Die()
+    {
+        Debug.Log("Player died!");
+        rb.linearVelocity = Vector3.zero; // 重置速度
+        transform.position = respawnPoint.position; // 回到存档点
     }
 }
