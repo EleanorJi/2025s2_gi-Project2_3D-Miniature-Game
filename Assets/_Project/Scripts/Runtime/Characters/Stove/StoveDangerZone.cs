@@ -15,7 +15,7 @@ public class StoveDangerZone : MonoBehaviour
         if (associatedFires == null || associatedFires.Length == 0)
         {
             // 方法1：查找场景中所有火焰
-            associatedFires = FindObjectsOfType<FireController>();
+            associatedFires = FindObjectsByType<FireController>(FindObjectsSortMode.None);
             
             // 方法2：或者通过标签查找
             // GameObject[] fireObjects = GameObject.FindGameObjectsWithTag("Fire");
