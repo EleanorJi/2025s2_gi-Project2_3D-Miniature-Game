@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("拾取参数")]
     public Transform carryPoint;   // 背上挂载点
+    public Transform dropPoint;    // 放下物品的位置参考点
     private GameObject carriedItem;
     private GameObject nearbyItem;
 
@@ -25,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     // 是否在地面上
     private bool isGrounded;
+    // 是否拿着物品
+    public bool IsCarryingItem => carriedItem != null;
 
     void Start()
     {
@@ -96,7 +99,7 @@ public class PlayerController : MonoBehaviour
     void HandleJump()
     {
         // 检测是否按下空格键并且角色在地面上
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !IsCarryingItem)
         {
             // 应用向上的力来实现跳跃
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -122,15 +125,36 @@ public class PlayerController : MonoBehaviour
             }
             else if (carriedItem != null)
             {
-                carriedItem.transform.SetParent(null);
-                Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
-                if (itemRb) itemRb.isKinematic = false;
-
-                Debug.Log("Dropped: " + carriedItem.name);
-                carriedItem = null;
+                DropItem();
             }
         }
     }
+
+    // 放下物品的方法，会放到玩家前面
+    void DropItem()
+    {
+        if (carriedItem != null)
+        {
+            // 移除父级关系
+            carriedItem.transform.SetParent(null);
+            
+            // 设置物品位置到玩家前面的dropPoint位置
+            carriedItem.transform.position = dropPoint.position;
+            carriedItem.transform.rotation = dropPoint.rotation;
+
+            Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
+            if (itemRb)
+            {
+                itemRb.isKinematic = false;
+                // 可选：给物品一个小的向前推力，让它更自然地落下
+                itemRb.linearVelocity = Vector3.zero;
+            }
+
+            Debug.Log("Dropped: " + carriedItem.name + " at position: " + dropPoint.position);
+            carriedItem = null;
+        }
+    }
+
 
     void OnCollisionEnter(Collision collision)
     {
@@ -148,7 +172,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 新增：检测与灶台的碰撞
+        // 检测与灶台的碰撞
         else if (collision.gameObject.CompareTag("Stove"))
         {
             isGrounded = true;
@@ -190,6 +214,8 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player died!");
+        // 重生前先放下物品
+        DropItem();
         rb.linearVelocity = Vector3.zero; // 重置速度
         transform.position = respawnPoint.position; // 回到存档点
     }
