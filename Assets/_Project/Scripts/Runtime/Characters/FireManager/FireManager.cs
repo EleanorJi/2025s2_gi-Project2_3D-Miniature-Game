@@ -30,7 +30,7 @@ public class FireManager : MonoBehaviour
             // 按钮被激活，让所有火焰开始下降
             foreach (FireController fire in fires)
             {
-                fire.StartDescent();
+                fire.StartShrink();
             }
         }
         else
@@ -39,7 +39,7 @@ public class FireManager : MonoBehaviour
             // 根据你的游戏需求，如果希望糖块拿走火焰就回去，就取消注释下面的代码。
             foreach (FireController fire in fires)
             {
-                fire.ResetPosition();
+                fire.ResetFire();
             }
         }
     }

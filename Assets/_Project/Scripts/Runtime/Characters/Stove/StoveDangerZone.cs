@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class StoveDangerZone : MonoBehaviour
 {
-    [Header("RelatedFires")]
+    [Header("Related Fires")]
     // 在Inspector中拖拽所有相关的火焰到这里
     public FireController[] associatedFires;
 
-    [Header("DangerousSettings")]
+    [Header("Dangerous Settings")]
     public bool isDangerous = true; // 可以在运行时调整
 
     void Start()
@@ -14,16 +14,8 @@ public class StoveDangerZone : MonoBehaviour
         // 如果没有手动关联，尝试自动查找
         if (associatedFires == null || associatedFires.Length == 0)
         {
-            // 方法1：查找场景中所有火焰
+            // 查找场景中所有火焰控制器
             associatedFires = FindObjectsByType<FireController>(FindObjectsSortMode.None);
-            
-            // 方法2：或者通过标签查找
-            // GameObject[] fireObjects = GameObject.FindGameObjectsWithTag("Fire");
-            // associatedFires = new FireController[fireObjects.Length];
-            // for (int i = 0; i < fireObjects.Length; i++)
-            // {
-            //     associatedFires[i] = fireObjects[i].GetComponent<FireController>();
-            // }
         }
     }
 
@@ -32,10 +24,10 @@ public class StoveDangerZone : MonoBehaviour
     {
         if (!isDangerous) return false;
         
-        // 如果任何关联的火焰还在下降或未完全下降，就是危险的
+        // 如果任何关联的火焰还在缩小或未完全缩小，就是危险的
         foreach (FireController fire in associatedFires)
         {
-            if (fire != null && (fire.IsDescending || !fire.IsFullyDescended))
+            if (fire != null && (fire.IsShrinking || !fire.IsFullyShrunk))
             {
                 return true;
             }
