@@ -129,7 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 227083}
   m_Layer: 0
-  m_Name: pointConner
+  m_Name: ConnerA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,7 +144,7 @@ Transform:
   m_GameObject: {fileID: 227082}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.37, y: -5, z: 102.9}
+  m_LocalPosition: {x: -10.8, y: -5, z: 92.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1027,7 +1027,7 @@ GameObject:
   m_Component:
   - component: {fileID: 634896238}
   m_Layer: 0
-  m_Name: pointFood
+  m_Name: EndPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2342,7 +2342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1241208827}
   m_Layer: 0
-  m_Name: pointPlayer
+  m_Name: returnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2357,7 +2357,7 @@ Transform:
   m_GameObject: {fileID: 1241208826}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 42.21, y: -11.8, z: 42.23}
+  m_LocalPosition: {x: 42.21, y: -10.3, z: 42.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2426,6 +2426,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1e935124e6e9f184ea5f3ac146630c4f, type: 3}
   m_PrefabInstance: {fileID: 2058291005}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1336346657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1336346658}
+  m_Layer: 0
+  m_Name: ConnerB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1336346658
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336346657}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.8, y: -4.3, z: 88.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1348717374 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5614912380276956335, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
@@ -2756,18 +2787,19 @@ MonoBehaviour:
   minPitch: -35
   maxPitch: 60
   startPoint: {fileID: 1560618971}
-  cookiePoint: {fileID: 1776641512}
-  secondPoint: {fileID: 634896238}
-  thirdPoint: {fileID: 227083}
+  cookiePosition: {fileID: 1776641512}
+  endPoint: {fileID: 634896238}
+  connerA: {fileID: 227083}
+  connerB: {fileID: 1336346658}
   returnPoint: {fileID: 1241208827}
   startToCookieRotateTime: 1
-  startToCookieMoveTime: 3
+  startToCookieMoveTime: 2.5
   cookieStayTime: 1
-  cookieToSecondTime: 2
-  secondToThirdTime: 5
-  thirdPointRotateTime: 2
-  thirdToReturnTime: 5
-  returnToPlayerTime: 1
+  cookieToSecondTime: 1
+  secondToThirdATime: 2
+  thirdCurveTime: 1.5
+  thirdToReturnTime: 2
+  returnToPlayerTime: 0.5
   downwardAngle: 45
 --- !u!1 &1494649815 stripped
 GameObject:
@@ -2833,7 +2865,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1560618971}
   m_Layer: 0
-  m_Name: pointStart
+  m_Name: StartPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3489,7 +3521,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1776641512}
   m_Layer: 0
-  m_Name: biscuitPosition
+  m_Name: CookiePosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4296,6 +4328,7 @@ SceneRoots:
   - {fileID: 1050996725}
   - {fileID: 1560618971}
   - {fileID: 227083}
+  - {fileID: 1336346658}
   - {fileID: 634896238}
   - {fileID: 1241208827}
   - {fileID: 1776641512}
