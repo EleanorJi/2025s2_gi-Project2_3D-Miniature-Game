@@ -14,20 +14,21 @@ public class CameraFollow : MonoBehaviour
     public float maxPitch = 60f;
 
     [Header("开场动画路径点")]
-    public Transform startPoint;           // 起点
-    public Transform cookiePoint;          // 饼干位置
-    public Transform secondPoint;          // 第二个点
-    public Transform thirdPoint;           // 第三个点
-    public Transform returnPoint;          // 回到玩家的点（玩家顶上偏前）
+    public Transform startPoint;           
+    public Transform cookiePosition;          
+    public Transform endPoint;          
+    public Transform connerA;          
+    public Transform connerB;          
+    public Transform returnPoint;
 
     [Header("各阶段时间设置")]
     public float startToCookieRotateTime = 1f;    // 起点转向饼干时间
-    public float startToCookieMoveTime = 2f;      // 起点移动到饼干时间
+    public float startToCookieMoveTime = 3f;      // 起点移动到饼干时间
     public float cookieStayTime = 1f;             // 饼干处停留时间
     public float cookieToSecondTime = 2f;         // 饼干退回第二个点时间
-    public float secondToThirdTime = 2f;          // 第二个点到第三个点移动时间
-    public float thirdPointRotateTime = 1f;       // 第三个点转向玩家时间
-    public float thirdToReturnTime = 2f;          // 第三个点到返回点时间
+    public float secondToThirdATime = 5f;         // 第二个点到拐弯点A移动时间
+    public float thirdCurveTime = 3f;             // 拐弯移动时间
+    public float thirdToReturnTime = 5f;          // 第三个点到返回点时间
     public float returnToPlayerTime = 1f;         // 返回点回到玩家时间
     public float downwardAngle = 45f;             // 俯角角度
 
@@ -44,8 +45,8 @@ public class CameraFollow : MonoBehaviour
             yaw = target.eulerAngles.y;
         }
 
-        // 检查必要的路径点
-        if (startPoint != null && cookiePoint != null && secondPoint != null && thirdPoint != null && returnPoint != null)
+        if (startPoint != null && cookiePosition != null && endPoint != null && 
+            connerA != null && connerB != null && returnPoint != null)
         {
             StartCoroutine(PlayIntroAnimation());
         }
@@ -59,64 +60,106 @@ public class CameraFollow : MonoBehaviour
     {
         isIntroPlaying = true;
 
-        // 阶段1：起点 → 饼干（先转向再移动）
+        // 阶段1：起点 → 饼干
         transform.position = startPoint.position;
-        
-        // 1.1 起点转向饼干
-        yield return StartCoroutine(RotateToPoint(startPoint.position, cookiePoint.position, startToCookieRotateTime));
-        
-        // 1.2 移动到饼干位置
-        yield return StartCoroutine(MoveToPoint(startPoint.position, cookiePoint.position, startToCookieMoveTime, false));
-        
-        // 1.3 在饼干处停留
+
+        yield return StartCoroutine(RotateToPoint(cookiePosition.position, startToCookieRotateTime));
+
+        yield return StartCoroutine(MoveToPoint(
+            transform.position, transform.rotation, 
+            cookiePosition.position, startToCookieMoveTime, false
+        ));
+
         yield return new WaitForSeconds(cookieStayTime);
 
-        // 阶段2：饼干 → 第二个点（退回并转向第三个点+45度）
+        // 阶段2：饼干 → 第二个点
         yield return StartCoroutine(MoveAndRotateToPoint(
-            cookiePoint.position, 
-            secondPoint.position, 
-            cookieToSecondTime, 
-            true  // 应用45度俯角
+            transform.position, transform.rotation,
+            endPoint.position, cookieToSecondTime, true
         ));
 
-        // 阶段3：第二个点 → 第三个点（仅移动，保持45度俯角）
-        yield return StartCoroutine(MoveToPoint(
-            secondPoint.position, 
-            thirdPoint.position, 
-            secondToThirdTime, 
-            true  // 保持45度俯角
-        ));
-
-        // 阶段4：在第三个点转向玩家（保持45度俯角）
-        yield return StartCoroutine(RotateToPointWithAngle(
-            thirdPoint.position, 
-            target.position, 
-            thirdPointRotateTime, 
-            downwardAngle
-        ));
-
-        // 阶段5：第三个点 → 返回点（水平移动，保持45度俯角）
-        yield return StartCoroutine(MoveToPoint(
-            thirdPoint.position, 
-            returnPoint.position, 
-            thirdToReturnTime, 
-            true  // 保持45度俯角
-        ));
-
-        // 阶段6：返回点 → 玩家位置（平滑过渡到正常视角）
-        yield return StartCoroutine(ReturnToPlayer(
+        // 合并阶段3、4、5：第二个点 → 第三个点A → 第三个点B（圆弧）→ 返回点
+        yield return StartCoroutine(ContinuousMoveStage3To5(
+            endPoint.position, 
+            connerA.position,
+            connerB.position,
             returnPoint.position,
-            returnToPlayerTime
+            secondToThirdATime + thirdCurveTime + thirdToReturnTime  // 总时间
         ));
+        // 阶段6：返回点 → 玩家
+        yield return StartCoroutine(ReturnToPlayer(returnToPlayerTime));
 
         isIntroPlaying = false;
         
         // 最终过渡到玩家跟随视角
         yield return StartCoroutine(SmoothTransitionToPlayer());
     }
+    IEnumerator ContinuousMoveStage3To5(Vector3 stage3Start, Vector3 stage4Start, Vector3 stage4End, Vector3 stage5End, float totalTime)
+    {
+        float timer = 0f;
+        
+        // 预先计算各阶段的开始和结束时间
+        float stage3EndTime = secondToThirdATime;
+        float stage4EndTime = stage3EndTime + thirdCurveTime;
+        float stage5EndTime = totalTime;
+        
+        // 预先计算各阶段的目标旋转
+        Quaternion stage3StartRot = transform.rotation;
+        Quaternion stage3TargetRot = Quaternion.LookRotation((stage4Start - stage3Start).normalized) * Quaternion.Euler(downwardAngle, 0, 0);
+        Quaternion stage4TargetRot = Quaternion.LookRotation((stage5End - stage4End).normalized) * Quaternion.Euler(downwardAngle, 0, 0);
+        Quaternion stage5TargetRot = stage4TargetRot; // 阶段5保持阶段4的旋转方向
 
-    // 从返回点平滑回到玩家
-    IEnumerator ReturnToPlayer(Vector3 fromPosition, float moveTime)
+        while (timer < totalTime)
+        {
+            timer += Time.deltaTime;
+            
+            if (timer <= stage3EndTime)
+            {
+                // 阶段3：线性移动
+                float t = timer / stage3EndTime;
+                transform.position = Vector3.Lerp(stage3Start, stage4Start, t);
+                transform.rotation = Quaternion.Lerp(stage3StartRot, stage3TargetRot, t);
+            }
+            else if (timer <= stage4EndTime)
+            {
+                // 阶段4：贝塞尔曲线移动
+                float t = (timer - stage3EndTime) / thirdCurveTime;
+                Vector3 controlPoint = CalculateHorizontalControlPoint(stage4Start, stage4End);
+                transform.position = CalculateBezierPoint(stage4Start, controlPoint, stage4End, t);
+                transform.rotation = Quaternion.Lerp(stage3TargetRot, stage4TargetRot, t);
+            }
+            else
+            {
+                // 阶段5：线性移动
+                float t = (timer - stage4EndTime) / thirdToReturnTime;
+                transform.position = Vector3.Lerp(stage4End, stage5End, t);
+                transform.rotation = Quaternion.Lerp(stage4TargetRot, stage5TargetRot, t);
+            }
+
+            yield return null;
+        }
+        
+        // 确保最终位置准确
+        transform.position = stage5End;
+        transform.rotation = stage5TargetRot;
+    }
+
+    Vector3 CalculateHorizontalControlPoint(Vector3 start, Vector3 end)
+    {
+        Vector3 midPoint = (start + end) * 0.5f;
+        Vector3 direction = (end - start).normalized;
+        Vector3 perpendicular = Vector3.Cross(direction, Vector3.up).normalized;
+        float curveAmount = Vector3.Distance(start, end) * 0.5f;
+        return midPoint + perpendicular * curveAmount;
+    }
+
+    Vector3 CalculateBezierPoint(Vector3 p0, Vector3 p1, Vector3 p2, float t)
+    {
+        float u = 1 - t;
+        return u * u * p0 + 2 * u * t * p1 + t * t * p2;
+    }
+
+    IEnumerator ReturnToPlayer(float moveTime)
     {
         float timer = 0f;
         Vector3 startPosition = transform.position;
@@ -146,103 +189,64 @@ public class CameraFollow : MonoBehaviour
         }
     }
 
-    // 旋转到目标点（无俯角）
-    IEnumerator RotateToPoint(Vector3 fromPosition, Vector3 lookAtTarget, float rotateTime)
+    IEnumerator RotateToPoint(Vector3 lookAtTarget, float rotateTime)
     {
         float timer = 0f;
         Quaternion startRotation = transform.rotation;
-        Vector3 direction = lookAtTarget - fromPosition;
+        Vector3 direction = lookAtTarget - transform.position;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
 
         while (timer < rotateTime)
         {
             timer += Time.deltaTime;
             float t = timer / rotateTime;
-            transform.position = fromPosition;
             transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
             yield return null;
         }
-        transform.rotation = targetRotation;
     }
 
-    // 旋转到目标点（带俯角）
-    IEnumerator RotateToPointWithAngle(Vector3 fromPosition, Vector3 lookAtTarget, float rotateTime, float angle)
+    IEnumerator MoveToPoint(Vector3 startPos, Quaternion startRot, Vector3 toPosition, float moveTime, bool keepDownwardAngle)
     {
         float timer = 0f;
-        Quaternion startRotation = transform.rotation;
-        Vector3 direction = lookAtTarget - fromPosition;
-        direction.y = 0; // 保持水平
-        Quaternion targetRotation = Quaternion.LookRotation(direction) * Quaternion.Euler(angle, 0, 0);
-
-        while (timer < rotateTime)
-        {
-            timer += Time.deltaTime;
-            float t = timer / rotateTime;
-            transform.position = fromPosition;
-            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
-            yield return null;
-        }
-        transform.rotation = targetRotation;
-    }
-
-    // 移动到目标点（可选择是否保持俯角）
-    IEnumerator MoveToPoint(Vector3 fromPosition, Vector3 toPosition, float moveTime, bool keepDownwardAngle)
-    {
-        float timer = 0f;
-        Vector3 startPosition = transform.position;
-        Quaternion startRotation = transform.rotation;
 
         while (timer < moveTime)
         {
             timer += Time.deltaTime;
-            float t = timer / moveTime;
-            t = Mathf.SmoothStep(0f, 1f, t);
+            float t = Mathf.SmoothStep(0f, 1f, timer / moveTime);
 
-            transform.position = Vector3.Lerp(startPosition, toPosition, t);
-            
+            transform.position = Vector3.Lerp(startPos, toPosition, t);
+
             if (keepDownwardAngle)
             {
-                Vector3 moveDirection = (toPosition - fromPosition);
+                Vector3 moveDirection = (toPosition - startPos);
                 moveDirection.y = 0;
                 if (moveDirection != Vector3.zero)
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(moveDirection.normalized) * Quaternion.Euler(downwardAngle, 0, 0);
-                    transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+                    transform.rotation = Quaternion.Slerp(startRot, targetRotation, t);
                 }
-            }
-            else
-            {
-                transform.rotation = startRotation;
             }
             yield return null;
         }
-        transform.position = toPosition;
     }
 
-    // 移动并旋转到目标点（带俯角）
-    IEnumerator MoveAndRotateToPoint(Vector3 fromPosition, Vector3 toPosition, float moveTime, bool useDownwardAngle)
+    IEnumerator MoveAndRotateToPoint(Vector3 startPos, Quaternion startRot, Vector3 toPosition, float moveTime, bool useDownwardAngle)
     {
         float timer = 0f;
-        Vector3 startPosition = transform.position;
-        Quaternion startRotation = transform.rotation;
-        
-        // 计算目标旋转：面向第三个点 + 俯角
-        Vector3 targetDirection = thirdPoint.position - toPosition;
+
+        Vector3 targetDirection = connerA.position - toPosition;
         targetDirection.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(targetDirection.normalized) * Quaternion.Euler(downwardAngle, 0, 0);
 
         while (timer < moveTime)
         {
             timer += Time.deltaTime;
-            float t = timer / moveTime;
-            t = Mathf.SmoothStep(0f, 1f, t);
+            float t = Mathf.SmoothStep(0f, 1f, timer / moveTime);
 
-            transform.position = Vector3.Lerp(startPosition, toPosition, t);
-            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+            transform.position = Vector3.Lerp(startPos, toPosition, t);
+            transform.rotation = Quaternion.Slerp(startRot, targetRotation, t);
             yield return null;
         }
-        transform.position = toPosition;
-        transform.rotation = targetRotation;
     }
 
     IEnumerator SmoothTransitionToPlayer()
@@ -255,14 +259,13 @@ public class CameraFollow : MonoBehaviour
         while (timer < transitionDuration)
         {
             timer += Time.deltaTime;
-            float t = timer / transitionDuration;
-            t = Mathf.SmoothStep(0f, 1f, t);
+            float t = Mathf.SmoothStep(0f, 1f, timer / transitionDuration);
 
             Quaternion targetRot = Quaternion.Euler(pitch, yaw, 0);
             Vector3 targetPos = target.position + targetRot * offset;
 
             transform.position = Vector3.Lerp(startPosition, targetPos, t);
-            
+
             Vector3 lookDir = target.position - transform.position;
             if (lookDir != Vector3.zero)
             {
@@ -286,50 +289,48 @@ public class CameraFollow : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         transform.LookAt(target);
     }
-
-    public void SkipIntroAnimation()
-    {
-        if (isIntroPlaying)
-        {
-            StopAllCoroutines();
-            isIntroPlaying = false;
-            StartCoroutine(SmoothTransitionToPlayer());
-        }
-    }
-
+    
+    // ===================调试函数，下面均可删======================
+    // 显示路径函数
     void OnDrawGizmosSelected()
     {
         // 绘制路径点
         DrawPointWithLabel(startPoint, "起点", Color.green);
-        DrawPointWithLabel(cookiePoint, "饼干位置", Color.red);
-        DrawPointWithLabel(secondPoint, "第二个点", Color.blue);
-        DrawPointWithLabel(thirdPoint, "第三个点", Color.yellow);
+        DrawPointWithLabel(cookiePosition, "饼干位置", Color.red);
+        DrawPointWithLabel(endPoint, "第二个点", Color.blue);
+        DrawPointWithLabel(connerA, "拐弯起点", Color.yellow);
+        DrawPointWithLabel(connerB, "拐弯终点", Color.magenta);
         DrawPointWithLabel(returnPoint, "返回点", Color.cyan);
 
         // 绘制路径线
-        if (startPoint && cookiePoint)
+        if (startPoint && cookiePosition)
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(startPoint.position, cookiePoint.position);
-            DrawArrow(startPoint.position, (cookiePoint.position - startPoint.position).normalized, 1f);
+            Gizmos.DrawLine(startPoint.position, cookiePosition.position);
+            DrawArrow(startPoint.position, (cookiePosition.position - startPoint.position).normalized, 1f);
         }
-        if (cookiePoint && secondPoint)
+        if (cookiePosition && endPoint)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(cookiePoint.position, secondPoint.position);
-            DrawArrow(cookiePoint.position, (secondPoint.position - cookiePoint.position).normalized, 1f);
+            Gizmos.DrawLine(cookiePosition.position, endPoint.position);
+            DrawArrow(cookiePosition.position, (endPoint.position - cookiePosition.position).normalized, 1f);
         }
-        if (secondPoint && thirdPoint)
+        if (endPoint && connerA)
         {
             Gizmos.color = Color.blue;
-            Gizmos.DrawLine(secondPoint.position, thirdPoint.position);
-            DrawArrow(secondPoint.position, (thirdPoint.position - secondPoint.position).normalized, 1f);
+            Gizmos.DrawLine(endPoint.position, connerA.position);
+            DrawArrow(endPoint.position, (connerA.position - endPoint.position).normalized, 1f);
         }
-        if (thirdPoint && returnPoint)
+        if (connerA && connerB)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(thirdPoint.position, returnPoint.position);
-            DrawArrow(thirdPoint.position, (returnPoint.position - thirdPoint.position).normalized, 1f);
+            // 绘制水平贝塞尔曲线预览
+            DrawHorizontalBezierCurve(connerA.position, connerB.position, Color.yellow);
+        }
+        if (connerB && returnPoint)
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawLine(connerB.position, returnPoint.position);
+            DrawArrow(connerB.position, (returnPoint.position - connerB.position).normalized, 1f);
         }
         if (returnPoint && target)
         {
@@ -337,6 +338,32 @@ public class CameraFollow : MonoBehaviour
             Gizmos.DrawLine(returnPoint.position, target.position);
             DrawArrow(returnPoint.position, (target.position - returnPoint.position).normalized, 1f);
         }
+    }
+
+    // 绘制水平贝塞尔曲线预览
+    void DrawHorizontalBezierCurve(Vector3 start, Vector3 end, Color color)
+    {
+        Vector3 controlPoint = CalculateHorizontalControlPoint(start, end);
+        Gizmos.color = color;
+        
+        // 绘制曲线段
+        Vector3 prevPoint = start;
+        for (int i = 1; i <= 20; i++)
+        {
+            float t = i / 20f;
+            Vector3 point = CalculateBezierPoint(start, controlPoint, end, t);
+            Gizmos.DrawLine(prevPoint, point);
+            prevPoint = point;
+        }
+        
+        // 绘制控制点连线
+        Gizmos.color = color * 0.7f;
+        Gizmos.DrawLine(start, controlPoint);
+        Gizmos.DrawLine(controlPoint, end);
+        
+        // 绘制控制点
+        Gizmos.color = Color.white;
+        Gizmos.DrawSphere(controlPoint, 0.2f);
     }
 
     void DrawPointWithLabel(Transform point, string label, Color color)
