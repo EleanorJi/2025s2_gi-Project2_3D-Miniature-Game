@@ -29,11 +29,22 @@ public class PlayerController : MonoBehaviour
     // 是否拿着物品
     public bool IsCarryingItem => carriedItem != null;
 
+    // 动画控制
+    private Animator antAnimator;
+    private bool isMoving = false;
+
     void Start()
     {
         // 获取组件
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main; // 获取主摄像机
+        
+        // 获取子物体（蚂蚁模型）上的Animator组件
+        antAnimator = GetComponentInChildren<Animator>();
+        if (antAnimator == null)
+        {
+            Debug.LogError("Animator not found on ant model!");
+        }
     }
 
     void Update()
@@ -41,6 +52,19 @@ public class PlayerController : MonoBehaviour
         // 处理跳跃输入
         HandleJump();
         HandlePickup();
+
+        // 检测移动输入
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+        isMoving = (Mathf.Abs(horizontalInput) > 0.3f || Mathf.Abs(verticalInput) > 0.3f);
+
+        // 控制动画
+        if (antAnimator != null)
+        {
+            antAnimator.SetBool("IsMoving", isMoving);
+            Debug.Log($"IsMoving: {isMoving}, Horizontal: {horizontalInput}, Vertical: {verticalInput}");
+        }
+
         // 记录离开地面瞬间的高度
         if (!isGrounded && wasGrounded)
         {
