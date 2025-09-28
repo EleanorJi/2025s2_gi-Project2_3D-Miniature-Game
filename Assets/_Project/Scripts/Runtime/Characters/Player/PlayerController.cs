@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f;
     // 跳跃力度
     public float jumpForce = 7f;
+    private float startThreshold = 0.1f;
+    private float stopThreshold = 0.3f;
+    // 动画控制
+    private Animator antAnimator;
+    private bool isMoving = false;
 
     [Header("拾取参数")]
     public Transform carryPoint;   // 背上挂载点
@@ -29,9 +34,6 @@ public class PlayerController : MonoBehaviour
     // 是否拿着物品
     public bool IsCarryingItem => carriedItem != null;
 
-    // 动画控制
-    private Animator antAnimator;
-    private bool isMoving = false;
 
     void Start()
     {
@@ -56,7 +58,17 @@ public class PlayerController : MonoBehaviour
         // 检测移动输入
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        isMoving = (Mathf.Abs(horizontalInput) > 0.3f || Mathf.Abs(verticalInput) > 0.3f);
+        // 如果正在移动，检查是否应该停止；如果停止，检查是否应该开始
+        if (isMoving)
+        {
+            // 只有当输入很小的时候才停止
+            isMoving = Mathf.Abs(horizontalInput) > stopThreshold || Mathf.Abs(verticalInput) > stopThreshold;
+        }
+        else
+        {
+            // 只要有轻微输入就开始
+            isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;;
+        }
 
         // 控制动画
         if (antAnimator != null)
