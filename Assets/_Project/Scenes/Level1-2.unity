@@ -2195,6 +2195,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1723249848}
     m_Modifications:
+    - target: {fileID: -5644133064174452605, guid: a7010fa210a53cc45a2fdbaa54da2dcd, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: cb980f485e490474f86b8c7105b69f69, type: 2}
+    - target: {fileID: -5644133064174452605, guid: a7010fa210a53cc45a2fdbaa54da2dcd, type: 3}
+      propertyPath: m_AnimatePhysics
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5644133064174452605, guid: a7010fa210a53cc45a2fdbaa54da2dcd, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8128668236925612103, guid: a7010fa210a53cc45a2fdbaa54da2dcd, type: 3}
       propertyPath: m_Name
       value: antMove
