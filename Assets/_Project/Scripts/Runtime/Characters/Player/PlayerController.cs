@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviour
         // 调试：按R键显示当前激活的存档点
         if (Input.GetKeyDown(KeyCode.R))
         {
-            CheckpointManager.Instance.DebugActivatedCheckpoints();
+            Die();
         }
     }
 
