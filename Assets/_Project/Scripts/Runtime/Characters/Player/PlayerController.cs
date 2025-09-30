@@ -218,6 +218,11 @@ public class PlayerController : MonoBehaviour
                 stove.OnPlayerEnter(this);
             }
         }
+        // 检测与水的碰撞
+        else if (collision.gameObject.CompareTag("Water"))
+        {
+            Die();
+        }
 
     }
 
