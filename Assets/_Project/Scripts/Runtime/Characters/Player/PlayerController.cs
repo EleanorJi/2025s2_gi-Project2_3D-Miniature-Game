@@ -40,13 +40,21 @@ public class PlayerController : MonoBehaviour
         // 获取组件
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main; // 获取主摄像机
-        
+
         // 获取子物体（蚂蚁模型）上的Animator组件
         antAnimator = GetComponentInChildren<Animator>();
         if (antAnimator == null)
         {
             Debug.LogError("Animator not found on ant model!");
         }
+
+        // 确保存档点管理器存在
+        if (CheckpointManager.Instance == null)
+        {
+            GameObject checkpointManager = new GameObject("CheckpointManager");
+            checkpointManager.AddComponent<CheckpointManager>();
+        }
+        
     }
 
     void Update()
@@ -67,14 +75,14 @@ public class PlayerController : MonoBehaviour
         else
         {
             // 只要有轻微输入就开始
-            isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;;
+            isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;
         }
 
         // 控制动画
         if (antAnimator != null)
         {
             antAnimator.SetBool("IsMoving", isMoving);
-            Debug.Log($"IsMoving: {isMoving}, Horizontal: {horizontalInput}, Vertical: {verticalInput}");
+            // Debug.Log($"IsMoving: {isMoving}, Horizontal: {horizontalInput}, Vertical: {verticalInput}");
         }
 
         // 记录离开地面瞬间的高度
@@ -83,6 +91,12 @@ public class PlayerController : MonoBehaviour
             lastAirY = transform.position.y;
         }
         wasGrounded = isGrounded;
+
+        // 调试：按R键显示当前激活的存档点
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            CheckpointManager.Instance.DebugActivatedCheckpoints();
+        }
     }
 
     void FixedUpdate()
@@ -201,7 +215,7 @@ public class PlayerController : MonoBehaviour
 
             // 计算落下高度
             float fallDistance = lastAirY - transform.position.y;
-            Debug.Log("lastAirY: " + lastAirY + ", fallDistance: " + fallDistance);
+            // Debug.Log("lastAirY: " + lastAirY + ", fallDistance: " + fallDistance);
             if (fallDistance > maxSafeFallDistance) // 阈值，单位根据场景调节
             {
                 Die();
@@ -258,6 +272,14 @@ public class PlayerController : MonoBehaviour
         // 重生前先放下物品
         DropItem();
         rb.linearVelocity = Vector3.zero; // 重置速度
-        transform.position = respawnPoint.position; // 回到存档点
+
+        // 使用存档点管理器获取最后一个激活的存档点位置
+        Vector3 respawnPosition = CheckpointManager.Instance.GetLastRespawnPosition();
+        transform.position = respawnPosition;
+        
+        // 可选：显示调试信息
+        CheckpointManager.Instance.DebugActivatedCheckpoints();
+        
+        Debug.Log($"Respawned at last checkpoint: {respawnPosition}");
     }
 }
