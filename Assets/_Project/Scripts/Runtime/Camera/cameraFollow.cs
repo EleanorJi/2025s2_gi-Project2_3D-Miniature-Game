@@ -5,7 +5,7 @@ public class CameraFollow : MonoBehaviour
 {
     [Header("目标与偏移")]
     public Transform target;                // 玩家角色
-    public Vector3 offset = new Vector3(0f, 2f, -5f);
+    public Vector3 offset = new Vector3(0f, 1.5f, -4f);
 
     [Header("跟随设置")]
     public float smoothSpeed = 5f;
@@ -35,6 +35,7 @@ public class CameraFollow : MonoBehaviour
     private float yaw = 0f;
     private float pitch = 10f;
     private bool isIntroPlaying = false;
+    private bool intro = true;
 
     void Start()
     {
@@ -46,7 +47,7 @@ public class CameraFollow : MonoBehaviour
         }
 
         if (startPoint != null && cookiePosition != null && endPoint != null && 
-            connerA != null && connerB != null && returnPoint != null)
+            connerA != null && connerB != null && returnPoint != null && intro)
         {
             StartCoroutine(PlayIntroAnimation());
         }
