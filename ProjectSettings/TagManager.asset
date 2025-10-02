@@ -8,6 +8,7 @@ TagManager:
   - Pickup
   - Sugar
   - Stove
+  - Water
   layers:
   - Default
   - TransparentFX
