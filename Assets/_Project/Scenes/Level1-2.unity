@@ -13414,11 +13414,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1560618971}
+  - {fileID: 1776641512}
+  - {fileID: 634896238}
   - {fileID: 227083}
   - {fileID: 1336346658}
-  - {fileID: 634896238}
   - {fileID: 1241208827}
-  - {fileID: 1776641512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1296449775 stripped
@@ -14608,6 +14608,7 @@ GameObject:
   - component: {fileID: 1456422301}
   - component: {fileID: 1456422300}
   - component: {fileID: 1456422303}
+  - component: {fileID: 1456422304}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -14707,6 +14708,18 @@ MonoBehaviour:
   mouseSensitivity: 3
   minPitch: -35
   maxPitch: 60
+--- !u!114 &1456422304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456422299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbb4dcb090f6ce24d865f69df681e46b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   startPoint: {fileID: 1560618971}
   cookiePosition: {fileID: 1776641512}
   endPoint: {fileID: 634896238}
@@ -14722,7 +14735,6 @@ MonoBehaviour:
   thirdToReturnTime: 2
   returnToPlayerTime: 0.5
   downwardAngle: 45
-  playerInputController: {fileID: 1723249851}
 --- !u!1 &1456645569 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e7a2f423a8ddbd741988399fece6832e, type: 3}
