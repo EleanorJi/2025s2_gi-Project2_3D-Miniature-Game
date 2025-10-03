@@ -8,6 +8,16 @@ public class PlayerController : MonoBehaviour
     // 跳跃力度
     public float jumpForce = 7f;
 
+    [Header("蓄力跳参数")]
+    public float minJumpForce = 4f;      // 最短按下的力度
+    public float maxJumpForce = 12f;     // 长按达到上限的力度
+    public float maxChargeTime = 0.8f;   // 按住超过这个时间，力度不再增长
+    public AnimationCurve chargeCurve = AnimationCurve.EaseInOut(0,0,1,1); // 可调曲线（前慢后快）
+
+    private bool isChargingJump;
+    private double chargeStartTime;
+
+
     [Header("拾取参数")]
     public Transform carryPoint;   // 背上挂载点
     private GameObject carriedItem;
@@ -95,11 +105,34 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        // 检测是否按下空格键并且角色在地面上
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        // 开始蓄力
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isChargingJump)
         {
-            // 应用向上的力来实现跳跃
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // ★ 记录：我正站在哪块石头上（供蜂蜜自救成功后返回）
+            GetComponent<RockTracker>()?.MarkJump();
+        
+            isChargingJump = true;
+            chargeStartTime = Time.timeAsDouble;
+        }
+    
+        // 释放起跳
+        if (Input.GetKeyUp(KeyCode.Space) && isChargingJump)
+        {
+            isChargingJump = false;
+    
+            // 计算按住时间（真实秒，与帧率无关）
+            double held = Time.timeAsDouble - chargeStartTime;
+            float t = Mathf.Clamp01((float)(held / maxChargeTime));
+            float k = chargeCurve.Evaluate(t);
+    
+            float force = Mathf.Lerp(minJumpForce, maxJumpForce, k);
+    
+            // 起跳前把竖直速度清零，避免叠加
+            Vector3 v = rb.linearVelocity;
+            v.y = 0f;
+            rb.linearVelocity = v;
+    
+            rb.AddForce(Vector3.up * force, ForceMode.Impulse);
             isGrounded = false;
         }
     }
