@@ -13,6 +13,9 @@ namespace Antventure.UI.Menus
         [SerializeField] private AudioSource uiAudioSource;
         [SerializeField] private AudioClip clickSound;
         [SerializeField] private AudioClip hoverSound;
+        
+        [Header("Settings")]
+        [SerializeField] private SettingsController settingsController;
 
         private void Start()
         {
@@ -47,8 +50,14 @@ namespace Antventure.UI.Menus
         public void OnOptionsClicked()
         {
             PlayClickSound();
-            Debug.Log("Options menu opened.");
-            // TODO: Open Options menu
+            if (settingsController != null)
+            {
+                settingsController.OpenSettings();
+            }
+            else
+            {
+                Debug.LogWarning("Settings controller not assigned!");
+            }
         }
 
         // Hover Sound
