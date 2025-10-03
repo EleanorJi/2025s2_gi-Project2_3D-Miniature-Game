@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
-using DG.Tweening;
 
 namespace Antventure.UI.Animation
 {
@@ -18,7 +17,6 @@ namespace Antventure.UI.Animation
         [SerializeField] private Vector3 hoverScale = new Vector3(1.1f, 1.1f, 1.1f);
         [SerializeField] private Vector3 pressScale = new Vector3(0.95f, 0.95f, 0.95f);
         [SerializeField] private float scaleAnimationDuration = 0.2f;
-        [SerializeField] private Ease scaleEase = Ease.OutBack;
 
         [Header("Color Animation")]
         [SerializeField] private bool enableColorAnimation = true;
@@ -32,12 +30,10 @@ namespace Antventure.UI.Animation
         [SerializeField] private bool enableRotationAnimation = false;
         [SerializeField] private Vector3 hoverRotation = new Vector3(0, 0, 5f);
         [SerializeField] private float rotationAnimationDuration = 0.3f;
-        [SerializeField] private Ease rotationEase = Ease.OutElastic;
 
         [Header("Bounce Animation")]
         [SerializeField] private bool enableBounceOnClick = true;
         [SerializeField] private float bounceStrength = 0.3f;
-        [SerializeField] private int bounceVibrato = 2;
         [SerializeField] private float bounceDuration = 0.5f;
 
         [Header("Glow Effect")]
@@ -73,7 +69,7 @@ namespace Antventure.UI.Animation
         // Animation state
         private bool isHovering = false;
         private bool isPressed = false;
-        private Sequence currentAnimation;
+        private Coroutine currentAnimation;
 
         private void Awake()
         {
@@ -130,7 +126,7 @@ namespace Antventure.UI.Animation
             // Stop all animations
             if (currentAnimation != null)
             {
-                currentAnimation.Kill();
+                StopCoroutine(currentAnimation);
             }
         }
 
@@ -140,20 +136,44 @@ namespace Antventure.UI.Animation
         {
             if (!button.interactable) return;
 
+            Debug.Log("[BUTTON] OnPointerEnter called on: " + gameObject.name);
             isHovering = true;
             PlayHoverAnimation();
             PlayHoverSound();
             PlayHoverParticles();
+            
+            // Set hover cursor when entering button area
+            if (CursorManager.Instance != null)
+            {
+                Debug.Log("[BUTTON] Calling SetHoverCursor from: " + gameObject.name);
+                CursorManager.Instance.SetHoverCursor();
+            }
+            else
+            {
+                Debug.LogWarning("[BUTTON] CursorManager.Instance is null!");
+            }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            Debug.Log("[BUTTON] OnPointerExit called on: " + gameObject.name);
             isHovering = false;
             if (!isPressed)
             {
                 PlayNormalAnimation();
             }
             StopHoverParticles();
+            
+            // Reset to default cursor when leaving button area
+            if (CursorManager.Instance != null)
+            {
+                Debug.Log("[BUTTON] Calling SetDefaultCursor from: " + gameObject.name);
+                CursorManager.Instance.SetDefaultCursor();
+            }
+            else
+            {
+                Debug.LogWarning("[BUTTON] CursorManager.Instance is null!");
+            }
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -199,25 +219,10 @@ namespace Antventure.UI.Animation
         {
             if (currentAnimation != null)
             {
-                currentAnimation.Kill();
+                StopCoroutine(currentAnimation);
             }
 
-            currentAnimation = DOTween.Sequence();
-
-            if (enableScaleAnimation)
-            {
-                currentAnimation.Join(rectTransform.DOScale(hoverScale, scaleAnimationDuration).SetEase(scaleEase));
-            }
-
-            if (enableColorAnimation && buttonImage != null)
-            {
-                currentAnimation.Join(buttonImage.DOColor(hoverColor, colorAnimationDuration));
-            }
-
-            if (enableRotationAnimation)
-            {
-                currentAnimation.Join(rectTransform.DOLocalRotate(originalRotation + hoverRotation, rotationAnimationDuration).SetEase(rotationEase));
-            }
+            currentAnimation = StartCoroutine(AnimateToState(hoverScale, hoverColor, originalRotation + hoverRotation, scaleAnimationDuration));
         }
 
         /// <summary>
@@ -227,20 +232,10 @@ namespace Antventure.UI.Animation
         {
             if (currentAnimation != null)
             {
-                currentAnimation.Kill();
+                StopCoroutine(currentAnimation);
             }
 
-            currentAnimation = DOTween.Sequence();
-
-            if (enableScaleAnimation)
-            {
-                currentAnimation.Join(rectTransform.DOScale(pressScale, scaleAnimationDuration * 0.5f));
-            }
-
-            if (enableColorAnimation && buttonImage != null)
-            {
-                currentAnimation.Join(buttonImage.DOColor(pressColor, colorAnimationDuration * 0.5f));
-            }
+            currentAnimation = StartCoroutine(AnimateToState(pressScale, pressColor, originalRotation, scaleAnimationDuration * 0.5f));
         }
 
         /// <summary>
@@ -250,25 +245,10 @@ namespace Antventure.UI.Animation
         {
             if (currentAnimation != null)
             {
-                currentAnimation.Kill();
+                StopCoroutine(currentAnimation);
             }
 
-            currentAnimation = DOTween.Sequence();
-
-            if (enableScaleAnimation)
-            {
-                currentAnimation.Join(rectTransform.DOScale(originalScale, scaleAnimationDuration));
-            }
-
-            if (enableColorAnimation && buttonImage != null)
-            {
-                currentAnimation.Join(buttonImage.DOColor(normalColor, colorAnimationDuration));
-            }
-
-            if (enableRotationAnimation)
-            {
-                currentAnimation.Join(rectTransform.DOLocalRotate(originalRotation, rotationAnimationDuration));
-            }
+            currentAnimation = StartCoroutine(AnimateToState(originalScale, normalColor, originalRotation, scaleAnimationDuration));
         }
 
         /// <summary>
@@ -278,7 +258,7 @@ namespace Antventure.UI.Animation
         {
             if (enableBounceOnClick)
             {
-                rectTransform.DOPunchScale(Vector3.one * bounceStrength, bounceDuration, bounceVibrato);
+                StartCoroutine(BounceAnimation());
             }
         }
 
@@ -289,13 +269,133 @@ namespace Antventure.UI.Animation
         {
             if (enableGlowEffect && glowImage != null)
             {
-                glowImage.gameObject.SetActive(true);
-                
-                Sequence glowSequence = DOTween.Sequence();
-                glowSequence.Append(glowImage.DOFade(glowIntensity, glowDuration * 0.3f));
-                glowSequence.Append(glowImage.DOFade(0f, glowDuration * 0.7f));
-                glowSequence.OnComplete(() => glowImage.gameObject.SetActive(false));
+                StartCoroutine(GlowAnimation());
             }
+        }
+
+        /// <summary>
+        /// Animate to target state
+        /// </summary>
+        private IEnumerator AnimateToState(Vector3 targetScale, Color targetColor, Vector3 targetRotation, float duration)
+        {
+            Vector3 startScale = rectTransform.localScale;
+            Color startColor = buttonImage != null ? buttonImage.color : Color.white;
+            Vector3 startRotation = rectTransform.localEulerAngles;
+
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = elapsed / duration;
+                
+                // Apply easing (simple ease out)
+                t = 1f - (1f - t) * (1f - t);
+
+                if (enableScaleAnimation)
+                {
+                    rectTransform.localScale = Vector3.Lerp(startScale, targetScale, t);
+                }
+
+                if (enableColorAnimation && buttonImage != null)
+                {
+                    buttonImage.color = Color.Lerp(startColor, targetColor, t);
+                }
+
+                if (enableRotationAnimation)
+                {
+                    rectTransform.localEulerAngles = Vector3.Lerp(startRotation, targetRotation, t);
+                }
+
+                yield return null;
+            }
+
+            // Ensure final values are set
+            if (enableScaleAnimation)
+            {
+                rectTransform.localScale = targetScale;
+            }
+
+            if (enableColorAnimation && buttonImage != null)
+            {
+                buttonImage.color = targetColor;
+            }
+
+            if (enableRotationAnimation)
+            {
+                rectTransform.localEulerAngles = targetRotation;
+            }
+        }
+
+        /// <summary>
+        /// Bounce animation coroutine
+        /// </summary>
+        private IEnumerator BounceAnimation()
+        {
+            Vector3 originalScale = rectTransform.localScale;
+            Vector3 bounceScale = originalScale + Vector3.one * bounceStrength;
+
+            float halfDuration = bounceDuration * 0.5f;
+
+            // Scale up
+            float elapsed = 0f;
+            while (elapsed < halfDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = elapsed / halfDuration;
+                rectTransform.localScale = Vector3.Lerp(originalScale, bounceScale, t);
+                yield return null;
+            }
+
+            // Scale down
+            elapsed = 0f;
+            while (elapsed < halfDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = elapsed / halfDuration;
+                rectTransform.localScale = Vector3.Lerp(bounceScale, originalScale, t);
+                yield return null;
+            }
+
+            rectTransform.localScale = originalScale;
+        }
+
+        /// <summary>
+        /// Glow animation coroutine
+        /// </summary>
+        private IEnumerator GlowAnimation()
+        {
+            glowImage.gameObject.SetActive(true);
+            
+            Color startColor = glowImage.color;
+            Color glowColor = new Color(startColor.r, startColor.g, startColor.b, glowIntensity);
+            Color fadeColor = new Color(startColor.r, startColor.g, startColor.b, 0f);
+
+            float fadeInDuration = glowDuration * 0.3f;
+            float fadeOutDuration = glowDuration * 0.7f;
+
+            // Fade in
+            float elapsed = 0f;
+            while (elapsed < fadeInDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = elapsed / fadeInDuration;
+                glowImage.color = Color.Lerp(startColor, glowColor, t);
+                yield return null;
+            }
+
+            // Fade out
+            elapsed = 0f;
+            while (elapsed < fadeOutDuration)
+            {
+                elapsed += Time.unscaledDeltaTime;
+                float t = elapsed / fadeOutDuration;
+                glowImage.color = Color.Lerp(glowColor, fadeColor, t);
+                yield return null;
+            }
+
+            glowImage.gameObject.SetActive(false);
+            glowImage.color = startColor;
         }
 
         /// <summary>
@@ -430,7 +530,7 @@ namespace Antventure.UI.Animation
         {
             if (currentAnimation != null)
             {
-                currentAnimation.Kill();
+                StopCoroutine(currentAnimation);
             }
 
             rectTransform.localScale = originalScale;

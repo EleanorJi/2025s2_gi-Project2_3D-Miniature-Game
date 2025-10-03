@@ -14,6 +14,22 @@ namespace Antventure.UI.Menus
         [SerializeField] private AudioClip clickSound;
         [SerializeField] private AudioClip hoverSound;
 
+        private void Start()
+        {
+            // Use CursorManager if available, otherwise fallback to direct cursor control
+            if (CursorManager.Instance != null)
+            {
+                CursorManager.Instance.SetDefaultCursor();
+            }
+            else
+            {
+                // Fallback: Show system default cursor in main menu
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            }
+        }
+
         // Play Button Clicks
         public void OnPlayClicked()
         {

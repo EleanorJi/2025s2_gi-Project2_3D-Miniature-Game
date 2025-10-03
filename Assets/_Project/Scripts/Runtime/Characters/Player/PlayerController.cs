@@ -1,4 +1,5 @@
 using UnityEngine;
+using Antventure.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -55,10 +56,33 @@ public class PlayerController : MonoBehaviour
             checkpointManager.AddComponent<CheckpointManager>();
         }
         
+        // Hide cursor during gameplay (third-person camera control)
+        Debug.Log("[PLAYER] Attempting to hide cursor for gameplay");
+        if (CursorManager.Instance != null)
+        {
+            Debug.Log("[PLAYER] CursorManager found, calling HideCursor()");
+            CursorManager.Instance.HideCursor();
+        }
+        else
+        {
+            Debug.LogWarning("[PLAYER] CursorManager.Instance is null! Using fallback cursor hiding");
+            // Fallback if CursorManager is not available
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
     }
 
     void Update()
     {
+        // Ensure cursor stays hidden during gameplay
+        if (Cursor.visible)
+        {
+            Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
         // 处理跳跃输入
         HandleJump();
         HandlePickup();

@@ -95,20 +95,29 @@ namespace Antventure.UI
         /// </summary>
         private void HandleEscapeKey()
         {
+            Debug.Log("[UI MANAGER] ESC key pressed");
+            
             // If options menu is open, close options menu
             if (IsOptionsMenuOpen)
             {
+                Debug.Log("[UI MANAGER] Closing options menu");
                 CloseOptionsMenu();
             }
             // If pause menu is open, close pause menu
             else if (IsPauseMenuOpen)
             {
+                Debug.Log("[UI MANAGER] Closing pause menu");
                 ClosePauseMenu();
             }
             // If in game scene, open pause menu
             else if (IsInGameScene())
             {
+                Debug.Log("[UI MANAGER] Opening pause menu");
                 OpenPauseMenu();
+            }
+            else
+            {
+                Debug.Log("[UI MANAGER] ESC pressed but no action taken (not in game scene)");
             }
         }
 
