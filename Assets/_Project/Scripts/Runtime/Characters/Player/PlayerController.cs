@@ -1,4 +1,5 @@
 using UnityEngine;
+using Antventure.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -13,15 +14,8 @@ public class PlayerController : MonoBehaviour
     private Animator antAnimator;
     private bool isMoving = false;
 
-    [Header("蓄力跳参数")]
-    public float minJumpForce = 4f;      // 最短按下的力度
-    public float maxJumpForce = 12f;     // 长按达到上限的力度
-    public float maxChargeTime = 0.8f;   // 按住超过这个时间，力度不再增长
-    public AnimationCurve chargeCurve = AnimationCurve.EaseInOut(0,0,1,1); // 可调曲线（前慢后快）
-
-    private bool isChargingJump;
-    private double chargeStartTime;
-
+    [Header("地面检测参数")]
+    public int groundContactCount = 0; // 记录与地面的接触数量
 
     [Header("拾取参数")]
     public Transform carryPoint;   // 背上挂载点
@@ -44,6 +38,9 @@ public class PlayerController : MonoBehaviour
     // 是否拿着物品
     public bool IsCarryingItem => carriedItem != null;
 
+    // 存储当前接触的地面物体
+    private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
+
 
     void Start()
     {
@@ -65,10 +62,36 @@ public class PlayerController : MonoBehaviour
             checkpointManager.AddComponent<CheckpointManager>();
         }
         
+        // Hide cursor during gameplay (third-person camera control)
+        Debug.Log("[PLAYER] Attempting to hide cursor for gameplay");
+        if (CursorManager.Instance != null)
+        {
+            Debug.Log("[PLAYER] CursorManager found, calling HideCursor()");
+            CursorManager.Instance.HideCursor();
+        }
+        else
+        {
+            Debug.LogWarning("[PLAYER] CursorManager.Instance is null! Using fallback cursor hiding");
+            // Fallback if CursorManager is not available
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
     }
 
     void Update()
     {
+        // Ensure cursor stays hidden during gameplay
+        if (Cursor.visible)
+        {
+            Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        
+        // 更新地面状态
+        UpdateGroundState();
+        
         // 处理跳跃输入
         HandleJump();
         HandlePickup();
@@ -115,6 +138,24 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
     }
 
+    void UpdateGroundState()
+    {
+        // 只要有至少一个地面接触，就认为在地面上
+        bool newGroundedState = groundContactCount > 0;
+        
+        // 如果刚刚落地，检测下落伤害
+        if (!isGrounded && newGroundedState)
+        {
+            float fallDistance = lastAirY - transform.position.y;
+            if (fallDistance > maxSafeFallDistance)
+            {
+                Die();
+            }
+        }
+        
+        isGrounded = newGroundedState;
+    }
+
     void HandleMovement()
     {
         // 获取键盘输入
@@ -158,35 +199,15 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        // 开始蓄力 - 检测是否按下空格键并且角色在地面上，同时没有携带物品且未在蓄力
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !isChargingJump && !IsCarryingItem)
+        // 检测是否按下空格键并且角色在地面上
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !IsCarryingItem)
         {
-            // ★ 记录：我正站在哪块石头上（供蜂蜜自救成功后返回）
-            GetComponent<RockTracker>()?.MarkJump();
-        
-            isChargingJump = true;
-            chargeStartTime = Time.timeAsDouble;
-        }
-    
-        // 释放起跳
-        if (Input.GetKeyUp(KeyCode.Space) && isChargingJump)
-        {
-            isChargingJump = false;
-    
-            // 计算按住时间（真实秒，与帧率无关）
-            double held = Time.timeAsDouble - chargeStartTime;
-            float t = Mathf.Clamp01((float)(held / maxChargeTime));
-            float k = chargeCurve.Evaluate(t);
-    
-            float force = Mathf.Lerp(minJumpForce, maxJumpForce, k);
-    
-            // 起跳前把竖直速度清零，避免叠加
-            Vector3 v = rb.linearVelocity;
-            v.y = 0f;
-            rb.linearVelocity = v;
-    
-            rb.AddForce(Vector3.up * force, ForceMode.Impulse);
+            // 应用向上的力来实现跳跃
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // 跳跃后立即设置为不在地面，防止连续跳跃
             isGrounded = false;
+            groundContactCount = 0;
+            groundContacts.Clear();
         }
     }
 
@@ -241,24 +262,21 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        // 检测与地面的碰撞
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Stove"))
         {
-            isGrounded = true;
-
-
-            // 计算落下高度
-            float fallDistance = lastAirY - transform.position.y;
-            // Debug.Log("lastAirY: " + lastAirY + ", fallDistance: " + fallDistance);
-            if (fallDistance > maxSafeFallDistance) // 阈值，单位根据场景调节
+            // 只有当这个地面物体不在列表中时才增加计数
+            if (!groundContacts.Contains(collision.gameObject))
             {
-                Die();
+                groundContacts.Add(collision.gameObject);
+                groundContactCount++;
+                Debug.Log($"Ground contact entered. Total contacts: {groundContactCount}");
             }
         }
 
-        // 检测与灶台的碰撞
-        else if (collision.gameObject.CompareTag("Stove"))
+        // 检测与灶台的碰撞（特殊处理）
+        if (collision.gameObject.CompareTag("Stove"))
         {
-            isGrounded = true;
             StoveDangerZone stove = collision.gameObject.GetComponent<StoveDangerZone>();
             if (stove != null)
             {
@@ -275,9 +293,16 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        // 检测离开地面
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Stove"))
         {
-            isGrounded = false;
+            // 如果这个地面物体在列表中，移除它
+            if (groundContacts.Contains(collision.gameObject))
+            {
+                groundContacts.Remove(collision.gameObject);
+                groundContactCount--;
+                Debug.Log($"Ground contact exited. Total contacts: {groundContactCount}");
+            }
         }
     }
 
@@ -305,6 +330,9 @@ public class PlayerController : MonoBehaviour
         // 重生前先放下物品
         DropItem();
         rb.linearVelocity = Vector3.zero; // 重置速度
+        // 重置地面接触
+        groundContacts.Clear();
+        groundContactCount = 0;
 
         // 使用存档点管理器获取最后一个激活的存档点位置
         Vector3 respawnPosition = CheckpointManager.Instance.GetLastRespawnPosition();
