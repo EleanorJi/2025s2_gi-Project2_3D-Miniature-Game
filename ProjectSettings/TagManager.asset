@@ -8,8 +8,6 @@ TagManager:
   - Pickup
   - Sugar
   - Stove
-  - Insect
-  - Cookie
   - Water
   layers:
   - Default
@@ -21,9 +19,9 @@ TagManager:
   - 
   - 
   - ButtonTrigger
-  - Player
-  - Insect
-  - Projectile
+  - 
+  - 
+  - 
   - 
   - 
   - 
