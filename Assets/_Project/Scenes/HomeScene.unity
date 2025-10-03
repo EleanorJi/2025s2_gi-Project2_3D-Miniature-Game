@@ -119,6 +119,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &143847248
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 143847250}
+  - component: {fileID: 143847249}
+  m_Layer: 0
+  m_Name: ButtonSetup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &143847249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143847248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f23f39536e8c0d7479265dc49f890d4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setupOnStart: 1
+--- !u!4 &143847250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 143847248}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1371.1213, y: 264.54364, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &262749634
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +439,7 @@ GameObject:
   - component: {fileID: 362571429}
   - component: {fileID: 362571431}
   - component: {fileID: 362571430}
+  - component: {fileID: 362571432}
   m_Layer: 5
   m_Name: ant
   m_TagString: Untagged
@@ -458,6 +504,65 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 362571428}
   m_CullTransparentMesh: 1
+--- !u!114 &362571432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362571428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dba40900825df48b066282fadbf585, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableAnimation: 1
+  animationSpeed: 1
+  enableBreathing: 1
+  breathingScale: 0.05
+  breathingSpeed: 2
+  enableIdleMovement: 1
+  movementRange: {x: 10, y: 5}
+  movementSpeed: 0.5
+  enableRotation: 0
+  maxRotation: 3
+  rotationSpeed: 1
+  enableColorPulse: 0
+  pulseColor: {r: 1, g: 1, b: 1, a: 1}
+  pulseSpeed: 1.5
+  pulseIntensity: 0.2
+  enableCrawling: 0
+  crawlStartPoint: {x: -100, y: 0}
+  crawlEndPoint: {x: 100, y: 0}
+  crawlDuration: 5
+  crawlLoop: 1
+  crawlCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  enableWalkingBob: 1
+  bobHeight: 3
+  bobSpeed: 8
 --- !u!1 &372640707
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,13 +759,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4515523052731344b365f9b3ccad6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstLevelSceneName: Level1
+  firstLevelSceneName: Level1-2
   tutorialSceneName: Tutorial
   uiAudioSource: {fileID: 0}
   clickSound: {fileID: 0}
   hoverSound: {fileID: 0}
-  customCursor: {fileID: 2800000, guid: 73492e0b9a7c30b49ad9d79d0e912b1c, type: 3}
-  cursorHotspot: {x: 0, y: 0}
 --- !u!4 &555656465
 Transform:
   m_ObjectHideFlags: 0
@@ -784,6 +887,55 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1001333497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1001333499}
+  - component: {fileID: 1001333498}
+  m_Layer: 0
+  m_Name: CursorManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1001333498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001333497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d36a355bb4a9d34db8cbe473335574c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handCursor: {fileID: 2800000, guid: 3d81401497e2c4a43a0eba3317d40ea0, type: 3}
+  defaultCursor: {fileID: 2800000, guid: 9ca07bac823785d479cb49c17fc8dbf5, type: 3}
+  useCustomCursors: 1
+  handHotspot: {x: 16, y: 16}
+  defaultHotspot: {x: 0, y: 0}
+--- !u!4 &1001333499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001333497}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1060.9062, y: 492.31116, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1078827103
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,3 +1514,5 @@ SceneRoots:
   - {fileID: 769390327}
   - {fileID: 1767800374}
   - {fileID: 555656465}
+  - {fileID: 1001333499}
+  - {fileID: 143847250}

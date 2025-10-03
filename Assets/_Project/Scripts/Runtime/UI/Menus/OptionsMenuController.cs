@@ -346,7 +346,7 @@ namespace Antventure.UI.Menus
             // Save all settings
             PlayerPrefs.Save();
             
-            Debug.Log("Settings applied and saved!");
+            UnityEngine.Debug.Log("Settings applied and saved!");
         }
 
         #endregion
@@ -461,3 +461,4 @@ namespace Antventure.UI.Menus
         }
     }
 }
+

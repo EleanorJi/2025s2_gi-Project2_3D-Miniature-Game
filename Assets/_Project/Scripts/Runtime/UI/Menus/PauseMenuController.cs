@@ -42,8 +42,18 @@ namespace Antventure.UI.Menus
 
         private void Update()
         {
-            // ESC key handling is now managed by UIManager to avoid conflicts
-            // This Update method is kept for potential future input handling
+            // Listen for ESC key to toggle pause state
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (isPaused)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    PauseGame();
+                }
+            }
         }
 
         /// <summary>
@@ -73,14 +83,12 @@ namespace Antventure.UI.Menus
         {
             if (isPaused) return;
 
-            Debug.Log("[PAUSE] Pausing game...");
             isPaused = true;
             Time.timeScale = 0f; // Pause game time
             
             if (pauseMenuPanel != null)
             {
                 pauseMenuPanel.SetActive(true);
-                Debug.Log("[PAUSE] Pause menu panel activated");
             }
 
             // Play pause sound effect
@@ -89,17 +97,15 @@ namespace Antventure.UI.Menus
             // Set cursor state - use CursorManager if available
             if (CursorManager.Instance != null)
             {
-                Debug.Log("[PAUSE] Using CursorManager to show cursor");
                 CursorManager.Instance.ShowCursor();
             }
             else
             {
-                Debug.Log("[PAUSE] Using fallback cursor show");
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
             }
 
-            Debug.Log("[PAUSE] Game paused successfully");
+            Debug.Log("Game Paused");
         }
 
         /// <summary>
@@ -109,14 +115,12 @@ namespace Antventure.UI.Menus
         {
             if (!isPaused) return;
 
-            Debug.Log("[PAUSE] Resuming game...");
             isPaused = false;
             Time.timeScale = 1f; // Resume game time
             
             if (pauseMenuPanel != null)
             {
                 pauseMenuPanel.SetActive(false);
-                Debug.Log("[PAUSE] Pause menu panel deactivated");
             }
 
             // Play resume sound effect
@@ -125,17 +129,15 @@ namespace Antventure.UI.Menus
             // Restore cursor state (adjust according to game needs)
             if (CursorManager.Instance != null)
             {
-                Debug.Log("[PAUSE] Using CursorManager to hide cursor");
                 CursorManager.Instance.HideCursor();
             }
             else
             {
-                Debug.Log("[PAUSE] Using fallback cursor hide");
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
 
-            Debug.Log("[PAUSE] Game resumed successfully");
+            Debug.Log("Game Resumed");
         }
 
         /// <summary>

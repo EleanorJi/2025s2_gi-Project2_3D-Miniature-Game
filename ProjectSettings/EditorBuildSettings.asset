@@ -10,11 +10,15 @@ EditorBuildSettings:
     guid: 06cbe14e58ef1404d920a5b1f51db1ff
   - enabled: 1
     path: Assets/_Project/Scenes/HomeScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 168757759009e514cbb229131a07f810
+  - enabled: 1
+    path: Assets/_Project/Scenes/Level1-2.unity
+    guid: 060bf255af5aa124187e208c2b9629eb
   - enabled: 1
     path: Assets/_Project/Scenes/Level1.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    guid: 01d51f4f91b020d4b860f20b44e169ed
   - enabled: 1
     path: Assets/_Project/Scenes/Tutorial.unity
-    guid: 550e8400e29b41d4a716446655440000
+    guid: fd1fbdc41cd39c34b8802495edfe3031
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
