@@ -41,6 +41,7 @@ public class PlayerController : MonoBehaviour
     // 存储当前接触的地面物体
     private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
 
+    private PlayerInputController inputController;
 
     void Start()
     {
@@ -60,6 +61,17 @@ public class PlayerController : MonoBehaviour
         {
             GameObject checkpointManager = new GameObject("CheckpointManager");
             checkpointManager.AddComponent<CheckpointManager>();
+        }
+
+        inputController = GetComponent<PlayerInputController>();
+        if (inputController == null)
+        {
+            Debug.LogError("PlayerInputController not found! Adding one...");
+            inputController = gameObject.AddComponent<PlayerInputController>();
+        }
+        else
+        {
+            Debug.Log("PlayerInputController found successfully");
         }
         
         // Hide cursor during gameplay (third-person camera control)
@@ -87,6 +99,12 @@ public class PlayerController : MonoBehaviour
             Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        if (inputController != null && !inputController.IsInputEnabled())
+        {
+            Debug.Log("输入被禁用，跳过玩家输入处理");
+            return;
         }
         
         // 更新地面状态
@@ -134,6 +152,11 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (inputController != null && !inputController.IsInputEnabled())
+        {
+            Debug.Log("输入被禁用，跳过玩家输入处理");
+            return;
+        }
         // 处理移动
         HandleMovement();
     }
@@ -158,6 +181,11 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
+        if (inputController != null && !inputController.IsInputEnabled())
+        {
+            Debug.Log("输入被禁用，跳过玩家输入处理");
+            return;
+        }
         // 获取键盘输入
         float horizontalInput = Input.GetAxis("Horizontal"); // A/D
         float verticalInput = Input.GetAxis("Vertical");     // W/S

@@ -35,7 +35,8 @@ public class CameraFollow : MonoBehaviour
     private float yaw = 0f;
     private float pitch = 10f;
     private bool isIntroPlaying = false;
-    private bool intro = false;
+    private bool intro = true;
+    public PlayerInputController playerInputController;
 
     void Start()
     {
@@ -55,11 +56,30 @@ public class CameraFollow : MonoBehaviour
         {
             Debug.LogWarning("缺少必要的路径点，请检查所有路径点是否已设置");
         }
+        // 确保输入控制器不为空
+        if (playerInputController == null)
+        {
+            playerInputController = FindObjectOfType<PlayerInputController>();
+            if (playerInputController == null)
+            {
+                Debug.LogError("未找到PlayerInputController！请检查设置。");
+            }
+            else
+            {
+                Debug.Log("通过FindObjectOfType找到PlayerInputController");
+            }
+        }
+        else
+        {
+            Debug.Log("PlayerInputController引用已设置");
+        }
     }
 
     IEnumerator PlayIntroAnimation()
     {
         isIntroPlaying = true;
+        // 禁用玩家输入
+        playerInputController.DisableInput();
 
         // 阶段1：起点 → 饼干
         transform.position = startPoint.position;
@@ -94,6 +114,8 @@ public class CameraFollow : MonoBehaviour
         
         // 最终过渡到玩家跟随视角
         yield return StartCoroutine(SmoothTransitionToPlayer());
+        // 重新启用玩家输入
+        playerInputController.EnableInput();
     }
     IEnumerator ContinuousMoveStage3To5(Vector3 stage3Start, Vector3 stage4Start, Vector3 stage4End, Vector3 stage5End, float totalTime)
     {
