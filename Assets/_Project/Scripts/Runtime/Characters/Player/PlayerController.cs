@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     private Animator antAnimator;
     private bool isMoving = false;
 
+    [Header("地面检测参数")]
+    public int groundContactCount = 0; // 记录与地面的接触数量
+
     [Header("拾取参数")]
     public Transform carryPoint;   // 背上挂载点
     public Transform dropPoint;    // 放下物品的位置参考点
@@ -34,6 +37,9 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     // 是否拿着物品
     public bool IsCarryingItem => carriedItem != null;
+
+    // 存储当前接触的地面物体
+    private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
 
 
     void Start()
@@ -83,6 +89,9 @@ public class PlayerController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
         }
         
+        // 更新地面状态
+        UpdateGroundState();
+        
         // 处理跳跃输入
         HandleJump();
         HandlePickup();
@@ -127,6 +136,24 @@ public class PlayerController : MonoBehaviour
     {
         // 处理移动
         HandleMovement();
+    }
+
+    void UpdateGroundState()
+    {
+        // 只要有至少一个地面接触，就认为在地面上
+        bool newGroundedState = groundContactCount > 0;
+        
+        // 如果刚刚落地，检测下落伤害
+        if (!isGrounded && newGroundedState)
+        {
+            float fallDistance = lastAirY - transform.position.y;
+            if (fallDistance > maxSafeFallDistance)
+            {
+                Die();
+            }
+        }
+        
+        isGrounded = newGroundedState;
     }
 
     void HandleMovement()
@@ -177,7 +204,10 @@ public class PlayerController : MonoBehaviour
         {
             // 应用向上的力来实现跳跃
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            // 跳跃后立即设置为不在地面，防止连续跳跃
             isGrounded = false;
+            groundContactCount = 0;
+            groundContacts.Clear();
         }
     }
 
@@ -232,24 +262,21 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        // 检测与地面的碰撞
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Stove"))
         {
-            isGrounded = true;
-
-
-            // 计算落下高度
-            float fallDistance = lastAirY - transform.position.y;
-            // Debug.Log("lastAirY: " + lastAirY + ", fallDistance: " + fallDistance);
-            if (fallDistance > maxSafeFallDistance) // 阈值，单位根据场景调节
+            // 只有当这个地面物体不在列表中时才增加计数
+            if (!groundContacts.Contains(collision.gameObject))
             {
-                Die();
+                groundContacts.Add(collision.gameObject);
+                groundContactCount++;
+                Debug.Log($"Ground contact entered. Total contacts: {groundContactCount}");
             }
         }
 
-        // 检测与灶台的碰撞
-        else if (collision.gameObject.CompareTag("Stove"))
+        // 检测与灶台的碰撞（特殊处理）
+        if (collision.gameObject.CompareTag("Stove"))
         {
-            isGrounded = true;
             StoveDangerZone stove = collision.gameObject.GetComponent<StoveDangerZone>();
             if (stove != null)
             {
@@ -266,9 +293,16 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        // 检测离开地面
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Stove"))
         {
-            isGrounded = false;
+            // 如果这个地面物体在列表中，移除它
+            if (groundContacts.Contains(collision.gameObject))
+            {
+                groundContacts.Remove(collision.gameObject);
+                groundContactCount--;
+                Debug.Log($"Ground contact exited. Total contacts: {groundContactCount}");
+            }
         }
     }
 
@@ -296,6 +330,9 @@ public class PlayerController : MonoBehaviour
         // 重生前先放下物品
         DropItem();
         rb.linearVelocity = Vector3.zero; // 重置速度
+        // 重置地面接触
+        groundContacts.Clear();
+        groundContactCount = 0;
 
         // 使用存档点管理器获取最后一个激活的存档点位置
         Vector3 respawnPosition = CheckpointManager.Instance.GetLastRespawnPosition();
