@@ -2,64 +2,139 @@ using UnityEngine;
 
 public class FireController : MonoBehaviour
 {
-    [Header("FireDownDistanceSetting")]
-    // 在Inspector中设置火焰要下降的距离
-    public float descentDistance = 2.0f;
-    // 下降的速度
-    public float descentSpeed = 1.0f;
+    [Header("Fire Shrink Settings")]
+    public float shrinkDuration = 2.0f;
+    public AnimationCurve shrinkCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
 
-    // 火焰的初始位置和目标位置
-    private Vector3 startPosition;
-    private Vector3 targetPosition;
+    [Header("Child Fire Settings")]
+    public bool shrinkFromBottomCenter = true;
 
-    // 一个标志位，控制是否开始下降
-    private bool shouldDescend = false;
+    private Transform[] fireChildren;
+    private Vector3[] childInitialPositions;
+    private Vector3[] childInitialScales;
+    private Bounds[] childInitialBounds;
 
-    // 添加公共属性来获取火焰状态
-    public bool IsDescending { get; private set; } = false;
-    public bool IsFullyDescended { get; private set; } = false;
+    private bool shouldShrink = false;
+    private float shrinkTimer = 0f;
+
+    public bool IsShrinking { get; private set; } = false;
+    public bool IsFullyShrunk { get; private set; } = false;
 
     void Start()
     {
-        // 记录火焰初始位置
-        startPosition = transform.position;
-        // 计算目标位置：初始位置向下移动一定距离
-        targetPosition = startPosition + Vector3.down * descentDistance;
+        InitializeChildFires();
     }
 
-    void Update()
+    void InitializeChildFires()
     {
-        // 如果应该下降，且还没有到达目标位置
-        if (shouldDescend && transform.position != targetPosition)
-        {
-            // 使用MoveTowards平滑地移动到目标位置
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, descentSpeed * Time.deltaTime);
+        int childCount = transform.childCount;
+        fireChildren = new Transform[childCount];
+        childInitialPositions = new Vector3[childCount];
+        childInitialScales = new Vector3[childCount];
+        childInitialBounds = new Bounds[childCount];
 
-            // 检查是否已经完全下降
-            if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
+        for (int i = 0; i < childCount; i++)
+        {
+            fireChildren[i] = transform.GetChild(i);
+            childInitialPositions[i] = fireChildren[i].localPosition;
+            childInitialScales[i] = fireChildren[i].localScale;
+            
+            // 计算每个子火焰的边界
+            Renderer renderer = fireChildren[i].GetComponent<Renderer>();
+            if (renderer != null)
             {
-                IsDescending = false;
-                IsFullyDescended = true;
+                childInitialBounds[i] = renderer.bounds;
             }
         }
     }
 
-    // 提供一个公共方法，让按钮可以调用它来开始下降
-    public void StartDescent()
+    void Update()
     {
-        shouldDescend = true;
-        IsDescending = true;
-        IsFullyDescended = false;
-        Debug.Log(gameObject.name + " 开始下降。");
+        if (shouldShrink && !IsFullyShrunk)
+        {
+            shrinkTimer += Time.deltaTime;
+            float progress = Mathf.Clamp01(shrinkTimer / shrinkDuration);
+            float scaleFactor = shrinkCurve.Evaluate(progress);
+            
+            for (int i = 0; i < fireChildren.Length; i++)
+            {
+                if (fireChildren[i] != null)
+                {
+                    if (shrinkFromBottomCenter)
+                    {
+                        // 从底部中心缩小
+                        ApplyBottomCenterShrink(fireChildren[i], i, scaleFactor);
+                    }
+                    else
+                    {
+                        // 普通缩小
+                        fireChildren[i].localScale = childInitialScales[i] * scaleFactor;
+                    }
+                }
+            }
+            
+            if (progress >= 1.0f)
+            {
+                IsShrinking = false;
+                IsFullyShrunk = true;
+                SetChildrenActive(false);
+            }
+        }
     }
 
-    // 提供一个公共方法，让按钮可以调用它来停止并复位（如果需要的话）
-    public void ResetPosition()
+    void ApplyBottomCenterShrink(Transform child, int index, float scaleFactor)
     {
-        shouldDescend = false;
-        IsDescending = false;
-        IsFullyDescended = false;
-        transform.position = startPosition;
-        Debug.Log(gameObject.name + " 复位。");
+        // 应用缩放
+        Vector3 newScale = childInitialScales[index] * scaleFactor;
+        child.localScale = newScale;
+
+        if (scaleFactor > 0)
+        {
+            // 计算位置偏移以保持底部固定
+            float heightDifference = childInitialScales[index].y - newScale.y;
+            Vector3 newPosition = childInitialPositions[index];
+            newPosition.y += heightDifference * 0.5f; // 向上移动一半的高度差
+            child.localPosition = newPosition;
+        }
+    }
+
+    public void StartShrink()
+    {
+        InitializeChildFires(); // 每次开始前重新初始化
+        shouldShrink = true;
+        IsShrinking = true;
+        IsFullyShrunk = false;
+        shrinkTimer = 0f;
+        SetChildrenActive(true);
+    }
+
+    public void ResetFire()
+    {
+        shouldShrink = false;
+        IsShrinking = false;
+        IsFullyShrunk = false;
+        shrinkTimer = 0f;
+        
+        for (int i = 0; i < fireChildren.Length; i++)
+        {
+            if (fireChildren[i] != null)
+            {
+                fireChildren[i].localPosition = childInitialPositions[i];
+                fireChildren[i].localScale = childInitialScales[i];
+            }
+        }
+        
+        SetChildrenActive(true);
+    }
+
+    private void SetChildrenActive(bool active)
+    {
+        foreach (Transform child in fireChildren)
+        {
+            if (child != null)
+            {
+                child.gameObject.SetActive(active);
+            }
+        }
     }
 }
