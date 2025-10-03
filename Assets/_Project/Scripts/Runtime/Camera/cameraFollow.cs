@@ -35,7 +35,7 @@ public class CameraFollow : MonoBehaviour
     private float yaw = 0f;
     private float pitch = 10f;
     private bool isIntroPlaying = false;
-    private bool intro = true;
+    private bool intro = false;
 
     void Start()
     {
