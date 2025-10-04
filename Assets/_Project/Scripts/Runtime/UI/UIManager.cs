@@ -20,6 +20,13 @@ namespace Antventure.UI
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private GameObject loadingScreen;
 
+        [Header("提示文字")]
+        [SerializeField] private GameObject hintTextPanel; // 新增：提示文字面板
+        [SerializeField] private Text hintText; // 新增：提示文字组件
+
+        [TextArea(3, 6)]
+        [SerializeField] private string stoveSaveHintText = "Stove now is save";
+
         [Header("UI Controllers")]
         [SerializeField] private OptionsMenuController optionsMenuController;
         [SerializeField] private PauseMenuController pauseMenuController;
@@ -120,6 +127,46 @@ namespace Antventure.UI
             string currentScene = SceneManager.GetActiveScene().name;
             return currentScene == "Level1" || currentScene == "Level1-2" || currentScene == "Tutorial";
         }
+        
+        /// <summary>
+        /// 显示提示文字
+        /// </summary>
+        public void ShowHintText(string text)
+        {
+            if (hintTextPanel != null && hintText != null)
+            {
+                hintText.text = text;
+                hintTextPanel.SetActive(true);
+            }
+        }
+
+        /// <summary>
+        /// 隐藏提示文字
+        /// </summary>
+        public void HideHintText()
+        {
+            if (hintTextPanel != null)
+            {
+                hintTextPanel.SetActive(false);
+            }
+        }
+
+        /// <summary>
+        /// 显示灶台安全提示
+        /// </summary>
+        public void ShowStoveSafeHint()
+        {
+            ShowHintText(stoveSaveHintText);
+            
+            // 5秒后自动隐藏提示
+            StartCoroutine(HideHintAfterDelay(5f));
+        }
+
+        private IEnumerator HideHintAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            HideHintText();
+        }
 
         #region Options Menu Methods
 
@@ -133,14 +180,14 @@ namespace Antventure.UI
                 optionsPanel.SetActive(true);
                 IsOptionsMenuOpen = true;
                 PlayMenuSound(menuOpenSound);
-                
+
                 // If in game, pause the game
                 if (IsInGameScene())
                 {
                     Time.timeScale = 0f;
                 }
             }
-            
+
             if (optionsMenuController != null)
             {
                 // Additional initialization logic can be added here
@@ -372,6 +419,8 @@ namespace Antventure.UI
             
             if (loadingScreen != null)
                 loadingScreen.SetActive(false);
+            if (hintTextPanel != null) // 新增
+                hintTextPanel.SetActive(false);
 
             IsOptionsMenuOpen = false;
             IsPauseMenuOpen = false;
