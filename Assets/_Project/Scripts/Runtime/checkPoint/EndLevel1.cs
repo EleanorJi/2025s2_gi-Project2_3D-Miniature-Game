@@ -1,9 +1,15 @@
 using UnityEngine;
+using System.Collections;
 
 public class EndLevel1 : MonoBehaviour
 {
     [Header("玩家设置")]
     public GameObject player; // 拖拽玩家对象到这里
+
+    [Header("相机转场设置")]
+    public Transform cameraEndPosition;    // 相机移动到的位置（空物体）
+    public Transform cameraLookAtTarget;   // 相机看向的位置（空物体）
+    public float transitionDuration = 2f;  // 转场时间
 
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
@@ -63,7 +69,50 @@ public class EndLevel1 : MonoBehaviour
             cameraFollow.SetCameraControl(false);
         }
         
+        // 启动相机转场协程
+        if (cameraEndPosition != null && cameraLookAtTarget != null)
+        {
+            StartCoroutine(CameraTransition());
+        }
+        else
+        {
+            Debug.LogWarning("相机转场目标位置未设置，跳过转场动画");
+        }
+        
         // 这里可以添加其他结束关卡的逻辑
         // 比如播放动画、显示UI等
+    }
+
+    IEnumerator CameraTransition()
+    {
+        float timer = 0f;
+        Vector3 startPosition = cameraFollow.transform.position;
+        Quaternion startRotation = cameraFollow.transform.rotation;
+
+        // 计算目标旋转：看向目标位置
+        Vector3 lookDirection = cameraLookAtTarget.position - cameraEndPosition.position;
+        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
+
+        while (timer < transitionDuration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, timer / transitionDuration);
+
+            // 平滑移动位置
+            cameraFollow.transform.position = Vector3.Lerp(startPosition, cameraEndPosition.position, t);
+            
+            // 平滑旋转视角
+            cameraFollow.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
+
+            yield return null;
+        }
+
+        // 确保最终位置和旋转准确
+        cameraFollow.transform.position = cameraEndPosition.position;
+        cameraFollow.transform.rotation = targetRotation;
+
+        Debug.Log("相机转场完成");
+        
+        // 这里可以继续播放其他结束动画或显示UI
     }
 }
