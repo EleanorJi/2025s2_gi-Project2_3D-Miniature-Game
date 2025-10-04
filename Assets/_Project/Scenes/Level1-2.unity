@@ -9342,7 +9342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34520f814d576f49a2fc55e6c7f7074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodInterval: 2
+  nodInterval: 10
 --- !u!95 &807850987
 Animator:
   serializedVersion: 7
