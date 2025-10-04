@@ -7,48 +7,73 @@ using System.Collections;
 public class StickyGooMashR : MonoBehaviour
 {
     [Header("规则")]
-    public int requiredPresses = 15;     // 需要按R次数
-    public float timeLimit = 8f;         // 倒计时（秒）
-    public int instantDeathOnNth = 3;    // 第N次落入直接死亡
+    public int requiredPresses = 15;
+    public float timeLimit = 8f;
 
-    [Header("UI（圆环+竖条）")]
-    public CanvasGroup ringGroup;        // 面板整体（CanvasGroup）
-    public Image ringFill;               // 圆环 Image（Type=Filled, Radial360）
-    public Image timerFill;              // 竖条 Image（Type=Filled, Vertical, Origin=Top）
-    public TMP_Text tipText;             // 文本（可空）
+    [Header("第 N 次进入蜂蜜直接死亡")]
+    public int instantDeathOnNth = 3;
 
-    [Header("回到哪")]
-    public float upOffset = 0.8f;        // 回石头时上抬
-    public Transform smallLevelStart;    // 本小关起始石头的 RespawnAnchor（第一块石头）
+    [Header("计数范围")]
+    public bool useGlobalCounter = true;
 
-    [Header("冻结方式")]
+    [Header("UI")]
+    public CanvasGroup ringGroup;
+    public Image ringFill;   // Filled/Radial360
+    public Image timerFill;  // Filled/Vertical Origin=Top
+    public TMP_Text tipText;
+
+    [Header("成功自救：回上一块石头")]
+    public float upOffset = 0.8f;
+    public Transform smallLevelStart = null; // 留空：失败/第N次走 pc.Die()
+
+    [Header("按键")]
+    public KeyCode mashKey = KeyCode.J;
+
+    [Header("冻结")]
     public bool setKinematicWhileStuck = true;
     public bool zeroVelocityWhileStuck = true;
 
-    private bool busy;
-    private int stuckTimes = 0;          // 累计落入次数（跨本局）
-    private PlayerController pc;
-    private RockTracker tracker;
-    private Rigidbody prb;
-    private float cachedSpeed;
-    private bool cachedKinematic;
+    // —— 内部 ——
+    bool busy;
+    PlayerController pc;
+    RockTracker tracker;
+    Rigidbody rb;
+    float cachedSpeed;
+    bool cachedKinematic;
+
+    int localTimes = 0;
+    static int globalTimes = 0;
 
     void Reset() { GetComponent<Collider>().isTrigger = true; }
+    void Awake() { ShowUI(false); }
+    void OnEnable(){ ShowUI(false); }
+
+    // 外部（如重生点触发器）可调用：StickyGooMashR.ResetGlobalHoneyCounter();
+    public static void ResetGlobalHoneyCounter() { globalTimes = 0; }
+    public void ResetLocalHoneyCounter() { localTimes = 0; }
+
+    int  Cnt()      => useGlobalCounter ? globalTimes : localTimes;
+    void SetCnt(int v){ if (useGlobalCounter) globalTimes = v; else localTimes = v; }
+    int  Inc()      { int v = Cnt() + 1; SetCnt(v); return v; }
 
     void OnTriggerEnter(Collider other)
     {
         if (busy) return;
-        if (!other.CompareTag("Player")) return;
 
-        pc = other.GetComponent<PlayerController>();
-        tracker = other.GetComponent<RockTracker>();
-        prb = other.GetComponent<Rigidbody>();
-        if (!pc || !prb) return;
+        var root = other.attachedRigidbody ? other.attachedRigidbody.transform : other.transform;
+        if (!root.CompareTag("Player")) return;
 
-        stuckTimes++;
-        if (instantDeathOnNth > 0 && stuckTimes >= instantDeathOnNth) {
-            FailToStart(); return;
-        }
+        pc      = root.GetComponent<PlayerController>();
+        tracker = root.GetComponent<RockTracker>();
+        rb      = root.GetComponent<Rigidbody>();
+        if (!pc || !rb) return;
+
+        // 若还没“上一块”而此刻踩在石头上，补一次
+        if (tracker && tracker.lastJumpFromRock == null && tracker.currentRock != null)
+            tracker.MarkJump();
+
+        int times = Inc();                 // 1,2,3...
+        if (instantDeathOnNth > 0 && times >= instantDeathOnNth) { Die(true); return; }
 
         StartCoroutine(MashRoutine());
     }
@@ -56,82 +81,88 @@ public class StickyGooMashR : MonoBehaviour
     IEnumerator MashRoutine()
     {
         busy = true;
+
         // 冻结
         cachedSpeed = pc.moveSpeed; pc.moveSpeed = 0f;
-        cachedKinematic = prb.isKinematic; if (setKinematicWhileStuck) prb.isKinematic = true;
-        if (zeroVelocityWhileStuck) { prb.linearVelocity = Vector3.zero; prb.angularVelocity = Vector3.zero; }
+        cachedKinematic = rb.isKinematic;
+        if (setKinematicWhileStuck) rb.isKinematic = true;
+        if (zeroVelocityWhileStuck) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
 
-        // UI 出现
-        if (ringGroup) ringGroup.alpha = 1f;
-        if (ringFill)  ringFill.fillAmount = 0f;
+        // UI
+        if (tipText) tipText.text = $"MASH {mashKey} TO ESCAPE";
+        if (ringFill) ringFill.fillAmount = 0f;
         if (timerFill) timerFill.fillAmount = 1f;
-        if (tipText)   tipText.text = "MASH R TO ESCAPE";
+        ShowUI(true);
 
-        int presses = 0;
-        float remain = timeLimit;
-
-        while (remain > 0f && presses < requiredPresses)
+        int presses = 0; float t = timeLimit;
+        while (t > 0f && presses < requiredPresses)
         {
-            remain -= Time.deltaTime;
-
-            if (Input.GetKeyDown(KeyCode.R)) {
+            t -= Time.deltaTime;
+            if (Input.GetKeyDown(mashKey))
+            {
                 presses++;
                 if (ringFill) ringFill.fillAmount = (float)presses / requiredPresses;
             }
-            if (timerFill) timerFill.fillAmount = Mathf.Clamp01(remain / timeLimit);
+            if (timerFill) timerFill.fillAmount = Mathf.Clamp01(t / timeLimit);
 
             if (zeroVelocityWhileStuck && !setKinematicWhileStuck)
-                prb.linearVelocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
 
             yield return null;
         }
 
-        // UI 收起
-        if (ringGroup) ringGroup.alpha = 0f;
-        if (ringFill)  ringFill.fillAmount = 0f;
+        ShowUI(false);
 
-        // 成功 or 失败
-        if (presses >= requiredPresses) SucceedToLastRock();
-        else FailToStart();
+        if (presses >= requiredPresses) TeleportToLastRock();
+        else                            Die(true);
 
         // 解冻
-        if (setKinematicWhileStuck) prb.isKinematic = cachedKinematic;
+        if (setKinematicWhileStuck) rb.isKinematic = cachedKinematic;
         pc.moveSpeed = cachedSpeed;
         busy = false;
     }
 
-    void SucceedToLastRock()
+    void TeleportToLastRock()
     {
-        // 回“起跳时的上一块石头”
-        Vector3 target = prb.position;
-        Transform anchor = null;
-
         var rock = tracker ? tracker.lastJumpFromRock : null;
-        if (rock && rock.respawnAnchor) anchor = rock.respawnAnchor;
-        else if (rock) { // 无锚点则用碰撞体顶面
+        if (rock == null) return;
+
+        Vector3 target = rb.position;
+        if (rock.respawnAnchor)
+            target = rock.respawnAnchor.position + Vector3.up * 0.02f;
+        else
+        {
             var col = rock.GetComponentInChildren<Collider>();
             if (col) target = col.bounds.center + Vector3.up * (col.bounds.extents.y + upOffset);
         }
 
-        if (anchor) target = anchor.position + Vector3.up * 0.02f;
-
-        // 传送
-        bool temp = prb.isKinematic; prb.isKinematic = true;
-        prb.position = target; prb.linearVelocity = Vector3.zero; prb.angularVelocity = Vector3.zero;
-        prb.isKinematic = temp;
+        bool keepK = rb.isKinematic; rb.isKinematic = true;
+        rb.position = target;
+        rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = keepK;
     }
 
-    void FailToStart()
+    void Die(bool resetCounter)
     {
-        // 失败/第N次：回本小关起点或用你的 Die()
-        if (smallLevelStart) {
-            bool temp = prb.isKinematic; prb.isKinematic = true;
-            prb.position = smallLevelStart.position + Vector3.up * 0.02f;
-            prb.linearVelocity = Vector3.zero; prb.angularVelocity = Vector3.zero;
-            prb.isKinematic = temp;
-            // 也可在这儿触发“死亡动画/GIF”
-        } else {
-            pc.Die();
+        ShowUI(false);
+
+        if (smallLevelStart)    // 你要“回区域重生点（第一块石头）”
+        {
+            bool keepK = rb.isKinematic; rb.isKinematic = true;
+            rb.position = smallLevelStart.position + Vector3.up * 0.02f;
+            rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+            rb.isKinematic = keepK;
         }
+        else pc.Die();          // 或走你们全局 Checkpoint
+
+        if (resetCounter) SetCnt(0); // 死亡后重新给两次机会
+    }
+
+    void ShowUI(bool show)
+    {
+        if (!ringGroup) return;
+        ringGroup.alpha = show ? 1f : 0f;
+        ringGroup.blocksRaycasts = false;
+        ringGroup.interactable = false;
     }
 }
