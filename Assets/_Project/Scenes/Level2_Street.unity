@@ -4242,6 +4242,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActivated: 0
   canReactivate: 0
+  hintText: "\u8BF7\u8F93\u5165\u63D0\u793A\u6587\u5B57"
+  autoHideDelay: 5
+  showHintOnActivation: 1
 --- !u!1 &328485235
 GameObject:
   m_ObjectHideFlags: 0
@@ -21151,6 +21154,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActivated: 0
   canReactivate: 0
+  hintText: "\u8BF7\u8F93\u5165\u63D0\u793A\u6587\u5B57"
+  autoHideDelay: 5
+  showHintOnActivation: 1
 --- !u!1 &1145363807 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2602975220198116835, guid: 10038933d2c22814dbaff12551a38547, type: 3}
@@ -33280,7 +33286,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.1
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -33333,21 +33339,6 @@ MonoBehaviour:
   mouseSensitivity: 3
   minPitch: -35
   maxPitch: 60
-  startPoint: {fileID: 0}
-  cookiePosition: {fileID: 0}
-  endPoint: {fileID: 0}
-  connerA: {fileID: 0}
-  connerB: {fileID: 0}
-  returnPoint: {fileID: 0}
-  startToCookieRotateTime: 1
-  startToCookieMoveTime: 3
-  cookieStayTime: 1
-  cookieToSecondTime: 2
-  secondToThirdATime: 5
-  thirdCurveTime: 3
-  thirdToReturnTime: 5
-  returnToPlayerTime: 1
-  downwardAngle: 45
 --- !u!1001 &1707721641
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39456,6 +39447,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActivated: 0
   canReactivate: 0
+  hintText: "\u8BF7\u8F93\u5165\u63D0\u793A\u6587\u5B57"
+  autoHideDelay: 5
+  showHintOnActivation: 1
 --- !u!65 &2110696525
 BoxCollider:
   m_ObjectHideFlags: 0
