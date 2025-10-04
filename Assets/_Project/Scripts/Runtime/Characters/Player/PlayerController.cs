@@ -4,53 +4,51 @@ using Antventure.UI;
 public class PlayerController : MonoBehaviour
 {
     [Header("移动与跳跃参数")]
-    // 移动速度
     public float moveSpeed = 5f;
-    // 跳跃力度
     public float jumpForce = 7f;
     private float startThreshold = 0.1f;
     private float stopThreshold = 0.3f;
+    
     // 动画控制
     private Animator antAnimator;
     private bool isMoving = false;
 
     [Header("地面检测参数")]
-    public int groundContactCount = 0; // 记录与地面的接触数量
+    public int groundContactCount = 0;
 
     [Header("拾取参数")]
-    public Transform carryPoint;   // 背上挂载点
-    public Transform dropPoint;    // 放下物品的位置参考点
+    public Transform carryPoint;
+    public Transform dropPoint;
     private GameObject carriedItem;
     private GameObject nearbyItem;
 
     [Header("死亡与重生参数")]
-    public float maxSafeFallDistance = 5f; // 下落速度阈值
-    public Transform respawnPoint;           // 存档点
-    private float lastAirY;   // 玩家上一次离开地面时的Y
-    private bool wasGrounded; // 用于检测刚刚落地
+    public float maxSafeFallDistance = 5f;
+    public Transform respawnPoint;
+    private float lastAirY;
+    private bool wasGrounded;
 
-    // 引用刚体组件
+    // 组件引用
     private Rigidbody rb;
-    // 引用主摄像机
     private Camera mainCamera;
-    // 是否在地面上
     private bool isGrounded;
-    // 是否拿着物品
     public bool IsCarryingItem => carriedItem != null;
 
-    // 存储当前接触的地面物体
-    private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
+    // 输入缓存（在Update中读取，在FixedUpdate中使用）
+    private float horizontalInput;
+    private float verticalInput;
+    private bool jumpInput;
+    private bool pickupInput;
 
+    private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
     private PlayerInputController inputController;
 
     void Start()
     {
-        // 获取组件
         rb = GetComponent<Rigidbody>();
-        mainCamera = Camera.main; // 获取主摄像机
-
-        // 获取子物体（蚂蚁模型）上的Animator组件
+        mainCamera = Camera.main;
         antAnimator = GetComponentInChildren<Animator>();
+        
         if (antAnimator == null)
         {
             Debug.LogError("Animator not found on ant model!");
@@ -69,31 +67,22 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("PlayerInputController not found! Adding one...");
             inputController = gameObject.AddComponent<PlayerInputController>();
         }
-        else
-        {
-            Debug.Log("PlayerInputController found successfully");
-        }
         
-        // Hide cursor during gameplay (third-person camera control)
-        Debug.Log("[PLAYER] Attempting to hide cursor for gameplay");
+        // 隐藏光标
         if (CursorManager.Instance != null)
         {
-            Debug.Log("[PLAYER] CursorManager found, calling HideCursor()");
             CursorManager.Instance.HideCursor();
         }
         else
         {
-            Debug.LogWarning("[PLAYER] CursorManager.Instance is null! Using fallback cursor hiding");
-            // Fallback if CursorManager is not available
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
         }
-        
     }
 
     void Update()
     {
-        // Ensure cursor stays hidden during gameplay
+        // 确保光标隐藏
         if (Cursor.visible)
         {
             Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
@@ -103,38 +92,23 @@ public class PlayerController : MonoBehaviour
 
         if (inputController != null && !inputController.IsInputEnabled())
         {
-            Debug.Log("输入被禁用，跳过玩家输入处理");
+            // Debug.Log("输入被禁用，跳过玩家输入处理");
+            // 控制动画
+            StopMovement();
             return;
         }
         
+        // 读取输入（在Update中）
+        horizontalInput = Input.GetAxis("Horizontal");
+        verticalInput = Input.GetAxis("Vertical");
+        jumpInput = Input.GetKeyDown(KeyCode.Space);
+        pickupInput = Input.GetKeyDown(KeyCode.C);
+
+        // 更新移动状态（用于动画）
+        UpdateMovementState();
+        
         // 更新地面状态
         UpdateGroundState();
-        
-        // 处理跳跃输入
-        HandleJump();
-        HandlePickup();
-
-        // 检测移动输入
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        // 如果正在移动，检查是否应该停止；如果停止，检查是否应该开始
-        if (isMoving)
-        {
-            // 只有当输入很小的时候才停止
-            isMoving = Mathf.Abs(horizontalInput) > stopThreshold || Mathf.Abs(verticalInput) > stopThreshold;
-        }
-        else
-        {
-            // 只要有轻微输入就开始
-            isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;
-        }
-
-        // 控制动画
-        if (antAnimator != null)
-        {
-            antAnimator.SetBool("IsMoving", isMoving);
-            // Debug.Log($"IsMoving: {isMoving}, Horizontal: {horizontalInput}, Vertical: {verticalInput}");
-        }
 
         // 记录离开地面瞬间的高度
         if (!isGrounded && wasGrounded)
@@ -143,7 +117,7 @@ public class PlayerController : MonoBehaviour
         }
         wasGrounded = isGrounded;
 
-        // 调试：按R键显示当前激活的存档点
+        // 调试：按R键死亡
         if (Input.GetKeyDown(KeyCode.R))
         {
             Die();
@@ -154,19 +128,39 @@ public class PlayerController : MonoBehaviour
     {
         if (inputController != null && !inputController.IsInputEnabled())
         {
-            Debug.Log("输入被禁用，跳过玩家输入处理");
+            StopMovement();
             return;
         }
-        // 处理移动
+        
+        // 处理移动和跳跃（在FixedUpdate中）
         HandleMovement();
+        HandleJump();
+        HandlePickup();
+    }
+
+    void UpdateMovementState()
+    {
+        // 更新移动状态用于动画
+        if (isMoving)
+        {
+            isMoving = Mathf.Abs(horizontalInput) > stopThreshold || Mathf.Abs(verticalInput) > stopThreshold;
+        }
+        else
+        {
+            isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;
+        }
+
+        // 控制动画
+        if (antAnimator != null)
+        {
+            antAnimator.SetBool("IsMoving", isMoving);
+        }
     }
 
     void UpdateGroundState()
     {
-        // 只要有至少一个地面接触，就认为在地面上
         bool newGroundedState = groundContactCount > 0;
         
-        // 如果刚刚落地，检测下落伤害
         if (!isGrounded && newGroundedState)
         {
             float fallDistance = lastAirY - transform.position.y;
@@ -181,26 +175,15 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
-        if (inputController != null && !inputController.IsInputEnabled())
-        {
-            Debug.Log("输入被禁用，跳过玩家输入处理");
-            return;
-        }
-        // 获取键盘输入
-        float horizontalInput = Input.GetAxis("Horizontal"); // A/D
-        float verticalInput = Input.GetAxis("Vertical");     // W/S
-
         // 基于摄像机方向计算移动方向
         Vector3 cameraForward = mainCamera.transform.forward;
         Vector3 cameraRight = mainCamera.transform.right;
 
-        // 忽略摄像机的Y分量
         cameraForward.y = 0f;
         cameraRight.y = 0f;
         cameraForward.Normalize();
         cameraRight.Normalize();
 
-        // 计算移动方向
         Vector3 movement = (cameraForward * verticalInput) + (cameraRight * horizontalInput);
 
         if (movement.magnitude > 1f)
@@ -208,13 +191,8 @@ public class PlayerController : MonoBehaviour
             movement.Normalize();
         }
 
-        // 应用移动速度
         movement *= moveSpeed;
-
-        // 保留Y速度（重力 & 跳跃）
         movement.y = rb.linearVelocity.y;
-
-        // 设置刚体速度
         rb.linearVelocity = movement;
 
         // 让角色面向移动方向
@@ -227,12 +205,9 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        // 检测是否按下空格键并且角色在地面上
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !IsCarryingItem)
+        if (jumpInput && isGrounded && !IsCarryingItem)
         {
-            // 应用向上的力来实现跳跃
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            // 跳跃后立即设置为不在地面，防止连续跳跃
             isGrounded = false;
             groundContactCount = 0;
             groundContacts.Clear();
@@ -241,7 +216,7 @@ public class PlayerController : MonoBehaviour
 
     void HandlePickup()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (pickupInput)
         {
             if (carriedItem == null && nearbyItem != null)
             {
@@ -260,6 +235,29 @@ public class PlayerController : MonoBehaviour
                 DropItem();
             }
         }
+    }
+    // 强制设置为空闲状态
+    void ForceIdleState()
+    {
+        // 重置移动状态
+        isMoving = false;
+        
+        // 更新动画
+        if (antAnimator != null)
+        {
+            antAnimator.SetBool("IsMoving", false);
+        }
+    }
+
+    //停止物理移动
+    void StopMovement()
+    {
+        // 保持Y轴速度（重力），但停止水平移动
+        Vector3 currentVelocity = rb.linearVelocity;
+        rb.linearVelocity = new Vector3(0f, currentVelocity.y, 0f);
+        
+        // 确保动画状态正确
+        ForceIdleState();
     }
 
     // 放下物品的方法，会放到玩家前面
