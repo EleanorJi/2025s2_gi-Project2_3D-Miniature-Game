@@ -22,6 +22,10 @@ public class CameraFollow : MonoBehaviour
     public float Yaw => yaw;
     public float Pitch => pitch;
 
+    // 新增：锁定垂直视角用
+    bool _lockPitch = false;
+    float _lockedPitchValue = 0f;
+
     void Start()
     {
         if (target != null)
@@ -38,8 +42,16 @@ public class CameraFollow : MonoBehaviour
 
         // 鼠标输入控制
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
-        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        
+        if (_lockPitch)
+        {
+            pitch = _lockedPitchValue;
+        }
+        else
+        {
+            pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        }
 
         // 计算目标位置和旋转
         Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
@@ -48,6 +60,15 @@ public class CameraFollow : MonoBehaviour
         // 平滑移动
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         transform.LookAt(target);
+    }
+
+    public void SetPitchLock(bool locked, float pitchValue = 0f)
+    {
+        _lockPitch = locked;
+        if (_lockPitch)
+        {
+            _lockedPitchValue = pitchValue;
+        }
     }
 
     public void SetCameraControl(bool enabled)
