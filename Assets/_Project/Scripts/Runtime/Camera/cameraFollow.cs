@@ -37,6 +37,10 @@ public class CameraFollow : MonoBehaviour
     private bool isIntroPlaying = false;
     private bool intro = true;
 
+    // 新增：锁定垂直视角用
+    bool _lockPitch = false;
+    float _lockedPitchValue = 0f;
+
     void Start()
     {
         if (target != null)
@@ -281,14 +285,31 @@ public class CameraFollow : MonoBehaviour
         if (target == null || isIntroPlaying) return;
 
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
-        pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
-        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        
+        if (_lockPitch)
+        {
+            pitch = _lockedPitchValue;
+        }
+        else
+        {
+            pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+            pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+        }
 
         Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
         Vector3 desiredPosition = target.position + rotation * offset;
 
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         transform.LookAt(target);
+    }
+
+    public void SetPitchLock(bool locked, float pitchValue = 0f)
+    {
+        _lockPitch = locked;
+        if (_lockPitch)
+        {
+            _lockedPitchValue = pitchValue;
+        }
     }
     
     // ===================调试函数，下面均可删======================
