@@ -21,14 +21,14 @@ public class AutoNod : MonoBehaviour
             // 等待指定的间隔时间
             yield return new WaitForSeconds(nodInterval);
 
-            // 只有当前不飞行的时候才点头
-            bool isFlying = animator.GetBool("IsFlying");
-            if (!isFlying)
+            // 只有当前不是end的时候才点头
+            bool isEnd = animator.GetBool("IsEnd");
+            if (!isEnd)
             {
                 // 触发DoNod参数，播放点头动画
                 animator.SetTrigger("DoNod");
             }
-            // 如果正在飞行，就跳过这次点头，等待下一个周期
+            // 如果已经结束，就跳过这次点头，等待下一个周期
         }
     }
 }

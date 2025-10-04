@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: nodding
+  m_Name: Nodding
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -19,7 +19,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 2.646, y: 2.449, z: 0.216}
+        value: {x: 2.646, y: 2.449, z: 7.729}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -27,62 +27,71 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.15
-        value: {x: 2.646, y: 2.449, z: -14.693}
-        inSlope: {x: 0, y: 0, z: -103.102104}
-        outSlope: {x: 0, y: 0, z: -103.102104}
+        time: 0.11666667
+        value: {x: 2.646, y: 2.449, z: -7.766}
+        inSlope: {x: 0, y: 0, z: -203.25}
+        outSlope: {x: 0, y: 0, z: -203.25}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.31666666
-        value: {x: 2.646, y: 2.449, z: -32.433}
-        inSlope: {x: 0, y: 0, z: -99.5179}
-        outSlope: {x: 0, y: 0, z: -99.5179}
+        time: 0.23333333
+        value: {x: 2.646, y: 2.449, z: -39.696}
+        inSlope: {x: 0, y: 0, z: -284.81998}
+        outSlope: {x: 0, y: 0, z: -284.81998}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.46666667
-        value: {x: 2.646, y: 2.449, z: -46.207}
-        inSlope: {x: 0, y: 0, z: -125.21667}
-        outSlope: {x: 0, y: 0, z: -125.21667}
+        time: 0.33333334
+        value: {x: 2.646, y: 2.449, z: -69.477}
+        inSlope: {x: 0, y: 0, z: -205.07999}
+        outSlope: {x: 0, y: 0, z: -205.07999}
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+      - serializedVersion: 3
+        time: 0.43333334
+        value: {x: 2.646, y: 2.449, z: -80.712}
+        inSlope: {x: 0, y: 0, z: 0}
+        outSlope: {x: 0, y: 0, z: 0}
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+      - serializedVersion: 3
+        time: 0.53333336
+        value: {x: 2.646, y: 2.449, z: -58.884}
+        inSlope: {x: 0, y: 0, z: 235.31453}
+        outSlope: {x: 0, y: 0, z: 235.31453}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.6166667
-        value: {x: 2.646, y: 2.449, z: -69.998}
-        inSlope: {x: 0, y: 0, z: 0}
-        outSlope: {x: 0, y: 0, z: 0}
+        value: {x: 2.646, y: 2.449, z: -37.571}
+        inSlope: {x: 0, y: 0, z: 226.17825}
+        outSlope: {x: 0, y: 0, z: 226.17825}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.76666665
-        value: {x: 2.646, y: 2.449, z: -43.02}
-        inSlope: {x: 0, y: 0, z: 145.88525}
-        outSlope: {x: 0, y: 0, z: 145.88525}
+        time: 0.71666664
+        value: {x: 2.646, y: 2.449, z: -17.418}
+        inSlope: {x: 0, y: 0, z: 177.69502}
+        outSlope: {x: 0, y: 0, z: 177.69502}
         tangentMode: 0
         weightedMode: 0
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 0.93333334
-        value: {x: 2.646, y: 2.449, z: -23.801}
-        inSlope: {x: 0, y: 0, z: 130.90735}
-        outSlope: {x: 0, y: 0, z: 130.90735}
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
-        outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
-      - serializedVersion: 3
-        time: 1.0833334
-        value: {x: 2.646, y: 2.449, z: -1.566}
+        time: 0.81666666
+        value: {x: 2.646, y: 2.449, z: -2.032}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -92,7 +101,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
   m_PositionCurves: []
   m_ScaleCurves: []
   m_FloatCurves: []
@@ -105,7 +114,7 @@ AnimationClip:
   m_ClipBindingConstant:
     genericBindings:
     - serializedVersion: 2
-      path: 858374890
+      path: 4007816474
       attribute: 4
       script: {fileID: 0}
       typeID: 4
@@ -119,7 +128,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 1.0833334
+    m_StopTime: 0.81666666
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -149,7 +158,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.15
+        time: 0.11666667
         value: 2.646
         inSlope: 0
         outSlope: 0
@@ -158,7 +167,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.31666666
+        time: 0.23333333
         value: 2.646
         inSlope: 0
         outSlope: 0
@@ -167,7 +176,25 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.46666667
+        time: 0.33333334
+        value: 2.646
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.43333334
+        value: 2.646
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.53333336
         value: 2.646
         inSlope: 0
         outSlope: 0
@@ -185,7 +212,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.76666665
+        time: 0.71666664
         value: 2.646
         inSlope: 0
         outSlope: 0
@@ -194,16 +221,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.93333334
-        value: 2.646
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
+        time: 0.81666666
         value: 2.646
         inSlope: 0
         outSlope: 0
@@ -215,7 +233,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.x
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -233,7 +251,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.15
+        time: 0.11666667
         value: 2.449
         inSlope: 0
         outSlope: 0
@@ -242,7 +260,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.31666666
+        time: 0.23333333
         value: 2.449
         inSlope: 0
         outSlope: 0
@@ -251,7 +269,25 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.46666667
+        time: 0.33333334
+        value: 2.449
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.43333334
+        value: 2.449
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.53333336
         value: 2.449
         inSlope: 0
         outSlope: 0
@@ -269,7 +305,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.76666665
+        time: 0.71666664
         value: 2.449
         inSlope: 0
         outSlope: 0
@@ -278,16 +314,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.93333334
-        value: 2.449
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
+        time: 0.81666666
         value: 2.449
         inSlope: 0
         outSlope: 0
@@ -299,7 +326,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.y
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -309,7 +336,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.216
+        value: 7.729
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -317,62 +344,71 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.15
-        value: -14.693
-        inSlope: -103.102104
-        outSlope: -103.102104
+        time: 0.11666667
+        value: -7.766
+        inSlope: -203.25
+        outSlope: -203.25
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.31666666
-        value: -32.433
-        inSlope: -99.5179
-        outSlope: -99.5179
+        time: 0.23333333
+        value: -39.696
+        inSlope: -284.81998
+        outSlope: -284.81998
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.46666667
-        value: -46.207
-        inSlope: -125.21667
-        outSlope: -125.21667
+        time: 0.33333334
+        value: -69.477
+        inSlope: -205.07999
+        outSlope: -205.07999
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.43333334
+        value: -80.712
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.53333336
+        value: -58.884
+        inSlope: 235.31453
+        outSlope: 235.31453
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.6166667
-        value: -69.998
-        inSlope: 0
-        outSlope: 0
+        value: -37.571
+        inSlope: 226.17825
+        outSlope: 226.17825
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.76666665
-        value: -43.02
-        inSlope: 145.88525
-        outSlope: 145.88525
+        time: 0.71666664
+        value: -17.418
+        inSlope: 177.69502
+        outSlope: 177.69502
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 0.93333334
-        value: -23.801
-        inSlope: 130.90735
-        outSlope: 130.90735
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 1.0833334
-        value: -1.566
+        time: 0.81666666
+        value: -2.032
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -383,7 +419,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAnglesRaw.z
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
     classID: 4
     script: {fileID: 0}
     flags: 16
@@ -396,7 +432,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -408,7 +444,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -420,7 +456,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
+    path: pigeon/Sketchfab_model/100395bd0b7947f789b70e6b512dd8c5.fbx/Object_2/RootNode/Object_4/_rootJoint/Root_01/Bip01_02/Bip01Pelvis_03/Bip01Spine_04/Bip01Spine1_019/Bip01Spine2_020
     classID: 4
     script: {fileID: 0}
     flags: 0

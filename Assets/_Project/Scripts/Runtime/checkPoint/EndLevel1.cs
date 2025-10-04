@@ -11,8 +11,12 @@ public class EndLevel1 : MonoBehaviour
     public Transform cameraLookAtTarget;   // 相机看向的位置（空物体）
     public float transitionDuration = 2f;  // 转场时间
 
+    [Header("动画控制")]
+    public GameObject endAnimationObject;  // 拖拽带有Animator的End物体到这里
+
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
+    private Animator endAnimator;          // End物体的Animator组件
     private bool hasTriggered = false; // 防止重复触发
 
     void Start()
@@ -42,6 +46,20 @@ public class EndLevel1 : MonoBehaviour
         {
             Debug.LogError("找不到带有 Player 标签的对象");
         }
+
+        // 获取End物体的Animator组件
+        if (endAnimationObject != null)
+        {
+            endAnimator = endAnimationObject.GetComponent<Animator>();
+            if (endAnimator == null)
+            {
+                Debug.LogError("在End物体上找不到Animator组件");
+            }
+        }
+        else
+        {
+            Debug.LogError("请设置End Animation Object");
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -57,6 +75,12 @@ public class EndLevel1 : MonoBehaviour
     void EndLevelSequence()
     {
         Debug.Log("播放结束动画");
+        
+        // 设置动画的IsEnd参数为true
+        if (endAnimator != null)
+        {
+            endAnimator.SetBool("IsEnd", true);
+        }
         
         // 禁用玩家输入和相机跟随
         if (playerInputController != null)
