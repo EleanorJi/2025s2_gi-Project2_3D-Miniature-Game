@@ -15,7 +15,8 @@ public class CookiePickup : MonoBehaviour
             
         Debug.Log($"[Cookie] Picked, total={CookiesInventory.Instance?.cookies}");
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);   // ★ 这样 ResetCrumbs() 才能把它们重新启用
+
         Debug.Log($"[Cookie] Picked, total={(CookiesInventory.Instance?CookiesInventory.Instance.cookies:-1)}");
 
     }
