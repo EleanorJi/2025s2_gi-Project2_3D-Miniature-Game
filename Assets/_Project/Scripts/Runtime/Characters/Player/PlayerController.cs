@@ -104,6 +104,10 @@ public class PlayerController : MonoBehaviour
         jumpInput = Input.GetKeyDown(KeyCode.Space);
         pickupInput = Input.GetKeyDown(KeyCode.C);
 
+        // 立即处理跳跃
+        HandleJump();
+        HandlePickup();
+
         // 更新移动状态（用于动画）
         UpdateMovementState();
         
@@ -132,10 +136,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
         
-        // 处理移动和跳跃（在FixedUpdate中）
+        // 处理移动
         HandleMovement();
-        HandleJump();
-        HandlePickup();
     }
 
     void UpdateMovementState()
