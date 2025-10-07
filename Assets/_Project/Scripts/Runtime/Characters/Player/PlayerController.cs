@@ -161,13 +161,27 @@ public class PlayerController : MonoBehaviour
     void UpdateGroundState()
     {
         bool newGroundedState = groundContactCount > 0;
-        
+
         if (!wasGrounded && newGroundedState)
         {
             float fallDistance = lastAirY - transform.position.y;
             if (fallDistance > maxSafeFallDistance)
             {
                 Die();
+            }
+        }
+        // 根据接地状态控制旋转约束
+        if (rb != null)
+        {
+            if (newGroundedState)
+            {
+                // 在地面上：冻结旋转（防止摔歪）
+                rb.freezeRotation = true;
+            }
+            else
+            {
+                // 离开地面：允许旋转（自由翻滚）
+                rb.freezeRotation = false;
             }
         }
     }
