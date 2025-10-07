@@ -153,7 +153,7 @@ public class ParachuteCarrier : MonoBehaviour
         // 再把世界坐标 Y 抬高一点（避免与地面/玩家穿插）
         if (!Mathf.Approximately(dropYOffset, 0f))
         {
-            leaf.position += Vector3.up * dropYOffset;
+            leaf.position += Vector3.left * dropYOffset;
         }
 
         // 还原物理/碰撞
