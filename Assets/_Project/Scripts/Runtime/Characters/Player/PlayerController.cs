@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
     // 组件引用
     private Rigidbody rb;
     private Camera mainCamera;
-    private bool isGrounded;
     public bool IsCarryingItem => carriedItem != null;
 
     // 输入缓存（在Update中读取，在FixedUpdate中使用）
@@ -104,22 +103,22 @@ public class PlayerController : MonoBehaviour
         jumpInput = Input.GetKeyDown(KeyCode.Space);
         pickupInput = Input.GetKeyDown(KeyCode.C);
 
-        // 立即处理跳跃
-        HandleJump();
-        HandlePickup();
-
         // 更新移动状态（用于动画）
         UpdateMovementState();
         
         // 更新地面状态
         UpdateGroundState();
 
+        // 立即处理跳跃
+        HandleJump();
+        HandlePickup();
+
         // 记录离开地面瞬间的高度
-        if (!isGrounded && wasGrounded)
+        if (!(groundContactCount > 0) && wasGrounded)
         {
             lastAirY = transform.position.y;
         }
-        wasGrounded = isGrounded;
+        wasGrounded = groundContactCount > 0;
 
         // 调试：按R键死亡
         if (Input.GetKeyDown(KeyCode.R))
@@ -163,7 +162,7 @@ public class PlayerController : MonoBehaviour
     {
         bool newGroundedState = groundContactCount > 0;
         
-        if (!isGrounded && newGroundedState)
+        if (!wasGrounded && newGroundedState)
         {
             float fallDistance = lastAirY - transform.position.y;
             if (fallDistance > maxSafeFallDistance)
@@ -171,8 +170,6 @@ public class PlayerController : MonoBehaviour
                 Die();
             }
         }
-        
-        isGrounded = newGroundedState;
     }
 
     void HandleMovement()
@@ -207,10 +204,9 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        if (jumpInput && isGrounded && !IsCarryingItem)
+        if (jumpInput && groundContactCount > 0 && !IsCarryingItem)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            isGrounded = false;
             groundContactCount = 0;
             groundContacts.Clear();
         }
@@ -317,6 +313,17 @@ public class PlayerController : MonoBehaviour
             Die();
         }
 
+    }
+    void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (!groundContacts.Contains(collision.gameObject))
+            {
+                groundContacts.Add(collision.gameObject);
+                groundContactCount++;
+            }
+        }
     }
 
     void OnCollisionExit(Collision collision)
