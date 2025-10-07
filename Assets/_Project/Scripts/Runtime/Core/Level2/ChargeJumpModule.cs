@@ -68,7 +68,7 @@ public class ChargeJumpModule : MonoBehaviour
 
         // UI
         if (hintGroup) hintGroup.alpha = chargeEnabled ? 1f : 0f;
-        if (hintText)  hintText.text  = "Hold <b>C</b> to charge, release to jump farther.\nNo W needed.";
+        if (hintText)  hintText.text  = "Hold <b>V</b> to charge, release to jump farther.\nNo W needed.";
         if (chargeBar) chargeBar.fillAmount = Mathf.Clamp01(charge / maxCharge);
 
         if (!chargeEnabled) { StopCharge(); return; }

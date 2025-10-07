@@ -29,4 +29,11 @@ public class CookiesInventory : MonoBehaviour
         OnChanged?.Invoke(cookies);
         return true;
     }
+
+    // ★ 新增：对外清零（或你愿意可做 Set(int v)）
+    public void Clear()
+    {
+        cookies = 0;
+        OnChanged?.Invoke(cookies);
+    }
 }

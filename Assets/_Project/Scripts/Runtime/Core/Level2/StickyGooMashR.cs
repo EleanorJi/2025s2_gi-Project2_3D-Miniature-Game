@@ -16,7 +16,7 @@ public class StickyGooMashR : MonoBehaviour
     [Header("计数范围")]
     public bool useGlobalCounter = true;
 
-    [Header("UI")]
+    [Header("UI（挣脱进度圈）")]
     public CanvasGroup ringGroup;
     public Image ringFill;   // Filled/Radial360
     public Image timerFill;  // Filled/Vertical Origin=Top
@@ -33,6 +33,12 @@ public class StickyGooMashR : MonoBehaviour
     public bool setKinematicWhileStuck = true;
     public bool zeroVelocityWhileStuck = true;
 
+    [Header("死亡 UI（仅在真正死亡时显示）")]
+    [TextArea]
+    public string deathMessage = "被蜂蜜困住，挣脱失败…";
+    public Sprite deathSprite;
+    public float deathDuration = 4f; // <=0 使用模板默认
+
     // —— 内部 ——
     bool busy;
     PlayerController pc;
@@ -48,7 +54,7 @@ public class StickyGooMashR : MonoBehaviour
     void Awake() { ShowUI(false); }
     void OnEnable(){ ShowUI(false); }
 
-    // 外部（如重生点触发器）可调用：StickyGooMashR.ResetGlobalHoneyCounter();
+    // 外部（如重生点触发器）可调用
     public static void ResetGlobalHoneyCounter() { globalTimes = 0; }
     public void ResetLocalHoneyCounter() { localTimes = 0; }
 
@@ -72,8 +78,12 @@ public class StickyGooMashR : MonoBehaviour
         if (tracker && tracker.lastJumpFromRock == null && tracker.currentRock != null)
             tracker.MarkJump();
 
-        int times = Inc();                 // 1,2,3...
-        if (instantDeathOnNth > 0 && times >= instantDeathOnNth) { Die(true); return; }
+        int times = Inc(); // 1,2,3...
+        if (instantDeathOnNth > 0 && times >= instantDeathOnNth)
+        {
+            Die(true);
+            return;
+        }
 
         StartCoroutine(MashRoutine());
     }
@@ -146,14 +156,26 @@ public class StickyGooMashR : MonoBehaviour
     {
         ShowUI(false);
 
-        if (smallLevelStart)    // 你要“回区域重生点（第一块石头）”
+        if (smallLevelStart)
         {
+            // 不是“真正死亡”——只是传送回小重生点，不显示死亡UI
             bool keepK = rb.isKinematic; rb.isKinematic = true;
             rb.position = smallLevelStart.position + Vector3.up * 0.02f;
             rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
             rb.isKinematic = keepK;
         }
-        else pc.Die();          // 或走你们全局 Checkpoint
+        else
+        {
+            // 真正死亡：走全局死亡流程 + 弹死亡UI模板
+            pc.Die();
+
+            // 只有此处触发死亡UI；可在组件里自定义文案/图片/时长
+            DeathUIOverlay.Instance?.Show(
+                string.IsNullOrEmpty(deathMessage) ? null : deathMessage,
+                deathSprite,
+                (deathDuration > 0f) ? deathDuration : (float?)null
+            );
+        }
 
         if (resetCounter) SetCnt(0); // 死亡后重新给两次机会
     }
