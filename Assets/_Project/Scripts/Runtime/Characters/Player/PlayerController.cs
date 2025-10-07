@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 7f;
     private float startThreshold = 0.1f;
     private float stopThreshold = 0.3f;
-    
+
     // 动画控制
     private Animator antAnimator;
     private bool isMoving = false;
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main;
         antAnimator = GetComponentInChildren<Animator>();
-        
+
         if (antAnimator == null)
         {
             Debug.LogError("Animator not found on ant model!");
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("PlayerInputController not found! Adding one...");
             inputController = gameObject.AddComponent<PlayerInputController>();
         }
-        
+
         // 隐藏光标
         if (CursorManager.Instance != null)
         {
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
             StopMovement();
             return;
         }
-        
+
         // 读取输入（在Update中）
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
 
         // 更新移动状态（用于动画）
         UpdateMovementState();
-        
+
         // 更新地面状态
         UpdateGroundState();
 
@@ -134,7 +134,7 @@ public class PlayerController : MonoBehaviour
             StopMovement();
             return;
         }
-        
+
         // 处理移动
         HandleMovement();
     }
@@ -253,7 +253,7 @@ public class PlayerController : MonoBehaviour
     {
         // 重置移动状态
         isMoving = false;
-        
+
         // 更新动画
         if (antAnimator != null)
         {
@@ -267,7 +267,7 @@ public class PlayerController : MonoBehaviour
         // 保持Y轴速度（重力），但停止水平移动
         Vector3 currentVelocity = rb.linearVelocity;
         rb.linearVelocity = new Vector3(0f, currentVelocity.y, 0f);
-        
+
         // 确保动画状态正确
         ForceIdleState();
     }
@@ -279,7 +279,7 @@ public class PlayerController : MonoBehaviour
         {
             // 移除父级关系
             carriedItem.transform.SetParent(null);
-            
+
             // 设置物品位置到玩家前面的dropPoint位置
             carriedItem.transform.position = dropPoint.position;
             carriedItem.transform.rotation = dropPoint.rotation;
@@ -378,18 +378,32 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player died!");
         // 重生前先放下物品
         DropItem();
-        rb.linearVelocity = Vector3.zero; // 重置速度
+
+        // 重置物理状态
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;  // 🧠 这一行非常重要，清除旋转速度
+
         // 重置地面接触
         groundContacts.Clear();
         groundContactCount = 0;
 
-        // 使用存档点管理器获取最后一个激活的存档点位置
+        // 获取重生点位置
         Vector3 respawnPosition = CheckpointManager.Instance.GetLastRespawnPosition();
         transform.position = respawnPosition;
-        
-        // 可选：显示调试信息
+
+        // 🧭 重置姿势为“脚朝下、面向前”
+        transform.rotation = Quaternion.identity;
+        // 或者如果你的蚂蚁模型默认前方是 +Z 方向（常见情况）
+        // transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        // 如果默认面向 X 方向或有偏转，可自行调整为 Quaternion.Euler(0f, 90f, 0f)
+
+        // 🧱 可选：重生后先冻结旋转，防止在地面上乱动
+        rb.freezeRotation = true;
+
+        // 调试信息
         CheckpointManager.Instance.DebugActivatedCheckpoints();
-        
+
         Debug.Log($"Respawned at last checkpoint: {respawnPosition}");
     }
+
 }
