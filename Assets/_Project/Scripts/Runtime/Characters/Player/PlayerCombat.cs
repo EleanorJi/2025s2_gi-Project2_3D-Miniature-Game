@@ -23,7 +23,7 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J)) TryShoot();
+        if (Input.GetKeyDown(KeyCode.P)) TryShoot();
         if (Input.GetKeyDown(KeyCode.K)) SummonMinions();
     }
 
