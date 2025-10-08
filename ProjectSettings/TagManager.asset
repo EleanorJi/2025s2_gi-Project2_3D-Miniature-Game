@@ -10,6 +10,7 @@ TagManager:
   - Stove
   - Water
   - Rock
+  - Boss
   layers:
   - Default
   - TransparentFX
