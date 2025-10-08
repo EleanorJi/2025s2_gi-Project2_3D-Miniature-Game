@@ -13251,6 +13251,7 @@ MonoBehaviour:
   cameraLookAtTarget: {fileID: 444472996}
   transitionDuration: 2
   endAnimationObject: {fileID: 807850984}
+  nextLevelName: Level2_Street
 --- !u!1 &1227591509
 GameObject:
   m_ObjectHideFlags: 0

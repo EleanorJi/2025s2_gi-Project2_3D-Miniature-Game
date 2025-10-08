@@ -20,5 +20,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Level2_Street.unity
     guid: 1bbfa2d427fb34ea38cf9f2c58fbfed8
+  - enabled: 1
+    path: Assets/_Project/Scenes/Level3_boss.unity
+    guid: 71c28e2a78ec040659505e3a96289354
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

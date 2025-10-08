@@ -1601,6 +1601,10 @@ MonoBehaviour:
   soundEffectAudioSource: {fileID: 777014028}
   defaultMusicVolume: 0.7
   defaultSoundEffectVolume: 0.7
+  fadeTransitionTime: 1
+  defaultBGM: {fileID: 8300000, guid: 50c2234ee71e0d542b974b6a33653af6, type: 3}
+  playBGMOnStart: 1
+  sceneBGMList: []
 --- !u!4 &755462227
 Transform:
   m_ObjectHideFlags: 0
