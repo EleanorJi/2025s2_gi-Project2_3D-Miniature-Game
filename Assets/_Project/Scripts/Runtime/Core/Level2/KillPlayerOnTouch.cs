@@ -21,6 +21,8 @@ public class KillPlayerOnTouch : MonoBehaviour
 
         // 先按你现有流程死亡（回到重生点等）
         pc.Die();
+        GlobalSfx.PlayDeathSfx();
+
 
         // 然后调用全局死亡模板（文字/图片/时长可在本组件里改；留空用模板默认）
         DeathUIOverlay.Instance?.Show(

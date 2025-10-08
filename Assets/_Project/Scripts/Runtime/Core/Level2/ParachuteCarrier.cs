@@ -117,6 +117,9 @@ public class ParachuteCarrier : MonoBehaviour
         leaf.localRotation = Quaternion.Euler(attachLocalEuler);
 
         carriedLeaf = leaf;
+
+        // ★ SFX：成功吸附时播放一次（同拾取/丢下用同一音效）
+        GlobalSfx.PlayLeafPickupSfx(transform.position);
     }
 
     // —— 每帧钉住姿态，防止被别的脚本/物理改掉 —— 
@@ -150,10 +153,10 @@ public class ParachuteCarrier : MonoBehaviour
         // 在当前姿态基础上，沿自身 X 轴 +90°
         leaf.Rotate(90f, 0f, 0f, Space.Self);
 
-        // 再把世界坐标 Y 抬高一点（避免与地面/玩家穿插）
+        // ★ 修正：Y 轴抬高（你原来写成了 Vector3.left ）
         if (!Mathf.Approximately(dropYOffset, 0f))
         {
-            leaf.position += Vector3.left * dropYOffset;
+            leaf.position += Vector3.up * dropYOffset;
         }
 
         // 还原物理/碰撞
@@ -168,5 +171,8 @@ public class ParachuteCarrier : MonoBehaviour
 
         carriedLeafRb = null;
         carriedLeafCols = null;
+
+        // ★ SFX：丢下时也播同一个音效
+        GlobalSfx.PlayLeafPickupSfx(transform.position);
     }
 }

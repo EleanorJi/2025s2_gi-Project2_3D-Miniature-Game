@@ -77,6 +77,8 @@ public class ParachuteGate : MonoBehaviour
             if (killIfNoLeaf)
             {
                 player.Die();
+                GlobalSfx.PlayDeathSfx();
+
 
                 // 调用全局模板（可在本组件 Inspector 覆盖文字/图片/时长）
                 DeathUIOverlay.Instance?.Show(

@@ -184,6 +184,8 @@ public class FloodSequence : MonoBehaviour
                 if (killWhenFull && playerController)
                 {
                     playerController.Die();
+                    GlobalSfx.PlayDeathSfx();
+
 
                     // —— 弹出全局死亡模板（文案/图片/时长可在本组件里改；为空就用模板默认）——
                     DeathUIOverlay.Instance?.Show(

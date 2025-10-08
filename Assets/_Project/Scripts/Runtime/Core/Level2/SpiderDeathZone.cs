@@ -35,6 +35,8 @@ public class SpiderDeathZone : MonoBehaviour
 
         // 1) 先真正死亡（会回到你的存档点/重生点）
         pc.Die();
+        GlobalSfx.PlayDeathSfx();
+
 
         // 2) 让全局模板显示（本次允许覆盖文案/图片/时长）
         if (DeathUIOverlay.Instance)

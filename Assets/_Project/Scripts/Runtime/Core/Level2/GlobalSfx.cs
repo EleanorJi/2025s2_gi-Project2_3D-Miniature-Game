@@ -31,10 +31,22 @@ public class GlobalSfx : MonoBehaviour
     public float minDistance = 1f;
     public float maxDistance = 30f;
 
+    // ───────────── 叶子拾取音效（新增） ─────────────
+    [Header("Leaf: 拾取音效")]
+    public AudioClip leafPickupClip;
+    [Range(0f,1f)] public float leafPickupVolume = 1f;
+    [Tooltip("短时间多次触发的限流（防爆音）")]
+    public float leafPickupCooldown = 0.03f;
+    [Tooltip("true=2D播放；false=按世界位置做3D衰减")]
+    public bool leafPickupAs2D = true;
+    
+
     // 内部
     AudioSource _src;
     float _lastDeathAt = -999f;
     float _lastCookieAt = -999f;
+    float _lastLeafAt = -999f;
+
 
     void Awake()
     {
@@ -105,6 +117,29 @@ public class GlobalSfx : MonoBehaviour
         }
     }
 
+    // 实例方法
+    public void PlayLeafPickup(Vector3 worldPos, float? volumeOverride = null, bool? as2DOverride = null)
+    {
+        if (!leafPickupClip) return;
+
+        if (Time.unscaledTime - _lastLeafAt < leafPickupCooldown) return;
+        _lastLeafAt = Time.unscaledTime;
+
+        float vol = Mathf.Clamp01(volumeOverride ?? leafPickupVolume);
+        bool as2D = as2DOverride ?? leafPickupAs2D;
+
+        if (as2D)
+        {
+            _src.PlayOneShot(leafPickupClip, vol);
+        }
+        else
+        {
+            OneShot3D(leafPickupClip, worldPos, vol);
+        }
+    }
+
+    
+
     // ========== 静态便捷封装 ==========
     public static void PlayDeathSfx(Vector3? worldPos = null, float? volumeOverride = null, bool? as2DOverride = null)
     {
@@ -116,6 +151,10 @@ public class GlobalSfx : MonoBehaviour
         if (Instance) Instance.PlayCookie(worldPos, volumeOverride, as2DOverride);
     }
 
+    public static void PlayLeafPickupSfx(Vector3 worldPos, float? volumeOverride = null, bool? as2DOverride = null)
+    {
+        if (Instance) Instance.PlayLeafPickup(worldPos, volumeOverride, as2DOverride);
+    }
     // ========== 私有工具：受控的 3D 一次性音源 ==========
     AudioSource OneShot3D(AudioClip clip, Vector3 pos, float volume)
     {

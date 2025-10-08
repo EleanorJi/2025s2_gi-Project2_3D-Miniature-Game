@@ -6,42 +6,80 @@ using TMPro;
 public class ChargeJumpModule : MonoBehaviour
 {
     [Header("输入")]
-    public KeyCode jumpKey = KeyCode.C;         // 蓄力键（避免与 Space 冲突）
+    public KeyCode jumpKey = KeyCode.C;
 
     [Header("落地检测")]
-    public Transform groundCheck;               // 放脚底
+    public Transform groundCheck;
     public float groundRadius = 0.18f;
-    public LayerMask groundMask;                // 勾 Ground | Rock
+    public LayerMask groundMask;
 
     [Header("蓄力参数（只影响距离）")]
-    public float chargeRate = 8f;               // 每秒增加的“charge”
-    public float maxCharge = 12f;               // charge 上限
+    public float chargeRate = 8f;
+    public float maxCharge = 12f;
 
     [Header("力度拆分：高度固定，距离随蓄力")]
-    public float verticalImpulse = 4.0f;        // 固定起跳高度（不随蓄力变）
-    public float baseHorizontal = 2.0f;         // 不蓄力也会有的水平冲量
-    public float horizontalPerCharge = 1.0f;    // 每 1 点 charge 增加的水平冲量
+    public float verticalImpulse = 4.0f;
+    public float baseHorizontal = 2.0f;
+    public float horizontalPerCharge = 1.0f;
 
     [Header("方向 & 手感")]
-    public float airControlMultiplier = 0.2f;   // 空中微调强度
-    public float maxAirSpeed = 8f;              // 空中水平最大速度
+    public float airControlMultiplier = 0.2f;
+    public float maxAirSpeed = 8f;
 
     [Header("仅在岩石上可蓄力")]
-    public bool requireOnRock = true;           // 只踩 Rock 才允许蓄力
+    public bool requireOnRock = true;
     public string rockTag = "Rock";
 
     [Header("教程UI（可选）")]
     public CanvasGroup hintGroup;
     public TMP_Text hintText;
-    public Image chargeBar;                    // Type=Filled Horizontal
+    public Image chargeBar; // Filled Horizontal
 
     [Header("由区域开启/关闭")]
-    public bool chargeEnabled = false;         // 由 ChargeJumpZone 控制
+    public bool chargeEnabled = false;
 
+    // ───────────── 音效（新增/修改） ─────────────
+    [Header("SFX：蓄力/释放")]
+    [Tooltip("按住时播放的音阶音效（一般不循环，播一遍）。")]
+    public AudioClip chargeClip;
+    [Range(0f,1f)] public float chargeVolume = 1f;
+    [Tooltip("2D=不随位置；3D=有方向感（左右耳）。")]
+    public bool chargeAs2D = true;
+    [Tooltip("是否让音阶在按住时循环。你的素材是整段音阶，通常建议关闭。")]
+    public bool chargeClipLoops = false;
+
+    [Tooltip("播放倍率（通过 pitch 实现）：>1 更快更尖；<1 更慢更低。")]
+    public float chargePlaybackSpeed = 1f;
+
+    [Tooltip("是否让音高跟随蓄力进度升高（你的素材本身已做音阶，建议关闭）。")]
+    public bool chargePitchFollowsCharge = false;
+    [Tooltip("x:charge/maxCharge ∈[0,1], y:附加倍速(pitch)。最终pitch=chargePlaybackSpeed * 曲线值")]
+    public AnimationCurve loopPitchOverCharge = new AnimationCurve(
+        new Keyframe(0f, 1f), new Keyframe(1f, 1.8f)
+    );
+
+    [Tooltip("开始按住时是否淡入；若关，则瞬间以设定音量开始。")]
+    public bool chargeFadeInOnStart = false;
+    public float chargeFadeInTime = 0.08f;
+
+    [Tooltip("松手时是否瞬停（推荐）。若关，则按下方时间淡出。")]
+    public bool stopChargeInstantOnRelease = true;
+    public float chargeFadeOutTime = 0.08f; // 只在 stopChargeInstantOnRelease=false 时用
+
+    [Space(6)]
+    public AudioClip releaseClip;              // 松手播放的“弹簧音”
+    [Range(0f,1f)] public float releaseVolume = 1f;
+    public bool releaseAs2D = true;
+
+    // ───────────── 内部 ─────────────
     Rigidbody rb;
     float charge;
     bool charging;
-    Vector3 chargeDir = Vector3.forward;       // 锁定的起跳方向（地面投影的蚂蚁 forward）
+    Vector3 chargeDir = Vector3.forward;
+
+    AudioSource _sfxSrc;
+    float _currentVol = 0f, _targetVol = 0f, _volVel = 0f;
+    bool _loopActive = false;
 
     void Awake()
     {
@@ -53,12 +91,24 @@ public class ChargeJumpModule : MonoBehaviour
             groundCheck = t;
         }
         SetHint(false);
+
+        _sfxSrc = gameObject.AddComponent<AudioSource>();
+        _sfxSrc.playOnAwake = false;
+        _sfxSrc.loop = false;
+        _sfxSrc.spatialBlend = 0f;
+        _sfxSrc.volume = 0f;
+    }
+
+    void OnDisable()
+    {
+        StopChargeSfx(true); // 组件禁用立停
     }
 
     public void SetChargeEnabled(bool on)
     {
         chargeEnabled = on;
         SetHint(on);
+        if (!on) StopCharge();
     }
 
     void Update()
@@ -66,46 +116,56 @@ public class ChargeJumpModule : MonoBehaviour
         bool grounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundMask);
         bool allowChargeNow = (!requireOnRock) || OnRock();
 
-        // UI
         if (hintGroup) hintGroup.alpha = chargeEnabled ? 1f : 0f;
         if (hintText)  hintText.text  = "Hold <b>V</b> to charge, release to jump farther.\nNo W needed.";
         if (chargeBar) chargeBar.fillAmount = Mathf.Clamp01(charge / maxCharge);
 
         if (!chargeEnabled) { StopCharge(); return; }
 
-        // 开始蓄力：锁定方向（用相机的水平朝向），还可顺手把蚂蚁转过去
+        // 开始蓄力
         if (Input.GetKeyDown(jumpKey) && grounded && allowChargeNow)
         {
             charging = true;
             charge = 0f;
-        
-            // 用相机水平朝向（如果没有相机引用，就退回用自身 forward）
+
             Vector3 fwd = Camera.main ? Camera.main.transform.forward : transform.forward;
             chargeDir = Vector3.ProjectOnPlane(fwd, Vector3.up).normalized;
             if (chargeDir.sqrMagnitude < 0.0001f) chargeDir = transform.forward;
-        
-            // 可选：把蚂蚁缓慢对准这个方向（1帧内瞬转也行）
-            Quaternion look = Quaternion.LookRotation(chargeDir, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, look, 1f); // 1f=瞬转；改小点=平滑
+
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(chargeDir, Vector3.up), 1f);
+
+            StartChargeSfx();
         }
 
-
-        // 按住蓄力
+        // 蓄力中
         if (charging && Input.GetKey(jumpKey))
         {
             charge += chargeRate * Time.deltaTime;
             charge = Mathf.Min(charge, maxCharge);
+
+            UpdateChargeSfx(charge / Mathf.Max(0.0001f, maxCharge));
         }
 
-        // 松开起跳
+        // 松手起跳
         if (charging && Input.GetKeyUp(jumpKey))
         {
-            if (grounded && allowChargeNow) DoJump(charge, chargeDir);
+            // 1) 先立刻停掉音阶 or 按设置淡出
+            StopChargeSfx(stopChargeInstantOnRelease);
+
+            if (grounded && allowChargeNow)
+            {
+                DoJump(charge, chargeDir);
+                // 2) 同时播弹簧音
+                PlayReleaseSfx();
+            }
+
             StopCharge();
         }
 
-        // 空中微调（可选）
+        // 空中微调
         if (!grounded) ApplyAirControl(chargeDir);
+
+        TickVolumeFade();
     }
 
     void StopCharge() { charging = false; charge = 0f; }
@@ -122,16 +182,12 @@ public class ChargeJumpModule : MonoBehaviour
         return false;
     }
 
-    // 最终：高度固定 + 水平随蓄力
     void DoJump(float finalCharge, Vector3 planarDir)
     {
-        // 记录上一块岩石（供蜂蜜回退用）
         GetComponent<RockTracker>()?.MarkJump();
 
-        // 清垂直速度，保留水平
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        // 距离 = 基础水平 + 蓄力 * 系数（可在此做非线性映射）
         float horiz = baseHorizontal + finalCharge * horizontalPerCharge;
         float vert  = verticalImpulse;
 
@@ -155,5 +211,128 @@ public class ChargeJumpModule : MonoBehaviour
         hintGroup.alpha = show ? 1f : 0f;
         hintGroup.blocksRaycasts = false;
         hintGroup.ignoreParentGroups = true;
+    }
+
+    // ───────────── SFX 实现 ─────────────
+    void StartChargeSfx()
+    {
+        if (!chargeClip) return;
+
+        _sfxSrc.clip = chargeClip;
+        _sfxSrc.loop = chargeClipLoops;
+        _sfxSrc.spatialBlend = chargeAs2D ? 0f : 1f;
+
+        // 初始音量
+        _targetVol = chargeVolume;
+        if (chargeFadeInOnStart && chargeFadeInTime > 0f)
+        {
+            _currentVol = 0f;
+        }
+        else
+        {
+            _currentVol = _targetVol; // 直接顶满
+        }
+        _sfxSrc.volume = _currentVol;
+
+        // 初始 pitch（播放倍率）
+        float basePitch = Mathf.Max(0.01f, chargePlaybackSpeed);
+        if (chargePitchFollowsCharge)
+        {
+            // 从 0 进度的曲线开始
+            _sfxSrc.pitch = basePitch * Mathf.Clamp(loopPitchOverCharge.Evaluate(0f), 0.01f, 3f);
+        }
+        else
+        {
+            _sfxSrc.pitch = basePitch;
+        }
+
+        if (!_sfxSrc.isPlaying) _sfxSrc.Play();
+        _loopActive = true;
+    }
+
+    void UpdateChargeSfx(float charge01)
+    {
+        if (!_loopActive || !chargeClip) return;
+
+        if (chargePitchFollowsCharge)
+        {
+            float basePitch = Mathf.Max(0.01f, chargePlaybackSpeed);
+            float follow    = Mathf.Clamp(loopPitchOverCharge.Evaluate(Mathf.Clamp01(charge01)), 0.01f, 3f);
+            _sfxSrc.pitch   = basePitch * follow;
+        }
+        // 音量目标保持 chargeVolume（如需随进度再抬，可在此乘系数）
+        _targetVol = chargeVolume;
+    }
+
+    void StopChargeSfx(bool immediate)
+    {
+        if (!_loopActive) return;
+
+        if (immediate)
+        {
+            _sfxSrc.Stop();
+            // 不再把 volume 永久置 0；仅停止播放
+            _targetVol = 0f;
+            _currentVol = 0f;
+            _loopActive = false;
+        }
+        else
+        {
+            _targetVol = 0f; // 交给 TickVolumeFade 淡出后自动 Stop
+        }
+    }
+
+    void PlayReleaseSfx()
+    {
+        if (!releaseClip) return;
+    
+        // 备份当前状态
+        float prevVol = _sfxSrc.volume;
+        float prevPitch = _sfxSrc.pitch;
+        float prevBlend = _sfxSrc.spatialBlend;
+    
+        // 2D/3D 设置
+        _sfxSrc.spatialBlend = releaseAs2D ? 0f : 1f;
+    
+        // 关键：PlayOneShot 的最终音量 = AudioSource.volume * 参数
+        // 这里临时把源音量拉到 1，避免被之前的 0 静音
+        _sfxSrc.volume = 1f;
+        _sfxSrc.pitch = 1f; // 一般弹簧音不用变速
+    
+        _sfxSrc.PlayOneShot(releaseClip, releaseVolume);
+    
+        // 还原
+        _sfxSrc.volume = prevVol;
+        _sfxSrc.pitch = prevPitch;
+        _sfxSrc.spatialBlend = prevBlend;
+    }
+
+    void TickVolumeFade()
+    {
+        if (!_loopActive) return;
+
+        // 只在需要淡入/淡出时平滑，否则保持当前值
+        float tau = (_targetVol > _currentVol)
+            ? Mathf.Max(0.0001f, chargeFadeInOnStart ? chargeFadeInTime : 0f)
+            : Mathf.Max(0.0001f, stopChargeInstantOnRelease ? 0f : chargeFadeOutTime);
+
+        if (tau <= 0f)
+        {
+            _currentVol = _targetVol;
+        }
+        else
+        {
+            _currentVol = Mathf.SmoothDamp(_currentVol, _targetVol, ref _volVel, tau);
+        }
+
+        _currentVol = Mathf.Clamp01(_currentVol);
+        _sfxSrc.volume = _currentVol;
+
+        // 淡出到0后停
+        if (_targetVol <= 0.0001f && _currentVol <= 0.0001f)
+        {
+            _sfxSrc.Stop();
+            _loopActive = false;
+        }
     }
 }

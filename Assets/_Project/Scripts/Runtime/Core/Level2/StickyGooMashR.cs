@@ -199,6 +199,8 @@ public class StickyGooMashR : MonoBehaviour
         {
             // 真正死亡：走全局死亡流程 + 弹死亡UI模板
             pc.Die();
+            GlobalSfx.PlayDeathSfx();
+
 
             // 只有此处触发死亡UI；可在组件里自定义文案/图片/时长
             DeathUIOverlay.Instance?.Show(
