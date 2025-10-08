@@ -172,10 +172,11 @@ The game is set in a fully 3D environment, but with level design that encourages
         -   **Rolling Cucumber:** A cucumber rolling back and forth on a cutting board, which the player must time their jump to overcome.
         -   **Sugar Cube Puzzle**: The player must grab (C) a sugar cube and carry it to a designated slot. Placing the cube correctly extinguishes the flames on a stovetop, allowing passage. 
         -   **Milk Carton Maze:** A maze constructed from towering milk cartons. The player must navigate through it to find the exit.
-    <p align="center">
-      <img src="images/maze.png" alt="maze design Level 1" width="400">
-    </p>
-        -   **Cake Spatula Bridge:** A long cake spatula spans over a sink filled with water. The player must carefully cross this narrow bridge. Falling into the water results in failure.
+        <p align="center">
+          <img src="images/maze.png" alt="maze design Level 1" width="400">
+        </p>
+        
+        -    **Cake Spatula Bridge:** A long cake spatula spans over a sink filled with water. The player must carefully cross this narrow bridge. Falling into the water results in failure.
 
 -   **Second Level (Outdoor Comprehensive):**
     <p align="center">
@@ -352,6 +353,7 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
 
 
 
