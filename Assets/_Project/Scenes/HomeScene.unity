@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstLevelSceneName: Level1-2
-  tutorialSceneName: Tutorial
+  tutorialSceneName: Level0_Tutorial
   uiAudioSource: {fileID: 555656466}
   clickSound: {fileID: 8300000, guid: 5ccd2a1d15d98a94daab8de31b9606e0, type: 3}
   hoverSound: {fileID: 0}
