@@ -39,6 +39,13 @@ public class StickyGooMashR : MonoBehaviour
     public Sprite deathSprite;
     public float deathDuration = 4f; // <=0 使用模板默认
 
+    // === 新增：挣脱按键的单次音效 ===
+    [Header("音效（挣脱按键，每按一次播一次）")]
+    public AudioClip mashPressSfx;
+    [Range(0f, 1f)] public float mashPressVolume = 1f;
+    [Tooltip("留空则在本物体上自动创建一个 AudioSource")]
+    public AudioSource mashAudioSource;
+
     // —— 内部 ——
     bool busy;
     PlayerController pc;
@@ -51,7 +58,19 @@ public class StickyGooMashR : MonoBehaviour
     static int globalTimes = 0;
 
     void Reset() { GetComponent<Collider>().isTrigger = true; }
-    void Awake() { ShowUI(false); }
+    void Awake()
+    {
+        ShowUI(false);
+
+        // 准备音源（不循环、不开播）
+        if (!mashAudioSource)
+        {
+            mashAudioSource = gameObject.AddComponent<AudioSource>();
+            mashAudioSource.playOnAwake = false;
+            mashAudioSource.loop = false;
+            mashAudioSource.spatialBlend = 0f; // UI类提示音常用2D；需要3D可改为1
+        }
+    }
     void OnEnable(){ ShowUI(false); }
 
     // 外部（如重生点触发器）可调用
@@ -112,6 +131,9 @@ public class StickyGooMashR : MonoBehaviour
             {
                 presses++;
                 if (ringFill) ringFill.fillAmount = (float)presses / requiredPresses;
+
+                // —— 新增：每次按下播放一次，不循环 —— //
+                PlayMashPressSfx();
             }
             if (timerFill) timerFill.fillAmount = Mathf.Clamp01(t / timeLimit);
 
@@ -130,6 +152,15 @@ public class StickyGooMashR : MonoBehaviour
         if (setKinematicWhileStuck) rb.isKinematic = cachedKinematic;
         pc.moveSpeed = cachedSpeed;
         busy = false;
+    }
+
+    // 播放单次“挣脱按键”音效
+    void PlayMashPressSfx()
+    {
+        if (!mashPressSfx || !mashAudioSource) return;
+
+        // 用 PlayOneShot 防止上一个尾音被打断
+        mashAudioSource.PlayOneShot(mashPressSfx, mashPressVolume);
     }
 
     void TeleportToLastRock()

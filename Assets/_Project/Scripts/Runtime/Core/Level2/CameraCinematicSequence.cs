@@ -67,21 +67,36 @@ public class CameraCinematicSequence : MonoBehaviour
     public Vector3 landingLeafEuler = Vector3.zero;
 
     // ------------------ 音效 ------------------
-    [Header("音效")]
-    public AudioSource sfxSource;
-    public AudioClip trafficLightSfx;
-    public float trafficLightDelay = 0.5f;
+    [Header("音效：共享源（可与下列独立源并存）")]
+    public AudioSource sfxSource;   // 可用于一次性音效（如红绿灯/鸽子）若单独源为空将退化使用它
 
+    [Header("音效：红绿灯（一次性）")]
+    public AudioClip trafficLightSfx;
+    [Range(0f,1f)] public float trafficLightVolume = 1f;
+    public float trafficLightDelay = 0.5f;
+    public bool trafficLightUseFade = true;
+    public float trafficLightFadeIn = 0.25f;
+    public float trafficLightFadeOut = 0.25f;
+
+    [Header("音效：风声（阶段2进行时）")]
     public AudioSource windSource;
     public AudioClip windLoop;
+    [Range(0f,1f)] public float windVolume = 0.8f;
+    public bool windLooping = true;       // 阶段2内循环，阶段2结束淡出
     public float windFadeIn  = 0.4f;
     public float windFadeOut = 0.4f;
-    [Range(0f,1f)] public float windVolume = 0.8f;
 
-    [Header("阶段3：落地后停留 + 鸽子音效（结束）")]
-    public float waitAfterLanding = 2f;
+    [Header("音效：鸽子（阶段3）")]
+    public AudioSource pigeonSource;      // 可选；为空会用 sfxSource
     public AudioClip pigeonSfx;
     [Range(0f,1f)] public float pigeonVolume = 1f;
+    public bool pigeonLoop = true;        // 在阶段3等待期间循环
+    public float pigeonFadeIn = 0.15f;
+    public float pigeonFadeOut = 0.15f;
+
+    // —— 阶段3等待：务必存在（之前你报错的字段） —— //
+    [Header("阶段3：落地后停留 + 鸽子音效（结束）")]
+    public float waitAfterLanding = 2f;
 
     [Header("落地演出行为（不移动真实玩家）")]
     public bool keepLeafVisualAtLanding = false;
@@ -166,11 +181,17 @@ public class CameraCinematicSequence : MonoBehaviour
             var rb2 = GetComponent<Rigidbody2D>(); if (rb2) { rb2.linearVelocity = Vector2.zero; rb2.angularVelocity = 0f; }
         }
 
-        // 阶段1：红绿灯音效（+0.5s）
-        if (trafficLightSfx && sfxSource)
+        // —— 阶段1 音效：红绿灯 —— //
+        if (trafficLightSfx)
         {
-            sfxSource.Stop(); sfxSource.clip = trafficLightSfx; sfxSource.loop = false;
-            sfxSource.PlayDelayed(Mathf.Max(0f, trafficLightDelay));
+            var src = sfxSource;
+            if (!src) src = gameObject.AddComponent<AudioSource>();
+            StartCoroutine(CoPlayNonLoopSfxWithFades(
+                src, trafficLightSfx, trafficLightVolume,
+                trafficLightDelay,
+                trafficLightUseFade ? trafficLightFadeIn  : 0f,
+                trafficLightUseFade ? trafficLightFadeOut : 0f
+            ));
         }
 
         // 阶段1：在1停 2s
@@ -211,11 +232,11 @@ public class CameraCinematicSequence : MonoBehaviour
             }
         }
 
+        // 风声：阶段2开始时进入
         if (windLoop && windSource)
         {
             _windOrigVol = windSource.volume;
-            windSource.clip = windLoop; windSource.loop = true; windSource.volume = 0f; windSource.Play();
-            yield return FadeAudio(windSource, 0f, windVolume, windFadeIn);
+            yield return StartCoroutine(CoStartLoopWithFade(windSource, windLoop, windVolume, windFadeIn, windLooping));
         }
 
         // —— 阶段2：1→4 抛物线（锁朝向），落地前0.2s隐藏假叶 —— //
@@ -253,8 +274,7 @@ public class CameraCinematicSequence : MonoBehaviour
         }
         if (windLoop && windSource)
         {
-            yield return FadeAudio(windSource, windSource.volume, 0f, windFadeOut);
-            windSource.Stop(); windSource.volume = _windOrigVol;
+            yield return StartCoroutine(CoStopWithFade(windSource, windFadeOut, _windOrigVol));
         }
 
         // —— 阶段2.5：4→5（只移动） —— //
@@ -277,12 +297,21 @@ public class CameraCinematicSequence : MonoBehaviour
         SpawnRealPlayerAtRespawn();     // 纯自由落体（速度=0，只开重力）
         SpawnLandingLeafVisual();       // 叶子一起落（可绑玩家）
 
-        // 阶段3：停留 + 鸽子叫
-        if (pigeonSfx && sfxSource)
+        // 阶段3：鸽子叫循环，等待 waitAfterLanding，再淡出
+        if (pigeonSfx)
         {
-            sfxSource.Stop(); sfxSource.volume = pigeonVolume; sfxSource.PlayOneShot(pigeonSfx);
+            var src = pigeonSource ? pigeonSource : sfxSource;
+            if (!src) src = gameObject.AddComponent<AudioSource>();
+            yield return StartCoroutine(CoStartLoopWithFade(src, pigeonSfx, pigeonVolume, pigeonFadeIn, pigeonLoop));
         }
+
         if (waitAfterLanding > 0f) yield return new WaitForSeconds(waitAfterLanding);
+
+        if (pigeonSfx)
+        {
+            var src = pigeonSource ? pigeonSource : sfxSource;
+            if (src) yield return StartCoroutine(CoStopWithFade(src, pigeonFadeOut, src.volume));
+        }
 
         if (restoreFOVOnFinish && _cam) _cam.fieldOfView = _origFOV;
         IsPlaying = false;
@@ -350,17 +379,65 @@ public class CameraCinematicSequence : MonoBehaviour
         transform.SetPositionAndRotation(fixedPos, toRot);
     }
 
-    // ------------------ 实用工具 ------------------
-    void SafeSetFollow(bool on){ if (!cameraFollow) return; try { cameraFollow.SetCameraControl(on); } catch { cameraFollow.enabled = on; } }
-    void SafeSetInput (bool on){ if (!playerInput)  return; try { if (on) playerInput.EnableInput(); else playerInput.DisableInput(); } catch { playerInput.enabled = on; } }
+    // ------------------ 音效工具 ------------------
 
-    IEnumerator FadeAudio(AudioSource src, float from, float to, float duration)
+    // 非循环的一次性音效：支持延迟 + 淡入/淡出（到点自动Stop）
+    IEnumerator CoPlayNonLoopSfxWithFades(AudioSource src, AudioClip clip, float volume, float delay, float fadeIn, float fadeOut)
+    {
+        if (!src || !clip) yield break;
+        if (delay > 0f) yield return new WaitForSeconds(delay);
+
+        src.clip = clip;
+        src.loop = false;
+        src.volume = (fadeIn > 0f) ? 0f : volume;
+        src.Play();
+
+        if (fadeIn > 0f) yield return StartCoroutine(CoFadeVolume(src, src.volume, volume, fadeIn));
+
+        // 预留淡出时间
+        float hold = Mathf.Max(0f, clip.length - fadeOut);
+        if (hold > 0f) yield return new WaitForSeconds(hold);
+
+        if (fadeOut > 0f) yield return StartCoroutine(CoFadeVolume(src, src.volume, 0f, fadeOut));
+        src.Stop();
+        src.volume = volume; // 还原
+    }
+
+    // 循环/或按需要循环的片段：开启并淡入；停止时调用 CoStopWithFade
+    IEnumerator CoStartLoopWithFade(AudioSource src, AudioClip clip, float volume, float fadeIn, bool loop)
+    {
+        if (!src || !clip) yield break;
+        src.clip = clip;
+        src.loop = loop;
+        src.volume = (fadeIn > 0f) ? 0f : volume;
+        src.Play();
+        if (fadeIn > 0f) yield return StartCoroutine(CoFadeVolume(src, src.volume, volume, fadeIn));
+    }
+
+    IEnumerator CoStopWithFade(AudioSource src, float fadeOut, float defaultRestore)
+    {
+        if (!src) yield break;
+        if (fadeOut > 0f) yield return StartCoroutine(CoFadeVolume(src, src.volume, 0f, fadeOut));
+        src.Stop();
+        src.volume = defaultRestore;
+    }
+
+    IEnumerator CoFadeVolume(AudioSource src, float from, float to, float duration)
     {
         if (!src || duration <= 0f) { if (src) src.volume = to; yield break; }
         float t = 0f;
-        while (t < duration) { t += Time.deltaTime; src.volume = Mathf.Lerp(from, to, t / duration); yield return null; }
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            src.volume = Mathf.Lerp(from, to, t / duration);
+            yield return null;
+        }
         src.volume = to;
     }
+
+    // ------------------ 实用工具 ------------------
+    void SafeSetFollow(bool on){ if (!cameraFollow) return; try { cameraFollow.SetCameraControl(on); } catch { cameraFollow.enabled = on; } }
+    void SafeSetInput (bool on){ if (!playerInput)  return; try { if (on) playerInput.EnableInput(); else playerInput.DisableInput(); } catch { playerInput.enabled = on; } }
 
     void MakePureVisual(GameObject root, bool removeColliders, bool setRigidbodiesKinematic)
     {
@@ -429,7 +506,7 @@ public class CameraCinematicSequence : MonoBehaviour
         else                      { pos = transform.position + transform.forward * 0.6f; rot = transform.rotation; }
 
         _landingLeaf = Instantiate(landingLeafVisualPrefab, pos, rot);
-        //if (makeLeafPureVisual) MakePureVisual(_landingLeaf, true, true);
+        // 若需要也可纯视觉：MakePureVisual(_landingLeaf, true, true);
 
         // 2) 用渲染中心居中（修正FBX根偏移）
         if (landingLeafUseBoundsCenter)

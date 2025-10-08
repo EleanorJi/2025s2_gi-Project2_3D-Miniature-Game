@@ -7477,8 +7477,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 1676891116}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -12825,6 +12836,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnAnchor: {fileID: 1214912563}
+--- !u!1 &539902647
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 539902649}
+  - component: {fileID: 539902648}
+  m_Layer: 0
+  m_Name: Death_GlobalSfx
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &539902648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539902647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de51938e1d81843f1a87d0184db3fb80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  output: {fileID: 0}
+  deathClip: {fileID: 8300000, guid: eff90a1e3a01443e6b24c0b2e29985de, type: 3}
+  deathVolume: 1
+  deathCooldown: 0.2
+  playAs2D: 1
+  spatialBlend3D: 1
+  minDistance: 1
+  maxDistance: 30
+--- !u!4 &539902649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539902647}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 83.79251, y: 0.8999, z: -346.97595}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &540897467 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2602975220198116835, guid: 10038933d2c22814dbaff12551a38547, type: 3}
@@ -23374,8 +23437,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 923611514}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -24154,8 +24228,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 521019226}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -28340,8 +28425,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 853691859}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -30718,7 +30814,7 @@ GameObject:
   - component: {fileID: 1095065730}
   - component: {fileID: 1095065733}
   m_Layer: 0
-  m_Name: Level2End----------Continue
+  m_Name: Level2End------DONE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31177,8 +31273,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 1999943319}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -31379,8 +31486,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 1461252457}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -32429,8 +32547,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 1096182578}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 2010979490}
@@ -37967,8 +38096,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 76448514}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -38508,8 +38648,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 2118632165}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 1047749184}
@@ -49462,6 +49613,9 @@ MonoBehaviour:
   deathMessage: Trapped by honey, failed to break free...
   deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
   deathDuration: 4
+  mashPressSfx: {fileID: 8300000, guid: 956bb3f727e7945399764e74f6a4e1cd, type: 3}
+  mashPressVolume: 1
+  mashAudioSource: {fileID: 0}
 --- !u!4 &1675427654 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2774220344278030320, guid: bc9d7612dba4a4033b48f6a42c64c28f, type: 3}
@@ -50102,8 +50256,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 15302688}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -50238,7 +50403,7 @@ MonoBehaviour:
   cameraFollow: {fileID: 1699580718}
   playerInput: {fileID: 0}
   point1: {fileID: 1756824742}
-  holdAtP1: 2
+  holdAtP1: 1
   point1_1: {fileID: 416737676}
   point1_2: {fileID: 563045052}
   p1To11Time: 1.5
@@ -50247,7 +50412,7 @@ MonoBehaviour:
   point2: {fileID: 935728732}
   point3: {fileID: 1240593752}
   p1To2Time: 3
-  p2To1Time: 3
+  p2To1Time: 2
   rot1To3Time: 2
   rot3To1Time: 2
   waitAfterStage1: 2
@@ -50273,16 +50438,25 @@ MonoBehaviour:
   landingLeafUseBoundsCenter: 1
   landingLeafEuler: {x: 180, y: 35, z: 90}
   sfxSource: {fileID: 0}
-  trafficLightSfx: {fileID: 0}
-  trafficLightDelay: 0.5
+  trafficLightSfx: {fileID: 8300000, guid: 972e8d61d9f3342cba2f632892caacc2, type: 3}
+  trafficLightVolume: 1
+  trafficLightDelay: 0
+  trafficLightUseFade: 1
+  trafficLightFadeIn: 1
+  trafficLightFadeOut: 1
   windSource: {fileID: 0}
-  windLoop: {fileID: 0}
-  windFadeIn: 0.4
-  windFadeOut: 0.4
+  windLoop: {fileID: 8300000, guid: f5da9e5aa72b84e51846d0fda35a3a37, type: 3}
   windVolume: 0.8
-  waitAfterLanding: 2
-  pigeonSfx: {fileID: 0}
+  windLooping: 1
+  windFadeIn: 0
+  windFadeOut: 0
+  pigeonSource: {fileID: 0}
+  pigeonSfx: {fileID: 8300000, guid: 4912e1abbe9c541ab9c8217c7d751409, type: 3}
   pigeonVolume: 1
+  pigeonLoop: 1
+  pigeonFadeIn: 0.15
+  pigeonFadeOut: 0.15
+  waitAfterLanding: 2
   keepLeafVisualAtLanding: 1
   respawnPoint: {fileID: 1557052641}
   playerRoot: {fileID: 705897498}
@@ -51789,8 +51963,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 3324025380223648098}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -54112,8 +54297,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 1922329241}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -55708,8 +55904,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 1552467883}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 747128047}
@@ -55893,8 +56100,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 127957093}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -56120,8 +56338,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 392833860}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -59404,8 +59633,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 394813887}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 1757433622}
@@ -60834,8 +61074,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 245483690}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -61027,8 +61278,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionFxPrefab: {fileID: 487539379}
-  explosionSfx: {fileID: 0}
+  explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 1
+  useAudioSource: 1
+  sfxLoop: 0
+  sfxFadeIn: 0
+  sfxFadeOut: 0.2
+  sfxPitch: 1
+  sfxSpatialBlend: 1
+  sfxMinDistance: 1
+  sfxMaxDistance: 20
+  sfxRolloff: 0
+  reuseChildAudioSource: 1
+  sfxDefaultLifetime: 2
   explosionChild: {fileID: 0}
   carryCookie: 1
   carryPoint: {fileID: 0}
@@ -61664,3 +61926,4 @@ SceneRoots:
   - {fileID: 860810497}
   - {fileID: 67095555}
   - {fileID: 1095065731}
+  - {fileID: 539902649}

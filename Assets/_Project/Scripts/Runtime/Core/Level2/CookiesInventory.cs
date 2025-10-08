@@ -6,7 +6,7 @@ public class CookiesInventory : MonoBehaviour
     public static CookiesInventory Instance { get; private set; }
     public int cookies = 0;
 
-    public event Action<int> OnChanged; // ★ 变化事件
+    public event Action<int> OnChanged;
 
     void Awake()
     {
@@ -30,7 +30,6 @@ public class CookiesInventory : MonoBehaviour
         return true;
     }
 
-    // ★ 新增：对外清零（或你愿意可做 Set(int v)）
     public void Clear()
     {
         cookies = 0;
