@@ -57796,6 +57796,9 @@ MonoBehaviour:
   hint3Text: Last chance!!
   notEnoughEnergyText: Energy Depleted (Requires 3 Cookie Crumbs)
   waterLoopSfx: {fileID: 0}
+  exitClearMode: 1
+  respawnPoint: {fileID: 575812939}
+  warpOnDeath: 1
 --- !u!4 &1365058326
 Transform:
   m_ObjectHideFlags: 0

@@ -20,6 +20,12 @@ public class CookiePickup : MonoBehaviour
         col.isTrigger = true;                // 作为拾取触发器
     }
 
+    // ☆ 关键：被重新 SetActive(true) 时，允许再次拾取
+    void OnEnable()
+    {
+        _consumed = false;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (_consumed) return;
@@ -34,20 +40,11 @@ public class CookiePickup : MonoBehaviour
 
         // ② 播放音效（不依赖本对象的激活状态）
         if (playSfx)
-        {
-            // 用全局一次性SFX，不会因为本物体被SetActive(false)而被掐断
             GlobalSfx.PlayCookieSfx(transform.position, sfxVolume, sfxAs2D);
-        }
 
-        // ③ 最后禁用物体（可选延迟一丢丢，给3D OneShot更充裕的建源时间）
-        if (deactivateDelay <= 0f)
-        {
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            StartCoroutine(DeactivateLater());
-        }
+        // ③ 最后禁用物体
+        if (deactivateDelay <= 0f) gameObject.SetActive(false);
+        else StartCoroutine(DeactivateLater());
     }
 
     System.Collections.IEnumerator DeactivateLater()

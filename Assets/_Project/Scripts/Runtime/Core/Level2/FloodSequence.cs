@@ -29,7 +29,6 @@ public class FloodSequence : MonoBehaviour
     public Sprite deathSprite;
     public float deathDuration = 4f;  // <=0 时使用模板默认
 
-
     [Header("Crumbs (攀爬能量)")]
     public int requiredCrumbs = 3;
     [SerializeField] int currentCrumbs = 0;
@@ -52,9 +51,20 @@ public class FloodSequence : MonoBehaviour
     [Header("SFX")]
     public AudioSource waterLoopSfx;
 
+    // ───── 离开区域清零策略（保持上版逻辑） ─────
+    [Header("Crumbs 清零策略（离开区域时）")]
+    [Tooltip("Always=总清；OnlyIfDiedInside=仅在本轮进区内发生过死亡时清；Never=从不清")]
+    public ExitClearMode exitClearMode = ExitClearMode.OnlyIfDiedInside;
+    public enum ExitClearMode { Always, OnlyIfDiedInside, Never }
+
+    // ───── 重生点（新增 / 恢复） ─────
+    [Header("Respawn（关内死亡后重生）")]
+    public Transform respawnPoint;           // 放在第一关外的重生点
+    public bool warpOnDeath = true;          // 勾选=关内死亡立刻传送到重生点
+
     // —— 内部状态 ——
     bool _running;
-    bool _playerInside;          // 我们自己“判定”的 inside 状态
+    bool _playerInside;
     bool _slowed;
     float _originalSpeed = -1f;
 
@@ -63,7 +73,11 @@ public class FloodSequence : MonoBehaviour
     Coroutine _hintRoutine;
     Coroutine _floodRoutine;
 
-    Transform _player;           // 玩家Transform用于几何包含判断
+    Transform _player;
+
+    // —— 本轮（本次进入区域→离开前）死亡标记 + 次数 —— 
+    bool _diedInsideSinceEnter = false;
+    public int deathCountThisRun { get; private set; } = 0;
 
     void Start()
     {
@@ -95,27 +109,41 @@ public class FloodSequence : MonoBehaviour
 
     void Update()
     {
-        // 每帧主动判定玩家是否在 startZone 内（解决“死亡传送/禁用不触发 OnTriggerExit”的问题）
+        // 主动判定玩家是否在 startZone 内
         bool insideNow = IsPlayerInsideStartZone();
 
         if (insideNow && !_playerInside)
         {
             _playerInside = true;
-            BeginSequence();             // 重新进入：重新开始涨水
+            BeginSequence(); // 重新进入：开始涨水 & 清本轮死亡计数
         }
         else if (!insideNow && _playerInside)
         {
             _playerInside = false;
-            // 离开（比如死亡回到上方重生点）：立刻复位并清零关内饼干
+
+            // 离开区域：复位水、提示等
             ResetSequence();
-            ResetCrumbs();
+
+            // 根据策略决定是否清全局饼干/UI
+            bool shouldClearGlobal = (exitClearMode == ExitClearMode.Always)
+                                   || (exitClearMode == ExitClearMode.OnlyIfDiedInside && _diedInsideSinceEnter);
+
+            if (shouldClearGlobal)
+            {
+                ResetCrumbs();                  // ★ 清全局（UI 清零 + 复活碎屑）
+                deathCountThisRun = 0;          // 重生回来再次进入时从 0 开始
+            }
+            else
+            {
+                ResetLevelLocalCrumbsOnly();    // ★ 只复位关内掉落，不清全局/UI
+                // 顺利过关 -> 保持 die=0 带到下一关
+            }
         }
     }
 
     bool IsPlayerInsideStartZone()
     {
         if (!startZone || !_player) return false;
-        // 利用 ClosestPoint 判断：如果最近点就是自己位置，说明在触发器体积内
         Vector3 p = _player.position;
         Vector3 cp = startZone.ClosestPoint(p);
         return (cp - p).sqrMagnitude < 1e-6f;
@@ -141,6 +169,10 @@ public class FloodSequence : MonoBehaviour
         _running = true;
         _startTime = Time.timeAsDouble;
         _hint1Shown = _hint2Shown = _hint3Shown = false;
+
+        // 进入本轮：清死亡标记与计数
+        _diedInsideSinceEnter = false;
+        deathCountThisRun = 0;
 
         if (waterLoopSfx) waterLoopSfx.Play();
         _floodRoutine = StartCoroutine(RunFlood());
@@ -183,18 +215,27 @@ public class FloodSequence : MonoBehaviour
 
                 if (killWhenFull && playerController)
                 {
+                    // 区域内被水杀：记录死亡
+                    _diedInsideSinceEnter = true;
+                    deathCountThisRun++;
+
                     playerController.Die();
                     GlobalSfx.PlayDeathSfx();
 
-
-                    // —— 弹出全局死亡模板（文案/图片/时长可在本组件里改；为空就用模板默认）——
+                    // 死亡UI
                     DeathUIOverlay.Instance?.Show(
                         string.IsNullOrEmpty(deathMessage) ? null : deathMessage,
                         deathSprite,
                         (deathDuration > 0f) ? deathDuration : (float?)null
                     );
-                    if (resetCrumbsOnDeath) ResetCrumbs();  // ★ 被淹死：清零并复活碎屑
+
+                    // 关内死亡：按照你原设定，清全局饼干并复活碎屑
+                    if (resetCrumbsOnDeath) ResetCrumbs();
+
+                    // ★ 立刻传送到重生点（不等离开区域的判定）
+                    if (warpOnDeath) WarpPlayerToRespawn();
                 }
+
                 ResetSequence();
                 yield break;
             }
@@ -264,24 +305,79 @@ public class FloodSequence : MonoBehaviour
         if (resetCrumbs) ResetCrumbs();
     }
 
-    void ResetCrumbs()
-{
-    // 1) 清本地计数（如果你还在用它）
-    currentCrumbs = 0;
-
-    // 2) 清真正库存并触发 UI 事件
-    if (CookiesInventory.Instance != null)
-        CookiesInventory.Instance.Clear();   // ★ 关键
-
-    // 3) 复活场景里的碎屑（确保拾取改成 SetActive(false)）
-    if (crumbRoot)
+    // 只复位关内掉落，不清全局库存/UI（顺利离开用）
+    void ResetLevelLocalCrumbsOnly()
     {
-        for (int i = 0; i < crumbRoot.childCount; i++)
-            crumbRoot.GetChild(i).gameObject.SetActive(true);
+        currentCrumbs = 0;
+        if (crumbRoot)
+        {
+            for (int i = 0; i < crumbRoot.childCount; i++)
+                crumbRoot.GetChild(i).gameObject.SetActive(true);
+        }
     }
 
-    // 4) 万一 UI 没监听事件，可兜底强刷一次（可留可删）
-    SkillChargeUI.Instance?.Refresh(0);
-}
+    // 清全局 + 复活掉落 + 刷UI（关内死亡或策略要求时）
+    void ResetCrumbs()
+    {
+        currentCrumbs = 0;
+    
+        if (CookiesInventory.Instance != null)
+            CookiesInventory.Instance.Clear();   // 触发 UI 清零
+    
+        // ☆ 递归复活：不管嵌套层级，都能把所有饼干启用回来
+        if (crumbRoot)
+        {
+            var allCrumbs = crumbRoot.GetComponentsInChildren<CookiePickup>(true);
+            foreach (var c in allCrumbs)
+                c.gameObject.SetActive(true);
+        }
+    
+        SkillChargeUI.Instance?.Refresh(0);
+    }
 
+
+    // ★ 外部致死时可调用：标记为“本轮区内发生过死亡”
+    public void NotifyPlayerDiedInside()
+    {
+        if (IsPlayerInsideStartZone())
+        {
+            _diedInsideSinceEnter = true;
+            deathCountThisRun++;
+        }
+    }
+
+    // ★ 实际传送到重生点（容错处理 Rigidbody / CharacterController）
+    public void WarpPlayerToRespawn()
+    {
+        if (!respawnPoint || !_player) return;
+
+        // 尝试拿到刚体/角色控制器
+        var rb = _player.GetComponent<Rigidbody>();
+        var cc = _player.GetComponent<CharacterController>();
+        var agent = _player.GetComponent<UnityEngine.AI.NavMeshAgent>();
+
+        bool ccWas = false; bool agentWas = false;
+
+        if (cc) { ccWas = cc.enabled; cc.enabled = false; }
+        if (agent){ agentWas = agent.enabled; agent.enabled = false; }
+
+        if (rb)
+        {
+            rb.isKinematic = true;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        _player.SetPositionAndRotation(respawnPoint.position, respawnPoint.rotation);
+
+        if (rb)
+        {
+            rb.isKinematic = false;
+            rb.WakeUp();
+        }
+        if (cc) cc.enabled = ccWas;
+        if (agent) agent.enabled = agentWas;
+
+        Physics.SyncTransforms();
+    }
 }
