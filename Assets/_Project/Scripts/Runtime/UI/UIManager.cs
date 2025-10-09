@@ -28,7 +28,7 @@ namespace Antventure.UI
         [SerializeField] private string stoveSaveHintText = "Stove now is save";
 
         [Header("UI Controllers")]
-        [SerializeField] private OptionsMenuController optionsMenuController;
+        [SerializeField] private GameSettingsManager gameSettingsManager;
         [SerializeField] private PauseMenuController pauseMenuController;
         [SerializeField] private GameHUDController gameHUDController;
 
@@ -188,7 +188,7 @@ namespace Antventure.UI
                 }
             }
 
-            if (optionsMenuController != null)
+            if (gameSettingsManager != null)
             {
                 // Additional initialization logic can be added here
             }

@@ -317,7 +317,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &161390923
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3050,16 +3050,16 @@ RectTransform:
   m_GameObject: {fileID: 1452566013}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.45804018, y: 0.54165, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 161390923}
   m_Father: {fileID: 769390327}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 800, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1452566015
 MonoBehaviour:
@@ -3074,7 +3074,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0.5803922}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3098,7 +3098,7 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1452566013}
-  m_CullTransparentMesh: 1
+  m_CullTransparentMesh: 0
 --- !u!1 &1491975100
 GameObject:
   m_ObjectHideFlags: 0
@@ -3244,6 +3244,8 @@ MonoBehaviour:
   soundEffectVolumeSlider: {fileID: 1116247594}
   closeButton: {fileID: 533975484}
   buttonClickSound: {fileID: 8300000, guid: 5ccd2a1d15d98a94daab8de31b9606e0, type: 3}
+  autoFixPanelScale: 1
+  targetScale: {x: 1, y: 1, z: 1}
 --- !u!4 &1502126149
 Transform:
   m_ObjectHideFlags: 0

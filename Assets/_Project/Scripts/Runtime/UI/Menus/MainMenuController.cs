@@ -15,7 +15,7 @@ namespace Antventure.UI.Menus
         [SerializeField] private AudioClip hoverSound;
         
         [Header("Settings")]
-        [SerializeField] private SettingsController settingsController;
+        [SerializeField] private GameSettingsManager gameSettingsManager;
 
         private void Start()
         {
@@ -50,13 +50,13 @@ namespace Antventure.UI.Menus
         public void OnOptionsClicked()
         {
             PlayClickSound();
-            if (settingsController != null)
+            if (gameSettingsManager != null)
             {
-                settingsController.OpenSettings();
+                gameSettingsManager.OpenSettings();
             }
             else
             {
-                Debug.LogWarning("Settings controller not assigned!");
+                Debug.LogWarning("Game Settings Manager not assigned!");
             }
         }
 
