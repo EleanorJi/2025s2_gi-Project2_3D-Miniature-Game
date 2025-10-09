@@ -62,19 +62,19 @@ In accordance with the project specification, our evaluation will be conducted u
 
 | Date Span                     | Task                                                                |
 | ----------------------------- | ------------------------------------------------------------------- |
-| **Nov 3 - Nov 10**           | Finalize evaluation materials (interview script, consent forms).      |
-| **Nov 11 - Nov 18**           | Recruit all 10 participants and conduct all evaluation sessions.    |
-| **Nov 19 - Nov 27**            | Analyze all collected data and synthesize findings.                 |
-| **Nov 30 - Final Submission**  | Implement high-priority changes to the game based on feedback.      |
+| **Oct 9 - Oct 14**           | Finalize evaluation materials (interview script, consent forms).      |
+| **Oct 14 - Oct 20**           | Recruit all 10 participants and conduct all evaluation sessions.    |
+| **Oct 20 - Nov 24**            | Analyze all collected data and synthesize findings.                 |
+| **Nov 24 - Final Submission**  | Implement high-priority changes to the game based on feedback.         |
 
 ### 6. Responsibilities
 
 | Task                                      | Responsible Team Member(s) |
 | ----------------------------------------- | -------------------------- |
-| Finalize Evaluation Materials             | Team Member Ruonan Xiong            |
-| Participant Recruitment & Scheduling      | Team Member Hanyu Ji              |
-| Conduct Cooperative Evaluation Sessions   | Team Member Zixin Xia, Team Member Naixin Zhang |
-| Administer Questionnaires & Interviews  | Team Member Ruonan Xiong, Team Member Hanyu Ji |
+| Finalize Evaluation Materials             | Ruonan Xiong            |
+| Participant Recruitment & Scheduling      | Hanyu Ji              |
+| Conduct Cooperative Evaluation Sessions   | Zixin Xia, Naixin Zhang |
+| Administer Questionnaires & Interviews  |  Ruonan Xiong,  Hanyu Ji |
 | Data Analysis & Synthesis                 | All Members                |
 | Implementing Game Changes                 | All Members                |
 
