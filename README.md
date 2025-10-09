@@ -38,21 +38,21 @@
 
 ### Core Concept
 
-The player takes on the role of a brave little ant on a quest to reclaim a stolen French fry from a greedy seagull. From the perspective of an insect, everyday environments become giant and dangerous playgrounds. Players must traverse kitchens, streets, and outdoor areas, overcoming hazards and using the unique ability to summon fellow ants to solve puzzles, cross obstacles, and ultimately confront the seagull in a final showdown. The game's title, *Antventure*, is a portmanteau of "Ant" and "Adventure," reflecting the grand journey of our tiny protagonist.
+The player takes on the role of a brave little ant on a quest to reclaim a stolen cookie from a greedy seagull. From the perspective of an insect, everyday environments become giant and dangerous playgrounds. Players must traverse kitchens, streets, and outdoor areas, overcoming hazards and using the unique ability to summon fellow ants to solve puzzles, cross obstacles, and ultimately confront the seagull in a final showdown. The game's title, *Antventure*, is a portmanteau of "Ant" and "Adventure," reflecting the grand journey of our tiny protagonist.
 
 ### Related Genre
 
 1.  3D platformer + light puzzle adventure
 2.  Inspirations include *Pikmin* (group coordination), *It Takes Two* (creative level design), and *Grounded* (miniature perspective).
-3.  Unlike these titles, our game emphasizes **Melbourne’s cultural** elements (seagulls, trams, café tables) while delivering a short, focused experience (~10 minutes) built around the summoning mechanic.
+3.  Unlike these titles, our game offers a short, focused experience (~10 minutes) built around the summoning mechanic and creative environmental puzzles from a miniature perspective.
 
 ### Target Audience
 
-*(Please fill in details about the target audience)*
+Primary audience is university students and young adults who enjoy fast-paced, light puzzle-solving and 3D platformer games.
 
 ### Unique Selling Points (USPs)
 
--   **Summoning Mechanic:** Collect fry crumbs to summon different types of ants (workers for carrying, builders for bridges/ladders, soldiers for defense). This introduces strategy and variety within a short playtime.
+-   **Summoning Mechanic:** Collect cookie crumbs to summon different types of ants (workers for carrying, builders for bridges/ladders, soldiers for defense). This introduces strategy and variety within a short playtime.
 -   **Creative Environmental Interactions:** Each level features unique obstacles: bubble machines in the kitchen, car traffic and shoe gaps on the street, puddles requiring bridges, and fishing lines or water spouts during the boss fight.
 -   **Miniature Melbourne Setting:** The game is built with recognizable Melbourne landmarks (streets, cafés, seaside piers), turning the familiar into adventurous landscapes.
 
@@ -62,19 +62,34 @@ The player takes on the role of a brave little ant on a quest to reclaim a stole
 
 ### Backstory
 
-In the hidden corners of Melbourne lies a world unnoticed by humans—the kingdom of ants. Within this miniature realm, a single ordinary French fry is like a legendary treasure bestowed by the gods, capable of altering the fate of an entire ant colony.
+In the hidden corners of Melbourne lies a world unnoticed by humans—the kingdom of ants. Within this miniature realm, a single ordinary cookie is like a legendary treasure bestowed by the gods, capable of altering the fate of an entire ant colony.
 
-The story begins on a tranquil morning. The protagonist is a small ant, stubborn and brave. It stumbles upon a fallen French fry on the kitchen counter—a “golden feast” in ant terms. Just as it prepares to feast, a cunning seagull swoops through the window, snatching the fry and leaving scattered crumbs behind. To humans, this is an insignificant scene, but in the eyes of the little ant, it is a challenge from fate and a call to adventure.
+The story begins on a tranquil morning. The protagonist is a small ant, stubborn and brave. It stumbles upon a fallen cookie on the kitchen counter—a “golden feast” in ant terms. Just as it prepares to feast, a cunning pigeon swoops through the window, snatching the cookie and leaving scattered crumbs behind. To humans, this is an insignificant scene, but in the eyes of the little ant, it is a challenge from fate and a call to adventure.
 
 In the ants' worldview, human kitchens, streets, cafes, and docks are not ordinary spaces, but towering labyrinths and turbulent battlefields. Tableware becomes colossal obstacles, human footsteps on the streets feel like impending doom, and a single drop of coffee could drown an entire squad.
 
-To reclaim its precious french fry, the little ant embarks on a journey of pursuit and resistance. It is not alone: food scraps gathered along the way summon companions. Ants unite to carry burdens, build bridges, and ward off dangers. Through this journey, the protagonist evolves into a leader—no longer merely a food-seeking individual, but a vanguard guiding its colony toward glory.
+To reclaim its precious cookie, the little ant embarks on a journey of pursuit and resistance. It is not alone: food scraps gathered along the way summon companions. Ants unite to carry burdens, build bridges, and ward off dangers. Through this journey, the protagonist evolves into a leader—no longer merely a food-seeking individual, but a vanguard guiding its colony toward glory.
 
 The ultimate adversary is the tyrannical seagull—a “dragon” in the ant world, symbolizing the oppression and arrogance of the outside world. Only by defeating it can the little ant prove that even the most insignificant life can leave its own mark of victory in the vast world.
 
 ### Characters
 
-*(Please add character details here)*
+-   **The Protagonist Ant (Player Character)**
+   -   **Role:** The hero controlled by the player, on an adventure to reclaim the cookie.
+   -   **Personality & Motivation:** Brave and determined, it fears nothing despite its tiny size. Its core drive is to reclaim the precious cookie stolen by the pigeon, a mission of honor for the entire ant colony.
+   -   **Appearance:** A stylized, earth-toned (sandy brown) ant with simple texturing on its body for detail. Features a smooth, six-legged crawling animation, making its movement look natural and insect-like.
+   -   **Abilities:** Can run, jump, climb walls, and grab (with the C key) small objects (e.g., sugar cubes). Also possesses the ability to summon specific helper ants.
+-   **The Pigeon (Main Antagonist)**
+    -   **Role:** The final boss and the greedy thief who stole the cookie.
+    -   **Personality & Motivation:** Arrogant and possessive, it views the ant's world as its personal pantry, plundering at will.
+    -   **Appearance:** From the ant's perspective, it is a massive and intimidating grey pigeon, with detailed feathers and threatening animations.
+    -   **Role in Gameplay:** Appears as the boss in the dock level. Its attack patterns include: a fast pecking motion with its beak, and periodically flapping its wings to create strong gusts of wind that can push the ant back or create obstacles.
+-   **Helper Ants (Worker, Builder, etc.)**
+    -   **Role:** AI-controlled allies summoned by the protagonist ant, crucial for solving puzzles and overcoming level challenges. 
+-   **Insects (Environmental Enemies)**
+    -   **Role:** Hostile creatures encountered in the second level (Outdoor), acting as environmental hazards that the player must avoid or confront.
+    -   **Scale & Design:** While small to humans, from the ant's perspective these insects are formidable in size and threat. They are designed to appear as large, intimidating adversaries.
+    -   **Interaction:** These insects can be defeated by the protagonist's Venom Shot ability. Upon being hit, they are eliminated, clearing the path for the player.
 
 ---
 
@@ -88,15 +103,17 @@ The game adopts a dynamic third-person perspective. The player need to control t
 
 -   **Movement control:** WASD keys control the character's movement in all directions.
 -   **Jumping action:** Pressing the space will perform a normal jump.
--   **Environmental Interaction:** The “E” key is used for interacting with scene objects and summoning points.
--   **Acceleration capability:** The “Shift” key triggers a short-term acceleration movement. There is a cooling mechanism in place to prevent abuse.
+-   **Pick up：** The "C" key is used for grabbing/picking up objects. 
+-   **Environmental Interaction:** The "E" key is used for interacting with scene objects and summoning points.
+-   **Launch attack:** The "P" key is used for shooting venom.
 -   **Viewpoint control:** Adjust the camera direction by moving the mouse.
--   **Special operation:** When close to the wall, press the space bar to activate the wall-following movement mode.
+-   **Special operation:** The "J" key is used to escape from a trapped situation. The "V" key is used for some special gameplay methods.
 
 ### Progression
 
 -   **Level structure:**
-    -   **Teaching level (kitchen area) 1.5-2min:** Gradually guide players to master movement, jumping and basic interaction.
+    -   **Tutorial Level: ~1 min:** Set in a simplified environment to teach the player the core controls: WASD movement, Space for jumping, and C for grabbing objects.
+    -   **Teaching level (kitchen area) 1.5-2min:** Introduces environmental hazards and basic puzzles using the learned controls.
     -   **Main level (outdoor mixed environment) 4-6min :** Integrates shrubbery and street elements, and introduces a complete summoning mechanism
     -   **Ultimate Challenge (Dock Boss Battle) 2-4min:** Requires the comprehensive application of all the skills learned so far
 -   **Difficulty assessment:**
@@ -119,12 +136,13 @@ The game adopts a dynamic third-person perspective. The player need to control t
     -   **Environmental Interaction:**
         -   Interact with the preset trigger point
         -   Interacting with dynamic obstacles (such as moving chopsticks, dripping faucets)
+    -   **Combat:** The player ant can perform a basic attack to defeat insects and clear a path.
     -   **Team collaboration:** Summon a limited number of ants to assist in completing the mission.
 -   **Summoning Skill:**
     -   **Summoning Resources:** Food scraps need to be collected as the summoning energy. Each summoning consumes one scrap.
     -   **Type of helper ants:**
-        -   **Worker ants:** Transport small objects, activate mechanisms, assist in defeating the boss.
-        -   **Assembly ants:** Constructing simple bridges and stairs
+        -   **Wall-Crawlers:** Jet-black ants. They can defy gravity to scurry quickly across specific vertical surfaces (e.g., walls, cabinet sides), used to activate out-of-reach switches or open new paths for the protagonist.
+        -   **Soldiers:** Jet-black ants, sturdier than workers. They are the primary units summoned for the final boss fight. Once summoned, Soldiers will automatically lock onto and charge towards the Pigeon boss to attack, providing constant distraction and damage without requiring player manual control.
     -   The summoning point is fixed at a specific location and requires sufficient debris to be gathered before it can be summoned.
 -   **Physical system:**
     -   Implementing the standard gravity model and collision detection
@@ -148,16 +166,18 @@ The game is set in a fully 3D environment, but with level design that encourages
     <p align="center">
       <img src="images/kitchen.png" alt="Kitchen Level 1" width="400">
     </p>
-    <p align="center">
-      <img src="images/bathroom.png" alt="Kitchen Level 2" width="400">
-    </p>
     
-    -   **Static obstacles:** Sink, kitchenware (requiring detour or jumping over)
-    -   **Dynamic obstacles:**
-        -   Rolling pin (moving along a fixed path)
-        -   Intermittent water droplets (triggered regularly)
-    -   **Interactive elements:**
-        -   Honey Zone: After entering, the speed slows down and remains at that level for a period.
+    -   **Checkpoint System:** A checkpoint is activated after overcoming each primary obstacle. Upon death, the player respawns at the most recently activated checkpoint.
+    -   **Obstacles & Puzzles:**
+        -   **Rolling Cucumber:** A cucumber rolling back and forth on a cutting board, which the player must time their jump to overcome.
+        -   **Sugar Cube Puzzle**: The player must grab (C) a sugar cube and carry it to a designated slot. Placing the cube correctly extinguishes the flames on a stovetop, allowing passage. 
+        -   **Milk Carton Maze:** A maze constructed from towering milk cartons. The player must navigate through it to find the exit.
+        <p align="center">
+          <img src="images/maze.png" alt="maze design Level 1" width="400">
+        </p>
+        
+        -    **Cake Spatula Bridge:** A long cake spatula spans over a sink filled with water. The player must carefully cross this narrow bridge. Falling into the water results in failure.
+
 -   **Second Level (Outdoor Comprehensive):**
     <p align="center">
       <img src="images/outdoor.png" alt="Outdoor Level" width="400">
@@ -273,11 +293,11 @@ A visual or descriptive flowchart of the user's navigation through the game's in
 ### In-Game HUD (Heads-Up Display)
 Core information displayed on-screen during gameplay.
 *(A visual mockup of the HUD will be added here.)*
-*   **Fry Crumb Counter:** Clearly displays the quantity of the summoning resource.
+*   **Cookie Crumb Counter:** Clearly displays the quantity of the summoning resource.
 *   **Summoned/Available Ants:** Shows the types and number of ants currently available.
 *   **Ability Cooldowns:** Visual indicator for skills like Sprint.
 *   **Interaction Prompts:** Contextual prompts like "Press E to Interact" when near objects.
-*   **Objective Reminder:** A simple text reminder of the current goal (e.g., "Reclaim the French fry!").
+*   **Objective Reminder:** A simple text reminder of the current goal (e.g., "Reclaim the cookie!").
 
 ### Menu Details
 Detailed breakdown of what each menu contains.
@@ -293,14 +313,14 @@ Detailed breakdown of what each menu contains.
     *   `Controls`: Display of keybindings.
 *   **Level Complete Screen:**
     *   `Time Taken`
-    *   `Collectibles Found` (e.g., Total fry crumbs)
+    *   `Collectibles Found` (e.g., Total cookie crumbs)
     *   Buttons for `Next Level` or `Replay`.
 
 ### Interaction & Feedback
 How UI elements respond to user input.
 *(Examples of these states will be visualized later.)*
 *   **Button States:** Visual changes for `Hover`, `Clicked`, and `Disabled` states.
-*   **Feedback on Collection:** A brief animation or sound effect when picking up fry crumbs.
+*   **Feedback on Collection:** A brief animation or sound effect when picking up cookie crumbs.
 *   **Summoning Feedback:** Visual and audio cues to confirm an ant has been successfully summoned.
 
 ---
@@ -333,5 +353,8 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
+
+
 
 

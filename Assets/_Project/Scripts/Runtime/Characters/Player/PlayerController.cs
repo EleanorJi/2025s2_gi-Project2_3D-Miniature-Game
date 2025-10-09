@@ -3,37 +3,37 @@ using Antventure.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("移动与跳跃参数")]
+    [Header("Movement and Jumping Parameters")]
     public float moveSpeed = 5f;
     public float jumpForce = 7f;
     private float startThreshold = 0.1f;
     private float stopThreshold = 0.3f;
 
-    // 动画控制
+    // Animation control
     private Animator antAnimator;
     private bool isMoving = false;
 
-    [Header("地面检测参数")]
+    [Header("Ground detection parameters")]
     public int groundContactCount = 0;
 
-    [Header("拾取参数")]
+    [Header("pickup parameters")]
     public Transform carryPoint;
     public Transform dropPoint;
     private GameObject carriedItem;
     private GameObject nearbyItem;
 
-    [Header("死亡与重生参数")]
+    [Header("Death and Rebirth Parameters")]
     public float maxSafeFallDistance = 5f;
     public Transform respawnPoint;
     private float lastAirY;
     private bool wasGrounded;
 
-    // 组件引用
+    // Component reference
     private Rigidbody rb;
     private Camera mainCamera;
     public bool IsCarryingItem => carriedItem != null;
 
-    // 输入缓存（在Update中读取，在FixedUpdate中使用）
+    // Input cache
     private float horizontalInput;
     private float verticalInput;
     private bool jumpInput;
@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
             Debug.LogError("Animator not found on ant model!");
         }
 
-        // 确保存档点管理器存在
+        // Ensure that the archive point manager is present
         if (CheckpointManager.Instance == null)
         {
             GameObject checkpointManager = new GameObject("CheckpointManager");
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
             inputController = gameObject.AddComponent<PlayerInputController>();
         }
 
-        // 隐藏光标
+        // Hide the cursor
         if (CursorManager.Instance != null)
         {
             CursorManager.Instance.HideCursor();
@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // 确保光标隐藏
+        // Make sure the cursor is hidden
         if (Cursor.visible)
         {
             Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
@@ -91,36 +91,36 @@ public class PlayerController : MonoBehaviour
 
         if (inputController != null && !inputController.IsInputEnabled())
         {
-            // Debug.Log("输入被禁用，跳过玩家输入处理");
-            // 控制动画
+            // Debug.Log("Input is disabled. Skip the processing of player input.");
+            // Control animation
             StopMovement();
             return;
         }
 
-        // 读取输入（在Update中）
+        // Read input
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         jumpInput = Input.GetKeyDown(KeyCode.Space);
         pickupInput = Input.GetKeyDown(KeyCode.C);
 
-        // 更新移动状态（用于动画）
+        // Update the movement status (for animation)
         UpdateMovementState();
 
-        // 更新地面状态
+        // Update the ground status
         UpdateGroundState();
 
-        // 立即处理跳跃
+        // Handling jumps and pickup
         HandleJump();
         HandlePickup();
 
-        // 记录离开地面瞬间的高度
+        // Record the height at the moment of leaving the ground
         if (!(groundContactCount > 0) && wasGrounded)
         {
             lastAirY = transform.position.y;
         }
         wasGrounded = groundContactCount > 0;
 
-        // 调试：按R键死亡
+        // Debugging: Pressing the R key results in death.
         if (Input.GetKeyDown(KeyCode.R))
         {
             Die();
@@ -135,13 +135,13 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // 处理移动
+        // Handling movement
         HandleMovement();
     }
 
     void UpdateMovementState()
     {
-        // 更新移动状态用于动画
+        // Update the movement status for animation
         if (isMoving)
         {
             isMoving = Mathf.Abs(horizontalInput) > stopThreshold || Mathf.Abs(verticalInput) > stopThreshold;
@@ -151,7 +151,7 @@ public class PlayerController : MonoBehaviour
             isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;
         }
 
-        // 控制动画
+        // Control animation
         if (antAnimator != null)
         {
             antAnimator.SetBool("IsMoving", isMoving);
@@ -170,25 +170,11 @@ public class PlayerController : MonoBehaviour
                 Die();
             }
         }
-        // 根据接地状态控制旋转约束
-        if (rb != null)
-        {
-            if (newGroundedState)
-            {
-                // 在地面上：冻结旋转（防止摔歪）
-                rb.freezeRotation = true;
-            }
-            else
-            {
-                // 离开地面：允许旋转（自由翻滚）
-                rb.freezeRotation = false;
-            }
-        }
     }
 
     void HandleMovement()
     {
-        // 基于摄像机方向计算移动方向
+        // Calculate the movement direction based on the direction of the camera.
         Vector3 cameraForward = mainCamera.transform.forward;
         Vector3 cameraRight = mainCamera.transform.right;
 
@@ -208,7 +194,7 @@ public class PlayerController : MonoBehaviour
         movement.y = rb.linearVelocity.y;
         rb.linearVelocity = movement;
 
-        // 让角色面向移动方向
+        // Make the character face the direction of movement.
         if (new Vector3(movement.x, 0f, movement.z).magnitude > 0.1f)
         {
             Vector3 lookDirection = new Vector3(movement.x, 0f, movement.z);
@@ -248,39 +234,39 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    // 强制设置为空闲状态
+    // Set to idle state forcibly
     void ForceIdleState()
     {
-        // 重置移动状态
+        // reset movement
         isMoving = false;
 
-        // 更新动画
+        // update animation
         if (antAnimator != null)
         {
             antAnimator.SetBool("IsMoving", false);
         }
     }
 
-    //停止物理移动
+    //Stop physical movement
     void StopMovement()
     {
-        // 保持Y轴速度（重力），但停止水平移动
+        // Maintain the Y-axis speed (gravity), but stop the horizontal movement
         Vector3 currentVelocity = rb.linearVelocity;
         rb.linearVelocity = new Vector3(0f, currentVelocity.y, 0f);
 
-        // 确保动画状态正确
+        // Ensure that the animation state is correct
         ForceIdleState();
     }
 
-    // 放下物品的方法，会放到玩家前面
+    // The method of placing the items will be shown to the player on the screen.
     void DropItem()
     {
         if (carriedItem != null)
         {
-            // 移除父级关系
+            // Remove parent-child relationship
             carriedItem.transform.SetParent(null);
 
-            // 设置物品位置到玩家前面的dropPoint位置
+            // Set the item's position to the dropPoint location in front of the player.
             carriedItem.transform.position = dropPoint.position;
             carriedItem.transform.rotation = dropPoint.rotation;
 
@@ -288,7 +274,7 @@ public class PlayerController : MonoBehaviour
             if (itemRb)
             {
                 itemRb.isKinematic = false;
-                // 可选：给物品一个小的向前推力，让它更自然地落下
+                // Give the object a small forward push to make it fall more naturally.
                 itemRb.linearVelocity = Vector3.zero;
             }
 
@@ -300,10 +286,10 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        // 检测与地面的碰撞
+        // Detecting collisions with the ground
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Stove"))
         {
-            // 只有当这个地面物体不在列表中时才增加计数
+            // Only when this ground object is not on the list will the count be incremented.
             if (!groundContacts.Contains(collision.gameObject))
             {
                 groundContacts.Add(collision.gameObject);
@@ -312,7 +298,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // 检测与灶台的碰撞（特殊处理）
+        // Detecting collisions with the Stove
         if (collision.gameObject.CompareTag("Stove"))
         {
             StoveDangerZone stove = collision.gameObject.GetComponent<StoveDangerZone>();
@@ -321,7 +307,7 @@ public class PlayerController : MonoBehaviour
                 stove.OnPlayerEnter(this);
             }
         }
-        // 检测与水的碰撞
+        // Detecting collisions with the Water
         else if (collision.gameObject.CompareTag("Water"))
         {
             Die();
@@ -342,10 +328,10 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        // 检测离开地面
+        // Detecting collisions exit the ground
         if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Stove"))
         {
-            // 如果这个地面物体在列表中，移除它
+            // If this ground object is present in the list, remove it.
             if (groundContacts.Contains(collision.gameObject))
             {
                 groundContacts.Remove(collision.gameObject);
@@ -376,31 +362,24 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player died!");
-        // 重生前先放下物品
+        // dropItem before die
         DropItem();
 
-        // 重置物理状态
+        // reset physical state
         rb.linearVelocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;  // 🧠 这一行非常重要，清除旋转速度
 
-        // 重置地面接触
+        // reset ground count
         groundContacts.Clear();
         groundContactCount = 0;
 
-        // 获取重生点位置
+        // get checkpoint
         Vector3 respawnPosition = CheckpointManager.Instance.GetLastRespawnPosition();
         transform.position = respawnPosition;
 
-        // 🧭 重置姿势为“脚朝下、面向前”
+        // reset position
         transform.rotation = Quaternion.identity;
-        // 或者如果你的蚂蚁模型默认前方是 +Z 方向（常见情况）
-        // transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        // 如果默认面向 X 方向或有偏转，可自行调整为 Quaternion.Euler(0f, 90f, 0f)
 
-        // 🧱 可选：重生后先冻结旋转，防止在地面上乱动
-        rb.freezeRotation = true;
-
-        // 调试信息
+        // debug
         CheckpointManager.Instance.DebugActivatedCheckpoints();
 
         Debug.Log($"Respawned at last checkpoint: {respawnPosition}");

@@ -99,7 +99,7 @@ MonoBehaviour:
   fireEvery: 0.7
   minionDamage: 1
   rotateSpeed: 10
-  lifeTime: 10
+  lifeTime: 5
 --- !u!1 &7003038216147009290
 GameObject:
   m_ObjectHideFlags: 0
