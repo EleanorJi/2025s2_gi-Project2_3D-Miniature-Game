@@ -3,31 +3,31 @@ using TMPro;
 using System.Collections;
 
 /// <summary>
-/// 挂到一个带 Box/Sphere/Capsule Collider 的触发区域（IsTrigger ✔）
-/// 作用：玩家进入→开启 ChargeJumpModule；离开→关闭 ChargeJumpModule
-/// 现在新增：进入区域时弹出一次提示UI（可选，不填引用就不显示）
+/// Attach to a trigger zone with Box/Sphere/Capsule Collider (IsTrigger ✔)
+/// Function: player enters→enable ChargeJumpModule; leaves→disable ChargeJumpModule
+/// Now added: pop up hint UI once when entering zone (optional, won't show if no reference)
 /// </summary>
 [RequireComponent(typeof(Collider))]
 public class ChargeJumpZone : MonoBehaviour
 {
-    [Header("过滤")]
+    [Header("Filter")]
     public bool onlyAffectTag = true;
-    public string requiredTag = "Player";   // 只影响这个 Tag
+    public string requiredTag = "Player";   // only affect this Tag
 
-    [Header("进入/离开行为")]
-    public bool enableOnEnter = true;       // 进入：开启蓄力跳
-    public bool disableOnExit = true;       // 离开：关闭蓄力跳
-    [Tooltip("离开后延迟关闭（秒），0=立即关闭")]
+    [Header("Enter/Exit Behavior")]
+    public bool enableOnEnter = true;       // enter: enable charge jump
+    public bool disableOnExit = true;       // exit: disable charge jump
+    [Tooltip("delay before disabling after exit (seconds), 0=disable immediately")]
     public float disableDelay = 0f;
 
-    [Header("进入提示UI（可选）")]
-    public CanvasGroup hintGroup;           // 拖一个面板（CanvasGroup），默认 alpha=0
-    public TMP_Text hintText;               // 面板上的文本
+    [Header("Entry Hint UI (Optional)")]
+    public CanvasGroup hintGroup;           // drag a panel (CanvasGroup), default alpha=0
+    public TMP_Text hintText;               // text on panel
     [TextArea] public string enterMessage = "在这个区域不要被粘稠的垃圾汤粘住！";
     public float hintFadeIn = 0.2f;
     public float hintStay   = 2.0f;
     public float hintFadeOut= 0.2f;
-    public bool  hideOnExit = true;         // 离开时立刻把提示隐藏（可选）
+    public bool  hideOnExit = true;         // immediately hide hint when exiting (optional)
 
     Coroutine hintCo;
 
@@ -41,11 +41,11 @@ public class ChargeJumpZone : MonoBehaviour
     {
         if (onlyAffectTag && !other.CompareTag(requiredTag)) return;
 
-        // 开启蓄力跳
+        // enable charge jump
         var mod = other.GetComponent<ChargeJumpModule>();
         if (mod && enableOnEnter) mod.SetChargeEnabled(true);
 
-        // 弹提示（可选）
+        // pop hint (optional)
         if (hintGroup && hintText)
         {
             ShowHintOnce(enterMessage);
@@ -56,7 +56,7 @@ public class ChargeJumpZone : MonoBehaviour
     {
         if (onlyAffectTag && !other.CompareTag(requiredTag)) return;
 
-        // 关闭蓄力跳
+        // disable charge jump
         var mod = other.GetComponent<ChargeJumpModule>();
         if (mod && disableOnExit)
         {
@@ -64,7 +64,7 @@ public class ChargeJumpZone : MonoBehaviour
             else StartCoroutine(DisableLater(mod, disableDelay));
         }
 
-        // 离开时可选隐藏提示
+        // optionally hide hint when exiting
         if (hideOnExit) HideHintImmediate();
     }
 
@@ -74,7 +74,7 @@ public class ChargeJumpZone : MonoBehaviour
         if (mod) mod.SetChargeEnabled(false);
     }
 
-    // —— 提示UI —— //
+    // —— Hint UI —— //
     void ShowHintOnce(string msg)
     {
         if (!hintGroup || !hintText) return;
@@ -86,7 +86,7 @@ public class ChargeJumpZone : MonoBehaviour
     {
         hintText.text = msg;
 
-        // 淡入
+        // fade in
         for (float t = 0f; t < hintFadeIn; t += Time.unscaledDeltaTime)
         {
             hintGroup.alpha = Mathf.Lerp(0f, 1f, t / hintFadeIn);
@@ -94,10 +94,10 @@ public class ChargeJumpZone : MonoBehaviour
         }
         hintGroup.alpha = 1f;
 
-        // 停留
+        // stay
         yield return new WaitForSecondsRealtime(hintStay);
 
-        // 淡出
+        // fade out
         for (float t = 0f; t < hintFadeOut; t += Time.unscaledDeltaTime)
         {
             hintGroup.alpha = Mathf.Lerp(1f, 0f, t / hintFadeOut);
@@ -116,7 +116,7 @@ public class ChargeJumpZone : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    // 小可视化
+    // small visualization
     void OnDrawGizmos()
     {
         Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.25f);

@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class KillPlayerOnTouch : MonoBehaviour
 {
-    [Header("Death UI（可在组件里自定义覆盖）")]
-    [TextArea] public string deathMessage = "你被虫子干掉了…";
+    [Header("Death UI (you can override in this component)")]
+    [TextArea] public string deathMessage = "You got bugged out...";
     public Sprite deathSprite;
-    public float deathDuration = 4f; // <=0 则用模板默认时长
+    public float deathDuration = 4f; // <=0 uses the template's default duration
 
-    // 防止一次接触同时触发 OnCollision 和 OnTrigger 导致重复播 UI
+    // Prevent double-trigger when both OnCollision and OnTrigger fire on the same contact
     bool _busy;
 
     void TriggerDeath(GameObject go)
@@ -19,19 +19,18 @@ public class KillPlayerOnTouch : MonoBehaviour
 
         _busy = true;
 
-        // 先按你现有流程死亡（回到重生点等）
+        // First, run your existing death flow (respawn, etc.)
         pc.Die();
         GlobalSfx.PlayDeathSfx();
 
-
-        // 然后调用全局死亡模板（文字/图片/时长可在本组件里改；留空用模板默认）
+        // Then show the global death UI template (text/sprite/duration can be overridden here; leave blank to use defaults)
         DeathUIOverlay.Instance?.Show(
             string.IsNullOrEmpty(deathMessage) ? null : deathMessage,
             deathSprite,
             (deathDuration > 0f) ? deathDuration : (float?)null
         );
 
-        // 小冷却，避免同一帧或短时间内重复触发
+        // Brief cooldown to avoid retriggering within the same frame/short window
         Invoke(nameof(ResetBusy), 0.2f);
     }
 
@@ -43,7 +42,7 @@ public class KillPlayerOnTouch : MonoBehaviour
             TriggerDeath(c.collider.gameObject);
     }
 
-    // 保险：若某个碰撞体被设为 Trigger 也能触发
+    // Safety net: if some collider is set to Trigger, still handle it
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

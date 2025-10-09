@@ -3,15 +3,15 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class SpiderDeathZone : MonoBehaviour
 {
-    [Header("过滤")]
+    [Header("Filter")]
     public string playerTag = "Player";
 
-    [Header("这一次想显示的内容（可留空=用模板默认）")]
+    [Header("What to show this time (leave empty = use template default)")]
     [TextArea]
-    public string overrideMessage;     // 例如：“你被蜘蛛网困住了…”
-    public Sprite overrideSprite;      // 这次的专用图片（可不填）
+    public string overrideMessage;
+    public Sprite overrideSprite;
 
-    [Header("这一次的显示时长（留空/<=0 用模板默认）")]
+    [Header("Display duration this time (empty/<=0 uses template default)")]
     public float holdSeconds = 4f;
 
     bool _busy;
@@ -33,21 +33,20 @@ public class SpiderDeathZone : MonoBehaviour
 
         _busy = true;
 
-        // 1) 先真正死亡（会回到你的存档点/重生点）
+        // 1) Actually kill the player first (they'll go back to save/respawn)
         pc.Die();
         GlobalSfx.PlayDeathSfx();
 
-
-        // 2) 让全局模板显示（本次允许覆盖文案/图片/时长）
+        // 2) Trigger the global death UI (this time we can override text/sprite/duration)
         if (DeathUIOverlay.Instance)
         {
             if (holdSeconds > 0f)
                 DeathUIOverlay.Instance.Show(overrideMessage, overrideSprite, holdSeconds);
             else
-                DeathUIOverlay.Instance.Show(overrideMessage, overrideSprite, null); // 用默认时长
+                DeathUIOverlay.Instance.Show(overrideMessage, overrideSprite, null); // use default duration
         }
 
-        // 确保不会一帧内多次触发
+        // Make sure we don't trigger multiple times in a single frame
         StartCoroutine(ClearBusyNextFrame());
     }
 

@@ -1,16 +1,17 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement; // NEW: scene loading
 
 [DefaultExecutionOrder(-1000)]
 public class CameraCinematicSequence : MonoBehaviour
 {
-    [Header("依赖（可选）")]
+    [Header("Dependencies (Optional)")]
     public CameraFollow cameraFollow;
     public PlayerInputController playerInput;
 
-    // ------------------ 阶段1：1→(停)→1.1→1.2→1 ------------------
-    [Header("阶段1：固定姿态点位 + 时间")]
+    // ------------------ Stage 1: 1→(stop)→1.1→1.2→1 ------------------
+    [Header("Stage 1: Fixed Pose Points + Time")]
     public Transform point1;
     public float holdAtP1 = 2f;
 
@@ -21,56 +22,56 @@ public class CameraCinematicSequence : MonoBehaviour
     public float p12To1Time  = 0.8f;
 
     public Transform point2;
-    public Transform point3;                  // 只用 rotation
+    public Transform point3;                  // only use rotation
     public float p1To2Time   = 3f;
     public float p2To1Time   = 3f;
     public float rot1To3Time = 2f;
     public float rot3To1Time = 2f;
     public float waitAfterStage1 = 2f;
 
-    // ------------------ 阶段2：1→4 抛物线（只移动，锁朝向） ------------------
-    [Header("阶段2：从P1起飞到P4（只移动，不变朝向）")]
+    // ------------------ Stage 2: 1→4 Parabolic (only move, lock rotation) ------------------
+    [Header("Stage 2: From P1 Takeoff to P4 (only move, no rotation change)")]
     public Transform stage2End;               // 4
     public float stage2Duration = 5f;
     public float arcHeight = 3f;
     public bool  lockRotationInStage2 = true;
 
-    [Tooltip("落地前多少秒把镜头前的“假蚂蚁+树叶”隐藏，仅做镜头移动")]
+    [Tooltip("How many seconds before landing to hide the 'fake ant+leaf' in front of camera, only do camera movement")]
     public float hideLeafBeforeLanding = 0.2f;
 
-    // ------------------ 阶段2.5：4→5→6（补镜头） ------------------
-    [Header("阶段2.5：落地后补两段")]
-    public Transform point5;                  // 只移动
+    // ------------------ Stage 2.5: 4→5→6 (additional shots) ------------------
+    [Header("Stage 2.5: Two more segments after landing")]
+    public Transform point5;                  // only move
     public float landTo5Time = 1.2f;
-    public Transform point6;                  // 原地只转
+    public Transform point6;                  // only rotate in place
     public float rot5To6Time = 0.8f;
 
-    // ------------------ 飞行阶段：镜头前假叶/假蚂蚁 ------------------
-    [Header("镜头前 ‘蚂蚁+树叶’（飞行阶段）")]
+    // ------------------ Flying Phase: Fake Leaf/Ant in Front of Camera ------------------
+    [Header("Fake 'Ant+Leaf' in Front of Camera (Flying Phase)")]
     public GameObject leafCarryVisualPrefab;
     public Vector3 leafLocalPos   = new Vector3(0f, -0.15f, 0.7f);
-    public Vector3 leafLocalEuler = new Vector3(0f, 90f, 0f);  // 你已自行调好
+    public Vector3 leafLocalEuler = new Vector3(0f, 90f, 0f);  // you already tuned this
     public Vector3 leafLocalScale = Vector3.one;
     public bool forceLeafLayerToCamera = true;
     public bool makeLeafPureVisual = true;
 
-    // ------------------ 落地后“一起降落”的叶子 ------------------
-    [Header("落地后一起降落的叶子（与真蚂蚁同步出现）")]
-    public GameObject landingLeafVisualPrefab;      // 可与飞行用不同
-    public Transform landingLeafSpawnPoint;         // 可为空
-    public bool attachLandingLeafToPlayer = true;   // 绑到玩家一起落
+    // ------------------ Leaf That "Lands Together" After Landing ------------------
+    [Header("Leaf That Lands Together After Landing (Appears Synchronized with Real Ant)")]
+    public GameObject landingLeafVisualPrefab;      // can be different from flying one
+    public Transform landingLeafSpawnPoint;         // can be empty
+    public bool attachLandingLeafToPlayer = true;   // attach to player to land together
     public Vector3 landingLeafLocalOffset = new Vector3(0f, 0.2f, 0f);
 
-    [Tooltip("用 Renderer.bounds 将落地叶子的视觉中心对齐到生成点，修正FBX根偏移")]
+    [Tooltip("Use Renderer.bounds to align landing leaf visual center to spawn point, fix FBX root offset")]
     public bool landingLeafUseBoundsCenter = true;
-    [Tooltip("为落地叶子叠加一个额外欧拉角（度）")]
+    [Tooltip("Add an extra Euler angle (degrees) to landing leaf")]
     public Vector3 landingLeafEuler = Vector3.zero;
 
-    // ------------------ 音效 ------------------
-    [Header("音效：共享源（可与下列独立源并存）")]
-    public AudioSource sfxSource;   // 可用于一次性音效（如红绿灯/鸽子）若单独源为空将退化使用它
+    // ------------------ Sound Effects ------------------
+    [Header("SFX: Shared Source (Can Coexist with Independent Sources Below)")]
+    public AudioSource sfxSource;   // can be used for one-shot effects (like traffic light/pigeon) if individual source is empty will fall back to this
 
-    [Header("音效：红绿灯（一次性）")]
+    [Header("SFX: Traffic Light (One-shot)")]
     public AudioClip trafficLightSfx;
     [Range(0f,1f)] public float trafficLightVolume = 1f;
     public float trafficLightDelay = 0.5f;
@@ -78,43 +79,43 @@ public class CameraCinematicSequence : MonoBehaviour
     public float trafficLightFadeIn = 0.25f;
     public float trafficLightFadeOut = 0.25f;
 
-    [Header("音效：风声（阶段2进行时）")]
+    [Header("SFX: Wind (During Stage 2)")]
     public AudioSource windSource;
     public AudioClip windLoop;
     [Range(0f,1f)] public float windVolume = 0.8f;
-    public bool windLooping = true;       // 阶段2内循环，阶段2结束淡出
+    public bool windLooping = true;       // loop during stage 2, fade out when stage 2 ends
     public float windFadeIn  = 0.4f;
     public float windFadeOut = 0.4f;
 
-    [Header("音效：鸽子（阶段3）")]
-    public AudioSource pigeonSource;      // 可选；为空会用 sfxSource
+    [Header("SFX: Pigeon (Stage 3)")]
+    public AudioSource pigeonSource;      // optional; will use sfxSource if empty
     public AudioClip pigeonSfx;
     [Range(0f,1f)] public float pigeonVolume = 1f;
-    public bool pigeonLoop = true;        // 在阶段3等待期间循环
+    public bool pigeonLoop = true;        // loop during stage 3 wait period
     public float pigeonFadeIn = 0.15f;
     public float pigeonFadeOut = 0.15f;
 
-    // —— 阶段3等待：务必存在（之前你报错的字段） —— //
-    [Header("阶段3：落地后停留 + 鸽子音效（结束）")]
+    // —— Stage 3 Wait: Must Exist —— //
+    [Header("Stage 3: Stay After Landing + Pigeon Sound Effect (End)")]
     public float waitAfterLanding = 2f;
 
-    [Header("落地演出行为（不移动真实玩家）")]
+    [Header("Landing Performance Behavior (Don't Move Real Player)")]
     public bool keepLeafVisualAtLanding = false;
 
-    // ------------------ 真玩家重生（到达“6”的瞬间） ------------------
-    [Header("玩家重生/降落（到达 6 时触发）")]
+    // ------------------ Real Player Respawn (Triggered When Reaching "6") ------------------
+    [Header("Player Respawn/Landing (Triggered When Reaching 6)")]
     public Transform respawnPoint;
     public Transform playerRoot;
-    public bool enablePlayerGravity   = true; // 纯自由落体：只开重力
+    public bool enablePlayerGravity   = true; // pure free-fall: just turn on gravity
     public bool wakeUpPlayerRigidBody = true;
 
-    // ------------------ 相机锁定 ------------------
-    [Header("相机：锁定视角（防止“收窄”）")]
+    // ------------------ Camera Lock ------------------
+    [Header("Camera: Lock View Angle (Prevent 'Narrowing')")]
     public bool hardLockFOV = true;
     public float lockedFOV  = 60f;
     public bool restoreFOVOnFinish = false;
 
-    [Header("通用")]
+    [Header("General")]
     public bool zeroVelOnStart = true;
     public bool reenableFollowAfter = false;
     public bool reenableInputAfter  = false;
@@ -124,11 +125,17 @@ public class CameraCinematicSequence : MonoBehaviour
     [Header("Debug")]
     public bool debugLogs = false;
 
+    // NEW: Level Switch (After reaching 6 and completing pigeon sound effect, wait N seconds to load next level)
+    [Header("Level Switch (Automatically Enter Next Level After Reaching 6)")]
+    public bool loadNextAtFinish = true;           // switch
+    public string nextLevelName = "Level3";        // scene name (need to add to Build Settings)
+    public float holdAtPoint6BeforeLoad = 2f;      // stay duration after reaching 6 and completing sound effects
+
     public bool IsPlaying { get; private set; }
 
-    // 运行时
-    GameObject _leafInstance;   // 飞行用假叶
-    GameObject _landingLeaf;    // 落地一起降落的叶
+    // runtime
+    GameObject _leafInstance;   // fake leaf for flying
+    GameObject _landingLeaf;    // leaf that lands together
     bool _leafHidden;
     Quaternion _cachedStage2Rotation;
     float _windOrigVol = 0f;
@@ -154,7 +161,7 @@ public class CameraCinematicSequence : MonoBehaviour
         if (!gameObject.activeInHierarchy || IsPlaying) return;
         if (!point1 || !point2 || !point3 || !stage2End)
         {
-            Debug.LogWarning("[CameraCinematicSequence] 缺少必要路径点（point1/point2/point3/stage2End）");
+            Debug.LogWarning("[CameraCinematicSequence] Missing required waypoints (point1/point2/point3/stage2End)");
             return;
         }
         StartCoroutine(CoPlay());
@@ -172,7 +179,7 @@ public class CameraCinematicSequence : MonoBehaviour
             _cam.fieldOfView = _lockedFOVRuntime;
         }
 
-        // 起始：对齐到 1
+        // Start: snap to 1
         transform.SetPositionAndRotation(point1.position, point1.rotation);
 
         if (zeroVelOnStart)
@@ -181,7 +188,7 @@ public class CameraCinematicSequence : MonoBehaviour
             var rb2 = GetComponent<Rigidbody2D>(); if (rb2) { rb2.linearVelocity = Vector2.zero; rb2.angularVelocity = 0f; }
         }
 
-        // —— 阶段1 音效：红绿灯 —— //
+        // —— Stage 1 SFX: traffic light —— //
         if (trafficLightSfx)
         {
             var src = sfxSource;
@@ -194,26 +201,26 @@ public class CameraCinematicSequence : MonoBehaviour
             ));
         }
 
-        // 阶段1：在1停 2s
+        // Stage 1: hold at 1 for 2s
         if (holdAtP1 > 0f) yield return new WaitForSeconds(holdAtP1);
 
-        // 环顾：1→1.1→1.2→1（全姿态插值）
+        // Look around: 1→1.1→1.2→1 (full pose lerp)
         if (point1_1) yield return MovePose(point1,  point1_1, p1To11Time);
         if (point1_2) yield return MovePose(point1_1 ? point1_1 : point1, point1_2, p11To12Time);
         yield return MovePose(point1_2 ? point1_2 : point1, point1, p12To1Time);
 
-        // 1→2→1
+        // 1 → 2 → 1
         yield return MovePose(point1, point2, p1To2Time);
         yield return MovePose(point2, point1, p2To1Time);
 
-        // 1 原地转 3，再转回 1
+        // At 1: rotate to 3, then rotate back to 1
         yield return RotateAtPosition(point1.position, point1.rotation, point3.rotation, rot1To3Time);
         yield return RotateAtPosition(point1.position, point3.rotation, point1.rotation, rot3To1Time);
 
-        // 等待
+        // Wait a bit
         if (waitAfterStage1 > 0f) yield return new WaitForSeconds(waitAfterStage1);
 
-        // —— 阶段2：准备飞行（挂假叶、风声淡入、锁朝向）——
+        // —— Stage 2: prep for flight (attach fake leaf, fade wind in, lock rotation) —— //
         _cachedStage2Rotation = transform.rotation;
         _leafHidden = false;
 
@@ -221,7 +228,7 @@ public class CameraCinematicSequence : MonoBehaviour
         {
             _leafInstance = Instantiate(leafCarryVisualPrefab, transform);
             _leafInstance.transform.localPosition    = leafLocalPos;
-            _leafInstance.transform.localEulerAngles = leafLocalEuler; // 你已自行调好
+            _leafInstance.transform.localEulerAngles = leafLocalEuler; // already tuned by you
             _leafInstance.transform.localScale       = leafLocalScale;
             if (makeLeafPureVisual) MakePureVisual(_leafInstance, true, true);
             if (_cam && forceLeafLayerToCamera) SetLayerRecursively(_leafInstance, _cam.gameObject.layer);
@@ -232,14 +239,14 @@ public class CameraCinematicSequence : MonoBehaviour
             }
         }
 
-        // 风声：阶段2开始时进入
+        // Wind: fade in at the start of Stage 2
         if (windLoop && windSource)
         {
             _windOrigVol = windSource.volume;
             yield return StartCoroutine(CoStartLoopWithFade(windSource, windLoop, windVolume, windFadeIn, windLooping));
         }
 
-        // —— 阶段2：1→4 抛物线（锁朝向），落地前0.2s隐藏假叶 —— //
+        // —— Stage 2: 1→4 along a parabola (rotation locked). Hide fake leaf ~0.2s before landing —— //
         Vector3 startPos = point1.position;
         Vector3 endPos   = stage2End.position;
         Quaternion fixedRot = _cachedStage2Rotation;
@@ -265,7 +272,7 @@ public class CameraCinematicSequence : MonoBehaviour
             yield return null;
         }
 
-        // 收尾：清理飞行用假叶 + 风声淡出
+        // Wrap-up: clean flying fake leaf + fade wind out
         if (_leafInstance)
         {
             if (!_leafHidden) SetVisualVisible(_leafInstance, false);
@@ -277,14 +284,14 @@ public class CameraCinematicSequence : MonoBehaviour
             yield return StartCoroutine(CoStopWithFade(windSource, windFadeOut, _windOrigVol));
         }
 
-        // —— 阶段2.5：4→5（只移动） —— //
+        // —— Stage 2.5: 4→5 (move only) —— //
         if (point5)
         {
             Quaternion hold = transform.rotation;
             yield return MoveOnlyKeepRotation(transform.position, point5.position, hold, landTo5Time);
         }
 
-        // —— 阶段2.5：5→6（原地只转） —— //
+        // —— Stage 2.5: 5→6 (rotate in place) —— //
         if (point6)
         {
             yield return RotateAtPosition(point5 ? point5.position : transform.position,
@@ -293,11 +300,11 @@ public class CameraCinematicSequence : MonoBehaviour
                                           rot5To6Time);
         }
 
-        // —— 到达“6”：真玩家自由落体重生 + 落地叶子出现 —— //
-        SpawnRealPlayerAtRespawn();     // 纯自由落体（速度=0，只开重力）
-        SpawnLandingLeafVisual();       // 叶子一起落（可绑玩家）
+        // —— Reached "6": real player respawn with free fall + spawn landing leaf —— //
+        SpawnRealPlayerAtRespawn();     // pure free fall (vel=0, only gravity on)
+        SpawnLandingLeafVisual();       // leaf falls together (can follow the player)
 
-        // 阶段3：鸽子叫循环，等待 waitAfterLanding，再淡出
+        // Stage 3: pigeon loop, wait, then fade out
         if (pigeonSfx)
         {
             var src = pigeonSource ? pigeonSource : sfxSource;
@@ -313,11 +320,22 @@ public class CameraCinematicSequence : MonoBehaviour
             if (src) yield return StartCoroutine(CoStopWithFade(src, pigeonFadeOut, src.volume));
         }
 
+        // NEW: after pigeon fades out → hold at 6 for N seconds → load next level
+        if (loadNextAtFinish && !string.IsNullOrEmpty(nextLevelName))
+        {
+            if (holdAtPoint6BeforeLoad > 0f)
+                yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
+
+            if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: {nextLevelName}");
+            SceneManager.LoadScene(nextLevelName);
+            yield break; // scene switched, end coroutine
+        }
+
         if (restoreFOVOnFinish && _cam) _cam.fieldOfView = _origFOV;
         IsPlaying = false;
     }
 
-    // ------------------ 锁FOV ------------------
+    // ------------------ Lock FOV ------------------
     IEnumerator CoHardLockCameraParams()
     {
         while (true)
@@ -331,7 +349,7 @@ public class CameraCinematicSequence : MonoBehaviour
         }
     }
 
-    // ------------------ 过渡工具 ------------------
+    // ------------------ Transition helpers ------------------
     IEnumerator MovePose(Transform fromPose, Transform toPose, float time)
     {
         float timer = 0f;
@@ -379,9 +397,8 @@ public class CameraCinematicSequence : MonoBehaviour
         transform.SetPositionAndRotation(fixedPos, toRot);
     }
 
-    // ------------------ 音效工具 ------------------
+    // ------------------ SFX helpers ------------------
 
-    // 非循环的一次性音效：支持延迟 + 淡入/淡出（到点自动Stop）
     IEnumerator CoPlayNonLoopSfxWithFades(AudioSource src, AudioClip clip, float volume, float delay, float fadeIn, float fadeOut)
     {
         if (!src || !clip) yield break;
@@ -394,16 +411,14 @@ public class CameraCinematicSequence : MonoBehaviour
 
         if (fadeIn > 0f) yield return StartCoroutine(CoFadeVolume(src, src.volume, volume, fadeIn));
 
-        // 预留淡出时间
         float hold = Mathf.Max(0f, clip.length - fadeOut);
         if (hold > 0f) yield return new WaitForSeconds(hold);
 
         if (fadeOut > 0f) yield return StartCoroutine(CoFadeVolume(src, src.volume, 0f, fadeOut));
         src.Stop();
-        src.volume = volume; // 还原
+        src.volume = volume; // restore
     }
 
-    // 循环/或按需要循环的片段：开启并淡入；停止时调用 CoStopWithFade
     IEnumerator CoStartLoopWithFade(AudioSource src, AudioClip clip, float volume, float fadeIn, bool loop)
     {
         if (!src || !clip) yield break;
@@ -435,7 +450,7 @@ public class CameraCinematicSequence : MonoBehaviour
         src.volume = to;
     }
 
-    // ------------------ 实用工具 ------------------
+    // ------------------ Utilities ------------------
     void SafeSetFollow(bool on){ if (!cameraFollow) return; try { cameraFollow.SetCameraControl(on); } catch { cameraFollow.enabled = on; } }
     void SafeSetInput (bool on){ if (!playerInput)  return; try { if (on) playerInput.EnableInput(); else playerInput.DisableInput(); } catch { playerInput.enabled = on; } }
 
@@ -458,7 +473,7 @@ public class CameraCinematicSequence : MonoBehaviour
     void SetLayerRecursively(GameObject go, int layer){ go.layer = layer; foreach (Transform c in go.transform) SetLayerRecursively(c.gameObject, layer); }
     void SetVisualVisible(GameObject root, bool visible){ if (!root) return; foreach (var r in root.GetComponentsInChildren<Renderer>(true)){ if (r) r.enabled = visible; } }
 
-    // ------------------ 真玩家重生（在到达6时触发） ------------------
+    // ------------------ Real player respawn (triggered at 6) ------------------
     void SpawnRealPlayerAtRespawn()
     {
         if (!playerRoot || !respawnPoint) { if (debugLogs) Debug.LogWarning("[Cinematic] Missing playerRoot/respawnPoint."); return; }
@@ -481,7 +496,7 @@ public class CameraCinematicSequence : MonoBehaviour
 
         if (rb)
         {
-            // 纯自由落体：速度=0，只开重力，加速度交给物理
+            // Pure free fall: velocity = 0, only gravity on; let physics handle acceleration
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             if (wakeUpPlayerRigidBody) rb.WakeUp();
@@ -494,21 +509,21 @@ public class CameraCinematicSequence : MonoBehaviour
         if (debugLogs) Debug.Log("[Cinematic] Player respawned at 6 (free fall).");
     }
 
-    // ------------------ 落地叶子在6出现（可绑玩家一起落） ------------------
+    // ------------------ Landing leaf appears at 6 (can attach to player to fall together) ------------------
     void SpawnLandingLeafVisual()
     {
         if (!landingLeafVisualPrefab) return;
 
-        // 1) 初始位姿
+        // 1) Initial pose
         Vector3 pos; Quaternion rot;
         if (landingLeafSpawnPoint) { pos = landingLeafSpawnPoint.position; rot = landingLeafSpawnPoint.rotation; }
         else if (playerRoot)      { pos = playerRoot.position + landingLeafLocalOffset; rot = playerRoot.rotation; }
         else                      { pos = transform.position + transform.forward * 0.6f; rot = transform.rotation; }
 
         _landingLeaf = Instantiate(landingLeafVisualPrefab, pos, rot);
-        // 若需要也可纯视觉：MakePureVisual(_landingLeaf, true, true);
+        // If needed, make it pure visual too: MakePureVisual(_landingLeaf, true, true);
 
-        // 2) 用渲染中心居中（修正FBX根偏移）
+        // 2) Center by render bounds (fix FBX root offset)
         if (landingLeafUseBoundsCenter)
         {
             var b = CalcCombinedBounds(_landingLeaf);
@@ -520,11 +535,11 @@ public class CameraCinematicSequence : MonoBehaviour
             }
         }
 
-        // 3) 叠加欧拉角
+        // 3) Extra Euler offset
         if (landingLeafEuler != Vector3.zero)
             _landingLeaf.transform.rotation = Quaternion.Euler(landingLeafEuler) * _landingLeaf.transform.rotation;
 
-        // 4) 跟随真蚂蚁一起落
+        // 4) Follow the real ant down together
         if (attachLandingLeafToPlayer && playerRoot)
         {
             _landingLeaf.transform.SetParent(playerRoot, true);

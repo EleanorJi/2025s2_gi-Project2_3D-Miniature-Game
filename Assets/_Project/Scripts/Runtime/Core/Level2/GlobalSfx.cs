@@ -5,43 +5,43 @@ public class GlobalSfx : MonoBehaviour
 {
     public static GlobalSfx Instance { get; private set; }
 
-    [Header("输出(可选)")]
-    public AudioMixerGroup output;          // 可接你的 SFX 混音组
+    [Header("Output (optional)")]
+    public AudioMixerGroup output;          // Can route to your SFX mixer group
 
-    // ───────────── 死亡音效 ─────────────
-    [Header("统一“死亡”音效")]
+    // ───────────── Death SFX ─────────────
+    [Header("Unified \"Death\" SFX")]
     public AudioClip deathClip;
     [Range(0f,1f)] public float deathVolume = 1f;
-    [Tooltip("同一时间短间隔内的重复触发会被抑制")]
+    [Tooltip("Rapid repeats within a short interval are suppressed")]
     public float deathCooldown = 0.2f;
 
-    // ───────────── 吃饼干音效（新增） ─────────────
-    [Header("Cookie: 拾取音效")]
+    // ───────────── Cookie pickup SFX (new) ─────────────
+    [Header("Cookie: Pickup SFX")]
     public AudioClip cookieClip;
     [Range(0f,1f)] public float cookieVolume = 1f;
-    [Tooltip("短时间多次拾取的限流（防爆音）")]
+    [Tooltip("Rate-limit frequent pickups (avoid audio spam)")]
     public float cookieCooldown = 0.03f;
-    [Tooltip("true=2D播放；false=按世界位置做3D衰减")]
+    [Tooltip("true = 2D playback; false = 3D attenuation by world position")]
     public bool cookieAs2D = true;
 
-    // ───────────── 空间化/3D参数（共用） ─────────────
-    [Header("空间化（3D 播放通用参数）")]
-    public bool playAs2D = true;            // 勾选=默认2D（仅对“死亡”静态方法生效）
+    // ───────────── Shared spatial/3D params ─────────────
+    [Header("Spatialization (shared 3D playback params)")]
+    public bool playAs2D = true;            // Checked = default 2D (only affects the 'Death' static methods)
     [Range(0f,1f)] public float spatialBlend3D = 1f;
     public float minDistance = 1f;
     public float maxDistance = 30f;
 
-    // ───────────── 叶子拾取音效（新增） ─────────────
-    [Header("Leaf: 拾取音效")]
+    // ───────────── Leaf pickup SFX (new) ─────────────
+    [Header("Leaf: Pickup SFX")]
     public AudioClip leafPickupClip;
     [Range(0f,1f)] public float leafPickupVolume = 1f;
-    [Tooltip("短时间多次触发的限流（防爆音）")]
+    [Tooltip("Rate-limit frequent triggers (avoid audio spam)")]
     public float leafPickupCooldown = 0.03f;
-    [Tooltip("true=2D播放；false=按世界位置做3D衰减")]
+    [Tooltip("true = 2D playback; false = 3D attenuation by world position")]
     public bool leafPickupAs2D = true;
     
 
-    // 内部
+    // Internals
     AudioSource _src;
     float _lastDeathAt = -999f;
     float _lastCookieAt = -999f;
@@ -72,13 +72,13 @@ public class GlobalSfx : MonoBehaviour
         _src.maxDistance  = Mathf.Max(_src.minDistance + 0.01f, maxDistance);
     }
 
-    // ========== 对外播放接口 ==========
-    // 死亡
+    // ========== Public playback API ==========
+    // Death
     public void PlayDeath(Vector3? worldPos = null, float? volumeOverride = null, bool? as2DOverride = null)
     {
         if (!deathClip) return;
 
-        // 冷却防炸音
+        // Cooldown to avoid spam
         if (Time.unscaledTime - _lastDeathAt < deathCooldown) return;
         _lastDeathAt = Time.unscaledTime;
 
@@ -95,12 +95,12 @@ public class GlobalSfx : MonoBehaviour
         }
     }
 
-    // 拾取饼干（新增）
+    // Cookie pickup (new)
     public void PlayCookie(Vector3 worldPos, float? volumeOverride = null, bool? as2DOverride = null)
     {
         if (!cookieClip) return;
 
-        // 限流（近距离连吃不会叠爆）
+        // Rate limit (nearby rapid pickups won't stack explosively)
         if (Time.unscaledTime - _lastCookieAt < cookieCooldown) return;
         _lastCookieAt = Time.unscaledTime;
 
@@ -117,7 +117,7 @@ public class GlobalSfx : MonoBehaviour
         }
     }
 
-    // 实例方法
+    // Instance method
     public void PlayLeafPickup(Vector3 worldPos, float? volumeOverride = null, bool? as2DOverride = null)
     {
         if (!leafPickupClip) return;
@@ -140,7 +140,7 @@ public class GlobalSfx : MonoBehaviour
 
     
 
-    // ========== 静态便捷封装 ==========
+    // Static convenience wrappers
     public static void PlayDeathSfx(Vector3? worldPos = null, float? volumeOverride = null, bool? as2DOverride = null)
     {
         if (Instance) Instance.PlayDeath(worldPos, volumeOverride, as2DOverride);
@@ -155,10 +155,10 @@ public class GlobalSfx : MonoBehaviour
     {
         if (Instance) Instance.PlayLeafPickup(worldPos, volumeOverride, as2DOverride);
     }
-    // ========== 私有工具：受控的 3D 一次性音源 ==========
+    // Private helper: controlled 3D one-shot source
     AudioSource OneShot3D(AudioClip clip, Vector3 pos, float volume)
     {
-        // 创建临时音源，按全局 3D 参数配置，接同一个输出混音组
+        // Create a temporary source, configure with global 3D params, route to the same mixer group
         var go = new GameObject($"_SFX3D_{clip.name}");
         go.transform.position = pos;
 
@@ -173,7 +173,7 @@ public class GlobalSfx : MonoBehaviour
         if (output) a.outputAudioMixerGroup = output;
 
         a.Play();
-        Destroy(go, clip.length + 0.1f); // 简单回收
+        Destroy(go, clip.length + 0.1f); // Simple cleanup
         return a;
     }
 }

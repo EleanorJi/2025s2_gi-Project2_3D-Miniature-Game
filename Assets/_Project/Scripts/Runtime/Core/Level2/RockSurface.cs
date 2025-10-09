@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class RockSurface : MonoBehaviour
 {
-    [Tooltip("玩家回到这块石头时落点；放在表面上方一点")]
+    [Tooltip("The player's landing point when returning to this stone")]
     public Transform respawnAnchor;
 
-    // 工具：一键在顶面创建锚点（右键组件 → Create Anchor At Top）
+    //（Right Click Component → Create Anchor At Top）
     [ContextMenu("Create Anchor At Top")]
     void CreateAnchorAtTop() {
         var t = new GameObject("RespawnAnchor").transform;

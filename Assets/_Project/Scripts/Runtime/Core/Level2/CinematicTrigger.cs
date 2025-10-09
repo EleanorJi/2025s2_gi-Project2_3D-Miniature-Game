@@ -4,7 +4,7 @@ using UnityEngine;
 public class CinematicTrigger : MonoBehaviour
 {
     public string playerTag = "Player";
-    public CameraCinematicSequence cinematic;   // 拖你的 Camera（带脚本）进来
+    public CameraCinematicSequence cinematic;
     public bool oneShot = true;
 
     bool _fired = false;
@@ -24,7 +24,7 @@ public class CinematicTrigger : MonoBehaviour
             cinematic = FindFirstObjectByType<CameraCinematicSequence>();
             if (!cinematic)
             {
-                Debug.LogWarning("[CinematicTrigger] 没找到 CameraCinematicSequence");
+                Debug.LogWarning("[CinematicTrigger] cannot find CameraCinematicSequence");
                 return;
             }
         }

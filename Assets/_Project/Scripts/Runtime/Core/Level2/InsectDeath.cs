@@ -2,74 +2,74 @@ using UnityEngine;
 
 public class InsectDeath : MonoBehaviour
 {
-    [Header("可选 FX / SFX")]
-    [Tooltip("（兜底）不使用子物体时，实例化这个爆炸预制体")]
+    [Header("Optional FX / SFX")]
+    [Tooltip("(Fallback) If you’re not using a child object, instantiate this explosion prefab")]
     public GameObject explosionFxPrefab;
 
-    [Header("爆炸音效（可淡入/淡出/循环）")]
+    [Header("Explosion SFX (supports fade/loop)")]
     public AudioClip explosionSfx;
     [Range(0f, 1f)] public float sfxVolume = 1f;
 
-    [Tooltip("用 AudioSource 播放（可渐变/循环）；关闭则用 PlayClipAtPoint（无渐变）")]
+    [Tooltip("Play with an AudioSource (can fade/loop). If off, uses PlayClipAtPoint (no fades)")]
     public bool useAudioSource = true;
-    [Tooltip("循环播放（通常不需要；用于较长炸裂环境音时）")]
+    [Tooltip("Loop playback (usually unnecessary; for longer ambience-style rips)")]
     public bool sfxLoop = false;
     [Min(0f)] public float sfxFadeIn = 0f;
     [Min(0f)] public float sfxFadeOut = 0.2f;
     [Range(0.1f, 3f)] public float sfxPitch = 1f;
 
-    [Header("3D 音频参数（仅 useAudioSource 生效）")]
+    [Header("3D audio params (only when useAudioSource is true)")]
     [Range(0f, 1f)] public float sfxSpatialBlend = 1f; // 1 = 3D
     public float sfxMinDistance = 1f;
     public float sfxMaxDistance = 20f;
     public AudioRolloffMode sfxRolloff = AudioRolloffMode.Logarithmic;
 
-    [Tooltip("若有 ExplosionFX 子物体，优先复用其 AudioSource")]
+    [Tooltip("If there’s an ExplosionFX child, reuse its AudioSource first")]
     public bool reuseChildAudioSource = true;
-    [Tooltip("若无法从粒子推断时，音效生命期兜底时长（用于循环=否时决定淡出开窗）")]
+    [Tooltip("Fallback lifetime when we can’t infer from particles (for non-looping fades)")]
     public float sfxDefaultLifetime = 2.0f;
 
-    [Header("子物体爆炸（推荐）")]
-    [Tooltip("把虫子预制体下的 ExplosionFX 子物体（默认禁用）拖到这里")]
+    [Header("Child explosion (recommended)")]
+    [Tooltip("Drag the disabled ExplosionFX child under the insect prefab here (it starts disabled by default)")]
     [SerializeField] private GameObject explosionChild;
 
-    [Header("背饼干（同一颗从背上掉）")]
+    [Header("Cookie-on-back (drop the same one)")]
     public bool carryCookie = true;
-    public Transform carryPoint;      // 可选：背部定位点
-    public GameObject cookieOnBack;   // 场景里的这颗子物体
+    public Transform carryPoint;      // Optional: back anchor
+    public GameObject cookieOnBack;   // The actual child object in the scene
     public float dropImpulse = 1.2f;
     public float dropTorque  = 0.8f;
 
-    [Header("撞到玩家是否秒杀")]
+    [Header("Instant-kill the player on touch")]
     public bool killPlayerOnTouch = true;
 
-    // —— 内部状态 —— //
-    private bool dropped  = false;    // 防二次掉饼干
-    private bool exploded = false;    // 防二次爆炸
+    // —— Internal state —— //
+    private bool dropped  = false;    // Prevent double drop
+    private bool exploded = false;    // Prevent double explosion
 
     private void Awake()
     {
-        ResolveExplosionChild();                // 自动寻找禁用的粒子子物体
+        ResolveExplosionChild();                // Auto-find the disabled particle child
         if (explosionChild && explosionChild.activeSelf)
         {
-            Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' 初始为激活，已强制关闭以避免开场播放。");
-            explosionChild.SetActive(false);    // 防止开场播
+            Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
+            explosionChild.SetActive(false);    // Don’t let it play at scene start
         }
     }
 
-    /// <summary> 标准死亡：在虫子当前位置爆炸一次。 </summary>
+    /// <summary> Standard death: explode once at the insect’s current position. </summary>
     public void Kill()
     {
         Debug.Log("[InsectDeath] Kill()");
         KillAt(transform.position, Vector3.up);
     }
 
-    /// <summary> 携带命中信息的死亡（但不再用朝向/位置去改特效）。 </summary>
+    /// <summary> Death with hit info (but we don’t alter FX by that normal/pos anymore). </summary>
     public void KillAt(Vector3 hitPos, Vector3 hitNormal)
     {
         PlayExplosion(hitPos, hitNormal);
 
-        // 掉同一颗饼干（只做一次）
+        // Drop the same cookie (only once)
         if (!dropped && carryCookie && cookieOnBack)
         {
             dropped = true;
@@ -92,7 +92,7 @@ public class InsectDeath : MonoBehaviour
             }
         }
 
-        Destroy(gameObject); // 最后销毁虫子本体
+        Destroy(gameObject); // Finally destroy the insect itself
     }
 
     private void PlayExplosion(Vector3 pos, Vector3 normal)
@@ -102,7 +102,7 @@ public class InsectDeath : MonoBehaviour
 
         GameObject fxRoot = null;
 
-        // —— 子物体爆炸（最稳，不改位置/朝向） —— //
+        // —— Use child FX (most reliable; don’t change its pose) —— //
         if (explosionChild)
         {
             explosionChild.transform.SetParent(null, true);
@@ -118,7 +118,7 @@ public class InsectDeath : MonoBehaviour
                 ps.Play(true);
             }
         }
-        // —— 兜底：实例化外部预制体 —— //
+        // —— Fallback: instantiate external prefab —— //
         else if (explosionFxPrefab)
         {
             Vector3 spawnPos = transform.position;
@@ -143,26 +143,26 @@ public class InsectDeath : MonoBehaviour
             Debug.LogWarning("[InsectDeath] 未设置 explosionChild 或 explosionFxPrefab，无法显示爆炸。");
         }
 
-        // —— 音效 —— //
+        // —— Audio —— //
         if (explosionSfx)
         {
             if (useAudioSource)
             {
-                // 选择挂载音源的宿主：优先 FX 根；若没有就挂到场景空物体
+                // Decide host for the AudioSource: prefer the FX root; if none, create an empty
                 GameObject host = fxRoot != null ? fxRoot : new GameObject("ExplosionSFX");
                 if (host.transform.parent == null && fxRoot == null)
                 {
                     host.transform.position = transform.position;
                 }
 
-                // 复用或新建 AudioSource
+                // Reuse or add a new AudioSource
                 AudioSource src = null;
                 if (reuseChildAudioSource && fxRoot != null)
                     src = fxRoot.GetComponent<AudioSource>();
 
                 if (!src) src = host.AddComponent<AudioSource>();
 
-                // 配置音源
+                // Configure the source
                 src.clip = explosionSfx;
                 src.loop = sfxLoop;
                 src.pitch = sfxPitch;
@@ -173,23 +173,23 @@ public class InsectDeath : MonoBehaviour
                 src.playOnAwake = false;
                 src.volume = (sfxFadeIn > 0f) ? 0f : sfxVolume;
 
-                // 播放 & 渐变
+                // Play & fade
                 src.Play();
                 float life = EstimateFxLifetimeSeconds(fxRoot);
                 if (!sfxLoop)
                 {
-                    // 非循环：淡入 -> 等待 -> 淡出 -> 回收
+                    // Non-looping: fade in -> hold -> fade out -> clean up temp host
                     StartCoroutine(FadeInThenOutAndCleanup(src, sfxVolume, sfxFadeIn, sfxFadeOut, life, fxRoot == null ? host : null));
                 }
                 else
                 {
-                    // 循环：仅淡入（淡出需你外部再停/销毁，或改用定时器）
+                    // Looping: fade in only (fade out later when you stop/destroy externally, or add a timer)
                     if (sfxFadeIn > 0f) StartCoroutine(FadeVolume(src, 0f, sfxVolume, sfxFadeIn));
                 }
             }
             else
             {
-                // 简单一次性（无淡入淡出）
+                // Simple one-shot (no fades)
                 AudioSource.PlayClipAtPoint(explosionSfx, transform.position, sfxVolume);
             }
         }
@@ -217,37 +217,37 @@ public class InsectDeath : MonoBehaviour
         }
     }
 
-    // —— 关键：更稳的“自动定位禁用子物体” —— //
+    // —— Key bit: more robust auto-locate of a disabled FX child —— //
     private void ResolveExplosionChild()
     {
         if (explosionChild) return;
 
-        // 1) 优先找挂了 AutoDestroyParticle 的禁用子物体
+        // 1) Prefer a disabled child with AutoDestroyParticle
         var autos = GetComponentsInChildren<AutoDestroyParticle>(true);
         foreach (var a in autos)
         {
             if (!a) continue;
             explosionChild = a.gameObject;
-            Debug.Log($"[InsectDeath] 自动找到 AutoDestroyParticle 子物体：{explosionChild.name}");
+            Debug.Log($"[InsectDeath] find AutoDestroyParticle child object: {explosionChild.name}");
             return;
         }
 
-        // 2) 其次找包含 ParticleSystem 的禁用子物体（取最上层节点）
+        // 2) Otherwise, look for a disabled child containing ParticleSystem (take the top-most root)
         var pss = GetComponentsInChildren<ParticleSystem>(true);
         if (pss.Length > 0)
         {
-            // 把第一个粒子的“最上层有粒子的根”作为特效根
+            // Use the first particle's top-most ancestor that still has particles as the FX root
             Transform root = pss[0].transform;
             while (root.parent != null && root.parent.GetComponentInChildren<ParticleSystem>(true) != null && root.parent != transform)
                 root = root.parent;
             explosionChild = root.gameObject;
-            Debug.Log($"[InsectDeath] 自动找到含粒子系统的子物体：{explosionChild.name}");
+            Debug.Log($"[InsectDeath] find particle system child object: {explosionChild.name}");
         }
     }
 
-    // =================== 音频小工具 ===================
+    //Small audio helpers
 
-    // 根据粒子系统估算 FX 时长（用于自动安排淡出窗口）
+    // Estimate FX lifetime from particle systems (used to schedule fade-out window)
     float EstimateFxLifetimeSeconds(GameObject fxRoot)
     {
         if (!fxRoot) return Mathf.Max(0.1f, sfxDefaultLifetime);
@@ -266,7 +266,7 @@ public class InsectDeath : MonoBehaviour
                 case ParticleSystemCurveMode.Constant:
                     life = lt.constant; break;
                 default:
-                    life = sfxDefaultLifetime * 0.5f; break; // 复杂曲线就给个近似
+                    life = sfxDefaultLifetime * 0.5f; break; // For complex curves, just approximate
             }
             max = Mathf.Max(max, dur + life);
         }
@@ -288,16 +288,16 @@ public class InsectDeath : MonoBehaviour
         if (src) src.volume = to;
     }
 
-    // 非循环：淡入 -> 保持 -> 淡出 -> 清理临时宿主
+    // Non-looping: fade in -> hold -> fade out -> clean up temp host
     System.Collections.IEnumerator FadeInThenOutAndCleanup(AudioSource src, float targetVol, float fadeIn, float fadeOut, float life, GameObject tempHostToDestroy)
     {
         if (!src) yield break;
 
-        // 淡入
+        // Fade in
         if (fadeIn > 0f) yield return FadeVolume(src, 0f, targetVol, fadeIn);
         else src.volume = targetVol;
 
-        // 等待（减去淡出窗口）
+        // Hold (minus fade-out window)
         float hold = Mathf.Max(0f, life - fadeOut);
         float t = 0f;
         while (t < hold && src)
@@ -306,10 +306,10 @@ public class InsectDeath : MonoBehaviour
             yield return null;
         }
 
-        // 淡出
+        // Fade out
         if (fadeOut > 0f && src) yield return FadeVolume(src, src.volume, 0f, fadeOut);
 
-        // 停止并清理
+        // Stop and clean up
         if (src) src.Stop();
         if (tempHostToDestroy) Destroy(tempHostToDestroy);
     }

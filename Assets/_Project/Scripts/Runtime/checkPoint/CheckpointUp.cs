@@ -5,69 +5,69 @@ using UnityEngine.Audio;
 
 public class CheckpointUp : MonoBehaviour
 {
-    [Header("玩家对象")]
+    [Header("Player Objects")]
     public GameObject playerObject;           
     public GameObject antsAnimationObject;    
     public string antsAnimationTrigger = "Activate";
 
-    [Header("玩家位置设置")]
+    [Header("Player Position Settings")]
     public Transform playerFinalPosition;     
 
-    // ============= 仅一个固定机位（世界姿态） =============
-    [Header("相机：固定机位（世界姿态）")]
-    [Tooltip("把一个空物体放到你想看的机位，这里只需要这一个 Transform")]
+    // ============= Single Fixed Camera Position (World Space) =============
+    [Header("Camera: Fixed Position (World Space)")]
+    [Tooltip("Put an empty object where you want the camera to be, only need this one Transform")]
     public Transform cameraFixedPose;
-    [Tooltip("进入固定机位的时间")]
+    [Tooltip("Time to move into fixed position")]
     public float cameraMoveInTime = 1.0f;
 
-    [Header("相机：FOV（可选）")]
+    [Header("Camera: FOV (Optional)")]
     public bool lockFOVDuringCinematic = true;
     public float fixedFOV = 55f;
 
-    // ============= 从固定机位 → 跟随 的“交接” =============
-    [Header("相机：从固定机位切回跟随")]
-    [Tooltip("可选：手动指定一个交接位（世界姿态）。相机会先从固定机位丝滑到这里，再交还给 CameraFollow。留空则直接交还给跟随。")]
-    public Transform followHandoffPose; // 可选
+    // ============= Transition from Fixed Camera → Follow =============
+    [Header("Camera: Switch from Fixed to Follow")]
+    [Tooltip("Optional: manually set a handoff position (world space). Camera will smoothly move from fixed position to here first, then hand back to CameraFollow. Leave empty to hand back directly.")]
+    public Transform followHandoffPose; // optional
     public float handoffLerpTime = 0.8f;
     public bool restoreFOVAfter = true;
     public float followResumeFOV = 60f;
 
-    [Header("动画设置")]
+    [Header("Animation Settings")]
     public float animationDuration = 3f;
 
-    [Header("攀爬前置条件（饼干）")]
+    [Header("Climb Prerequisites (Cookies)")]
     public int requiredCookies = 3;
     public bool consumeOnClimb = true;
     public FloodSequence flood;
 
-    [Header("提示UI（不足时）")]
+    [Header("Hint UI (When Not Enough)")]
     public CanvasGroup hintGroup;
     public TMP_Text hintText;
     public string notEnoughText = "能量不足（需要 3 个饼干碎屑）";
     public float hintFadeTime = 0.2f;
     public float hintStayTime = 1.2f;
 
-    // ==== SFX：固定机位开始音（播完一次，不被中途打断） ====
-    [Header("SFX：固定机位开始音（播完一次）")]
+    // ==== SFX: Fixed Camera Start Sound (Play Once, Won't Be Interrupted) ====
+    [Header("SFX: Fixed Camera Start Sound (Play Once)")]
     public AudioClip cinematicStartSfx;
     [Range(0f,1f)] public float cinematicStartVolume = 1f;
-    [Tooltip("2D=不受空间影响；3D=按世界位置渲染（会用 cameraFixedPose 位置）")]
+    [Tooltip("2D=not affected by space; 3D=rendered by world position (will use cameraFixedPose position)")]
     public bool cinematicStartAs2D = true;
-    public AudioMixerGroup sfxOutput;      // 可选：挂到你的 SFX Mixer 组
+    public AudioMixerGroup sfxOutput;      // optional: attach to your SFX Mixer group
 
-    [Header("SFX：淡入/自然结尾淡出")]
+    [Header("SFX: Fade In/Natural End Fade Out")]
     public bool sfxUseFade = true;
-    public float sfxFadeInTime  = 0.25f;   // 开头淡入
-    public bool sfxFadeOutAtEnd = true;    // 自然结束前做尾淡出
-    public float sfxEndFadeTime = 0.25f;   // 尾淡出时长
+    public float sfxFadeInTime  = 0.25f;   // fade in at start
+    public bool sfxFadeOutAtEnd = true;    // fade out before natural end
+    public float sfxEndFadeTime = 0.25f;   // end fade duration
 
-    [Header("SFX：3D参数（仅当为3D时生效）")]
+    [Header("SFX: 3D Parameters (Only When 3D)")]
     public float sfxSpatialMinDistance = 1f;
     public float sfxSpatialMaxDistance = 30f;
 
-    private AudioSource _sfx;                  // 本地音源
-    private Coroutine _fadeCo;                 // 音量淡协程
-    private Coroutine _playOnceCo;             // 播放一次的主协程
+    private AudioSource _sfx;                  // local audio source
+    private Coroutine _fadeCo;                 // volume fade coroutine
+    private Coroutine _playOnceCo;             // main play once coroutine
     // =====================================================
 
     private bool playerInRange = false;
@@ -81,7 +81,7 @@ public class CheckpointUp : MonoBehaviour
 
     void Start()
     {
-        // 找玩家
+        // find player
         playerObject = playerObject ? playerObject : GameObject.FindGameObjectWithTag("Player");
         if (playerObject != null)
         {
@@ -89,10 +89,10 @@ public class CheckpointUp : MonoBehaviour
             playerController = playerObject.GetComponent<PlayerController>();
         }
 
-        // 找相机
+        // find camera
         cameraFollow = Camera.main ? Camera.main.GetComponent<CameraFollow>() : null;
 
-        // 动画替身
+        // animation substitute
         if (antsAnimationObject != null)
         {
             antsAnimator = antsAnimationObject.GetComponent<Animator>();
@@ -101,7 +101,7 @@ public class CheckpointUp : MonoBehaviour
 
         if (hintGroup) hintGroup.alpha = 0f;
 
-        // ==== SFX：初始化音源 ====
+        // ==== SFX: initialize audio source ====
         _sfx = gameObject.GetComponent<AudioSource>();
         if (!_sfx) _sfx = gameObject.AddComponent<AudioSource>();
         _sfx.playOnAwake = false;
@@ -110,7 +110,7 @@ public class CheckpointUp : MonoBehaviour
         _sfx.minDistance = Mathf.Max(0.01f, sfxSpatialMinDistance);
         _sfx.maxDistance = Mathf.Max(_sfx.minDistance + 0.01f, sfxSpatialMaxDistance);
         if (sfxOutput) _sfx.outputAudioMixerGroup = sfxOutput;
-        _sfx.volume = 0f; // 为了淡入，初始0
+        _sfx.volume = 0f; // start at 0 for fade in
         // ==================================
     }
 
@@ -139,7 +139,7 @@ public class CheckpointUp : MonoBehaviour
         }
     }
 
-    // —— 饼干判定 —— //
+    // —— cookie check —— //
     void TryActivate()
     {
         var inv = CookiesInventory.Instance;
@@ -147,7 +147,7 @@ public class CheckpointUp : MonoBehaviour
 
         if (inv == null)
         {
-            Debug.LogWarning("[CheckpointUp] CookiesInventory.Instance 为空，跳过判定（调试中视为通过）");
+            Debug.LogWarning("[CheckpointUp] CookiesInventory.Instance is null, skipping check (debug mode - treat as passed)");
             ActivateCheckpoint();
             return;
         }
@@ -167,13 +167,13 @@ public class CheckpointUp : MonoBehaviour
         ActivateCheckpoint();
     }
 
-    // —— 主流程 —— //
+    // —— main flow —— //
     void ActivateCheckpoint()
     {
         if (isAnimating) return;
         if (!cameraFixedPose)
         {
-            Debug.LogWarning("[CheckpointUp] 未设置 cameraFixedPose（固定机位），将跳过相机固定。");
+            Debug.LogWarning("[CheckpointUp] cameraFixedPose (fixed camera position) not set, will skip camera fixing.");
         }
 
         isAnimating = true;
@@ -181,13 +181,13 @@ public class CheckpointUp : MonoBehaviour
         if (playerInputController) playerInputController.DisableInput();
         if (playerController)      playerController.enabled = false;
 
-        // 交出相机跟随权（我们要自己控制）
+        // hand over camera follow control (we want to control it ourselves)
         if (cameraFollow) cameraFollow.SetCameraControl(false);
 
         if (antsAnimationObject) antsAnimationObject.SetActive(false);
         if (playerObject)        playerObject.SetActive(true);
 
-        // ==== SFX：开始播放（整段播完；不随过场结束而打断） ====
+        // ==== SFX: start playing (play entire clip; won't be interrupted by cutscene end) ====
         if (cinematicStartSfx)
         {
             PlayCinematicStartOnce();
@@ -201,7 +201,7 @@ public class CheckpointUp : MonoBehaviour
     {
         var cam = Camera.main;
 
-        // 1) 从当前相机 → 固定机位（并切到固定FOV）
+        // 1) move from current camera → fixed position (and switch to fixed FOV)
         if (cam && cameraFixedPose)
         {
             float startFov = cam.fieldOfView;
@@ -212,29 +212,29 @@ public class CheckpointUp : MonoBehaviour
                                     cameraMoveInTime);
         }
 
-        // 2) 立刻把玩家传送到“新的落点”，避免回弹
+        // 2) immediately teleport player to "new landing point" to avoid bouncing back
         if (playerObject && playerFinalPosition)
         {
             playerObject.transform.SetPositionAndRotation(
                 playerFinalPosition.position, playerFinalPosition.rotation);
         }
 
-        // 3) 播放替身动画（此时相机固定不动）
+        // 3) play substitute animation (camera stays fixed at this point)
         if (antsAnimationObject)
         {
             antsAnimationObject.SetActive(true);
             if (antsAnimator && !string.IsNullOrEmpty(antsAnimationTrigger))
                 antsAnimator.SetTrigger(antsAnimationTrigger);
         }
-        if (playerObject) playerObject.SetActive(false); // 用替身表演
+        if (playerObject) playerObject.SetActive(false); // use substitute for performance
 
         yield return new WaitForSeconds(animationDuration);
 
-        // 4) 替身退场，玩家出现（已在新位置）
+        // 4) substitute exits, player appears (already in new position)
         if (antsAnimationObject) antsAnimationObject.SetActive(false);
         if (playerObject)        playerObject.SetActive(true);
 
-        // 5) 从固定机位 → 跟随（有交接位/无交接位）
+        // 5) from fixed position → follow (with handoff position / without handoff position)
         if (cam && followHandoffPose)
         {
             float startFov = cam.fieldOfView;
@@ -253,7 +253,7 @@ public class CheckpointUp : MonoBehaviour
             HandBackFollow();
         }
 
-        // 注意：此处不再 Stop SFX（让它自然播完）
+        // note: don't Stop SFX here anymore (let it finish naturally)
         if (flood) flood.OnClimbSucceeded(resetCrumbs: false);
 
         isAnimating = false;
@@ -276,7 +276,7 @@ public class CheckpointUp : MonoBehaviour
         if (playerController)      playerController.enabled = true;
     }
 
-    // —— 相机插值（位置/旋转/FOV 同时插）——
+    // —— camera interpolation (position/rotation/FOV interpolated together) ——
     IEnumerator LerpCamera(Camera cam,
                            Vector3 fromPos, Quaternion fromRot, float fromFov,
                            Vector3 toPos,   Quaternion toRot,   float toFov,
@@ -305,12 +305,12 @@ public class CheckpointUp : MonoBehaviour
         cam.fieldOfView = toFov;
     }
 
-    // ==== SFX：整段播完（可淡入，尾部可淡出），不被外部打断 ====
+    // ==== SFX: play entire clip (can fade in, end can fade out), won't be interrupted externally ====
     void PlayCinematicStartOnce()
     {
         if (!_sfx || !cinematicStartSfx) return;
 
-        // 3D 时把音源放到固定机位位置（更贴画面）
+        // when 3D, put audio source at fixed camera position (closer to picture)
         if (!cinematicStartAs2D && cameraFixedPose)
             _sfx.transform.position = cameraFixedPose.position;
 
@@ -318,7 +318,7 @@ public class CheckpointUp : MonoBehaviour
         _sfx.clip = cinematicStartSfx;
         _sfx.loop = false;
 
-        // 停掉正在进行的淡与播放
+        // stop ongoing fade and play
         if (_fadeCo != null) { StopCoroutine(_fadeCo); _fadeCo = null; }
         if (_playOnceCo != null) { StopCoroutine(_playOnceCo); _playOnceCo = null; }
 
@@ -331,7 +331,7 @@ public class CheckpointUp : MonoBehaviour
         _sfx.volume = sfxUseFade ? 0f : Mathf.Clamp01(cinematicStartVolume);
         _sfx.Play();
 
-        // 开头淡入
+        // fade in at start
         if (sfxUseFade && sfxFadeInTime > 0f)
         {
             yield return FadeVolume(_sfx.volume, Mathf.Clamp01(cinematicStartVolume), sfxFadeInTime);
@@ -341,20 +341,20 @@ public class CheckpointUp : MonoBehaviour
             _sfx.volume = Mathf.Clamp01(cinematicStartVolume);
         }
 
-        // 计算尾淡出开始时刻（自然长度内）
+        // calculate end fade out start time (within natural length)
         if (sfxFadeOutAtEnd && sfxUseFade && sfxEndFadeTime > 0f)
         {
             float wait = Mathf.Max(0f, cinematicStartSfx.length - sfxEndFadeTime);
             yield return new WaitForSeconds(wait);
-            // 尾淡出
+            // end fade out
             yield return FadeVolume(_sfx.volume, 0f, sfxEndFadeTime);
             _sfx.Stop();
         }
         else
         {
-            // 不做尾淡出：就让它自然播完
+            // don't do end fade out: just let it finish naturally
             yield return new WaitForSeconds(cinematicStartSfx.length - (_sfx.isPlaying ? _sfx.time : 0f));
-            // 不调用 Stop()，让尾巴自然结束即可
+            // don't call Stop(), let the tail end naturally
         }
 
         _playOnceCo = null;
@@ -376,7 +376,7 @@ public class CheckpointUp : MonoBehaviour
     }
     // =================================
 
-    // —— 简单提示 —— //
+    // —— simple hint —— //
     void ShowHint(string msg)
     {
         if (!hintGroup || !hintText) { Debug.Log(msg); return; }

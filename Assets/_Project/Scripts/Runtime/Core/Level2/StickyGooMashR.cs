@@ -6,47 +6,47 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class StickyGooMashR : MonoBehaviour
 {
-    [Header("规则")]
+    [Header("Rule")]
     public int requiredPresses = 15;
     public float timeLimit = 8f;
 
-    [Header("第 N 次进入蜂蜜直接死亡")]
+    [Header("The Nth time entering the honey resulted in instant death")]
     public int instantDeathOnNth = 3;
 
-    [Header("计数范围")]
+    [Header("Counting Range")]
     public bool useGlobalCounter = true;
 
-    [Header("UI（挣脱进度圈）")]
+    [Header("UI")]
     public CanvasGroup ringGroup;
     public Image ringFill;   // Filled/Radial360
     public Image timerFill;  // Filled/Vertical Origin=Top
     public TMP_Text tipText;
 
-    [Header("成功自救：回上一块石头")]
+    [Header("Successful Self-Rescue: Returning to the Previous Stone")]
     public float upOffset = 0.8f;
-    public Transform smallLevelStart = null; // 留空：失败/第N次走 pc.Die()
+    public Transform smallLevelStart = null; // leave null: on fail/Nth time we call pc.Die()
 
-    [Header("按键")]
+    [Header("Key")]
     public KeyCode mashKey = KeyCode.J;
 
-    [Header("冻结")]
+    [Header("Freeze")]
     public bool setKinematicWhileStuck = true;
     public bool zeroVelocityWhileStuck = true;
 
-    [Header("死亡 UI（仅在真正死亡时显示）")]
+    [Header("Death UI")]
     [TextArea]
-    public string deathMessage = "被蜂蜜困住，挣脱失败…";
+    public string deathMessage = "Trapped by honey, failed to break free...";
     public Sprite deathSprite;
-    public float deathDuration = 4f; // <=0 使用模板默认
+    public float deathDuration = 4f; // <=0 uses template default
 
-    // === 新增：挣脱按键的单次音效 ===
-    [Header("音效（挣脱按键，每按一次播一次）")]
+    // === NEW: single SFX per mash press ===
+    [Header("Sound effect (release button, plays once per press)")]
     public AudioClip mashPressSfx;
     [Range(0f, 1f)] public float mashPressVolume = 1f;
-    [Tooltip("留空则在本物体上自动创建一个 AudioSource")]
+    [Tooltip("Leave blank to automatically create an AudioSource on this object")]
     public AudioSource mashAudioSource;
 
-    // —— 内部 ——
+    // —— Internals ——
     bool busy;
     PlayerController pc;
     RockTracker tracker;
@@ -62,18 +62,18 @@ public class StickyGooMashR : MonoBehaviour
     {
         ShowUI(false);
 
-        // 准备音源（不循环、不开播）
+        // Prep the audio source (no loop, don't auto-play)
         if (!mashAudioSource)
         {
             mashAudioSource = gameObject.AddComponent<AudioSource>();
             mashAudioSource.playOnAwake = false;
             mashAudioSource.loop = false;
-            mashAudioSource.spatialBlend = 0f; // UI类提示音常用2D；需要3D可改为1
+            mashAudioSource.spatialBlend = 0f; // UI beeps are usually 2D; set to 1 for 3D if you want
         }
     }
     void OnEnable(){ ShowUI(false); }
 
-    // 外部（如重生点触发器）可调用
+    // External code (e.g., respawn trigger) can call these
     public static void ResetGlobalHoneyCounter() { globalTimes = 0; }
     public void ResetLocalHoneyCounter() { localTimes = 0; }
 
@@ -93,7 +93,7 @@ public class StickyGooMashR : MonoBehaviour
         rb      = root.GetComponent<Rigidbody>();
         if (!pc || !rb) return;
 
-        // 若还没“上一块”而此刻踩在石头上，补一次
+        // If we don't have a "last rock" yet but we ARE on a rock now, record one
         if (tracker && tracker.lastJumpFromRock == null && tracker.currentRock != null)
             tracker.MarkJump();
 
@@ -111,7 +111,7 @@ public class StickyGooMashR : MonoBehaviour
     {
         busy = true;
 
-        // 冻结
+        // Freeze
         cachedSpeed = pc.moveSpeed; pc.moveSpeed = 0f;
         cachedKinematic = rb.isKinematic;
         if (setKinematicWhileStuck) rb.isKinematic = true;
@@ -132,7 +132,7 @@ public class StickyGooMashR : MonoBehaviour
                 presses++;
                 if (ringFill) ringFill.fillAmount = (float)presses / requiredPresses;
 
-                // —— 新增：每次按下播放一次，不循环 —— //
+                // NEW: play once per press, no looping
                 PlayMashPressSfx();
             }
             if (timerFill) timerFill.fillAmount = Mathf.Clamp01(t / timeLimit);
@@ -148,18 +148,18 @@ public class StickyGooMashR : MonoBehaviour
         if (presses >= requiredPresses) TeleportToLastRock();
         else                            Die(true);
 
-        // 解冻
+        // Unfreeze
         if (setKinematicWhileStuck) rb.isKinematic = cachedKinematic;
         pc.moveSpeed = cachedSpeed;
         busy = false;
     }
 
-    // 播放单次“挣脱按键”音效
+    // Play the single "mash" SFX
     void PlayMashPressSfx()
     {
         if (!mashPressSfx || !mashAudioSource) return;
 
-        // 用 PlayOneShot 防止上一个尾音被打断
+        // Use PlayOneShot so the tail of the previous sound isn't cut off
         mashAudioSource.PlayOneShot(mashPressSfx, mashPressVolume);
     }
 
@@ -189,7 +189,7 @@ public class StickyGooMashR : MonoBehaviour
 
         if (smallLevelStart)
         {
-            // 不是“真正死亡”——只是传送回小重生点，不显示死亡UI
+            // Not a “real death” — just warp back to the small checkpoint, no death UI
             bool keepK = rb.isKinematic; rb.isKinematic = true;
             rb.position = smallLevelStart.position + Vector3.up * 0.02f;
             rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
@@ -197,12 +197,11 @@ public class StickyGooMashR : MonoBehaviour
         }
         else
         {
-            // 真正死亡：走全局死亡流程 + 弹死亡UI模板
+            // Real death: run global death flow + show the death UI template
             pc.Die();
             GlobalSfx.PlayDeathSfx();
 
-
-            // 只有此处触发死亡UI；可在组件里自定义文案/图片/时长
+            // Only here we pop the death UI; you can customize text/sprite/duration on the component
             DeathUIOverlay.Instance?.Show(
                 string.IsNullOrEmpty(deathMessage) ? null : deathMessage,
                 deathSprite,
@@ -210,7 +209,7 @@ public class StickyGooMashR : MonoBehaviour
             );
         }
 
-        if (resetCounter) SetCnt(0); // 死亡后重新给两次机会
+        if (resetCounter) SetCnt(0); // After death, reset counter so you get more tries
     }
 
     void ShowUI(bool show)

@@ -5,23 +5,23 @@ using System.Reflection;
 [RequireComponent(typeof(Collider))]
 public class CameraFollowZone_PitchLock : MonoBehaviour
 {
-    [Header("引用")]
-    public MonoBehaviour cameraFollowScript;   // 拖主相机上的相机跟随脚本
-    public Transform cameraTransform;          // 可留空，自动取 Camera.main
+    [Header("References")]
+    public MonoBehaviour cameraFollowScript;   // drag the camera follow script on main camera
+    public Transform cameraTransform;          // can be empty, will automatically get Camera.main
 
-    [Header("Offset（位置）")]
+    [Header("Offset (Position)")]
     public bool overrideOffset = true;
     public Vector3 offsetInZone = new Vector3(0f, 0.08f, -0.4f);
-    public float smoothTime = 0.25f;           // 进出区平滑时间（0 = 立即）
+    public float smoothTime = 0.25f;           // smooth time when entering/exiting zone (0 = immediate)
 
     public enum PitchSource { FixedAngle, FromOffset }
-    [Header("Pitch（上下角度）")]
-    public bool lockPitch = true;              // 锁上下
+    [Header("Pitch (Up/Down Angle)")]
+    public bool lockPitch = true;              // lock up/down
     public PitchSource pitchMode = PitchSource.FromOffset;
-    public float fixedPitchDeg = 10f;          // PitchSource=FixedAngle 时使用
-    public float pitchSign = 1f;               // 如方向相反，可设为 -1
+    public float fixedPitchDeg = 10f;          // used when PitchSource=FixedAngle
+    public float pitchSign = 1f;               // if direction is opposite, can set to -1
 
-    // —— 内部缓存 —— //
+    // —— internal cache —— //
     Vector3 _oldOffset;
     float _oldMinPitch, _oldMaxPitch;
     FieldInfo _fOffset, _fMinPitch, _fMaxPitch;
@@ -38,12 +38,12 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
         if (!cameraTransform && Camera.main) cameraTransform = Camera.main.transform;
         if (!cameraFollowScript) return;
 
-        // 反射拿字段（大小写不敏感，只要包含关键字）
+        // get fields via reflection (case insensitive, just need to contain keyword)
         _fOffset   = FindField(cameraFollowScript, "offset",   typeof(Vector3));
         _fMinPitch = FindField(cameraFollowScript, "minpitch", typeof(float));
         _fMaxPitch = FindField(cameraFollowScript, "maxpitch", typeof(float));
 
-        // 记录初始值
+        // record initial values
         if (_fOffset   != null) _oldOffset   = (Vector3)_fOffset.GetValue(cameraFollowScript);
         if (_fMinPitch != null) _oldMinPitch = (float)_fMinPitch.GetValue(cameraFollowScript);
         if (_fMaxPitch != null) _oldMaxPitch = (float)_fMaxPitch.GetValue(cameraFollowScript);
@@ -54,7 +54,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
         if (!cameraFollowScript) return;
         if (!IsPlayer(other)) return;
 
-        // 1) Offset 过渡
+        // 1) Offset transition
         if (overrideOffset && _fOffset != null)
         {
             StopBlend();
@@ -64,7 +64,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
                 _fOffset.SetValue(cameraFollowScript, offsetInZone);
         }
 
-        // 2) Pitch 锁定（不取进入角度；用固定角或offset推导）
+        // 2) Pitch lock (don't take entry angle; use fixed angle or derive from offset)
         if (lockPitch && _fMinPitch != null && _fMaxPitch != null)
         {
             float targetPitch = (pitchMode == PitchSource.FixedAngle)
@@ -73,7 +73,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
 
             _fMinPitch.SetValue(cameraFollowScript, targetPitch);
             _fMaxPitch.SetValue(cameraFollowScript, targetPitch);
-            // 不改 yaw，因此鼠标左右仍可用
+            // don't change yaw, so mouse left/right still works
         }
     }
 
@@ -82,7 +82,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
         if (!cameraFollowScript) return;
         if (!IsPlayer(other)) return;
 
-        // 还原 Offset
+        // restore Offset
         if (overrideOffset && _fOffset != null)
         {
             StopBlend();
@@ -92,7 +92,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
                 _fOffset.SetValue(cameraFollowScript, _oldOffset);
         }
 
-        // 还原 Pitch 限制
+        // restore Pitch limits
         if (lockPitch && _fMinPitch != null && _fMaxPitch != null)
         {
             _fMinPitch.SetValue(cameraFollowScript, _oldMinPitch);
@@ -100,7 +100,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
         }
     }
 
-    // —— 工具函数 —— //
+    // —— utility functions —— //
 
     FieldInfo FindField(MonoBehaviour mb, string keyword, System.Type type)
     {
@@ -120,7 +120,7 @@ public class CameraFollowZone_PitchLock : MonoBehaviour
         return root.CompareTag("Player");
     }
 
-    // 根据 offset 估出合适 pitch：pitch = atan2(y, √(x²+z²))（角度）
+    // estimate appropriate pitch from offset: pitch = atan2(y, √(x²+z²)) (in degrees)
     float PitchFromOffset(Vector3 off)
     {
         float horiz = Mathf.Sqrt(off.x * off.x + off.z * off.z);

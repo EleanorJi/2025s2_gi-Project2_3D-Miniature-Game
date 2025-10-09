@@ -1,33 +1,33 @@
 using UnityEngine;
 
 /// <summary>
-/// 挂在 Player 上：按 C 拾取附近的叶子，保持原尺寸背到 carryPoint；
-/// 通过 Gate 传送；落地后第一次移动自动从 dropPoint 丢下。
-/// 朝向规则：背在身上时 X=-90, Z=90；丢下时在当前姿态基础上 X 再 +90°。
+/// Attach on the Player: press C to pick up a nearby leaf, carry it at original size at carryPoint;
+/// pass through a Gate to teleport; after landing, the first movement auto-drops it from dropPoint.
+/// Facing rule: while carried X = -90, Z = 90; when dropping, add +90° on X based on current pose.
 /// </summary>
 public class ParachuteCarrier : MonoBehaviour
 {
-    [Header("输入")]
+    [Header("Input")]
     public KeyCode pickupKey = KeyCode.C;
 
-    [Header("引用（自动从 PlayerController 获取）")]
+    [Header("Refs (auto-fetched from PlayerController)")]
     public Transform carryPoint;
     public Transform dropPoint;
 
-    [Header("背在身上的姿态（可在 Inspector 微调）")]
+    [Header("Pose while carried (fine-tune in Inspector)")]
     public Vector3 attachLocalEuler = new Vector3(-90f, 0f, 90f);
     public Vector3 attachLocalOffset = Vector3.zero;
 
-    [Header("丢下时位置微调")]
-    public float dropYOffset = 0.03f; // 放下时世界坐标向上抬高
+    [Header("Drop position tweak")]
+    public float dropYOffset = 0.03f; // Raise world Y a bit on drop
 
-    // 状态
-    ParachuteLeafPickup nearbyLeaf;   // 可拾取范围标记
-    Transform carriedLeaf;            // 正在背的叶子
+    // State
+    ParachuteLeafPickup nearbyLeaf;   // Mark if a leaf is in pickup range
+    Transform carriedLeaf;            // The leaf being carried
     Rigidbody carriedLeafRb;
     Collider[] carriedLeafCols;
 
-    // 落地->第一次移动 丢叶
+    // Land -> first movement will drop the leaf
     PlayerController pc;
     bool wasGroundedLastFrame;
     bool waitingForFirstMoveAfterLand;
@@ -46,14 +46,14 @@ public class ParachuteCarrier : MonoBehaviour
 
     void Update()
     {
-        // 按 C 拾取
+        // Press C to pick up
         if (Input.GetKeyDown(pickupKey))
         {
             if (!carriedLeaf && nearbyLeaf)
                 AttachLeaf(nearbyLeaf.transform);
         }
 
-        // 落地 -> 等待第一次移动 就丢叶
+        // Landed -> wait for the first movement to drop the leaf
         bool groundedNow = pc ? (pc.groundContactCount > 0) : false;
         if (!wasGroundedLastFrame && groundedNow)
             waitingForFirstMoveAfterLand = carriedLeaf != null;
@@ -72,24 +72,24 @@ public class ParachuteCarrier : MonoBehaviour
         wasGroundedLastFrame = groundedNow;
     }
 
-    // 由叶子触发器调用
+    // Called by the leaf trigger
     public void SetNearbyLeaf(ParachuteLeafPickup leaf) => nearbyLeaf = leaf;
     public ParachuteLeafPickup GetNearbyLeaf() => nearbyLeaf;
 
     public bool HasLeaf() => carriedLeaf != null;
-    // 兼容旧用法
+    // Back-compat with old usages
     public bool hasLeaf() => HasLeaf();
     public void MarkUsedParachute() => DropLeaf();
 
-    // —— 吸附（保持原“世界尺寸”，并强制指定姿态）——
+    // —— Snap onto carryPoint (keep original WORLD size, and force a specific pose) ——
     void AttachLeaf(Transform leaf)
     {
         if (!carryPoint || !leaf) return;
 
-        // 记录原世界缩放（为了保持尺寸）
+        // Record original world scale (so size stays the same)
         Vector3 worldScale = leaf.lossyScale;
 
-        // 禁物理/碰撞
+        // Disable physics/collisions
         carriedLeafRb = leaf.GetComponent<Rigidbody>();
         if (carriedLeafRb)
         {
@@ -101,10 +101,10 @@ public class ParachuteCarrier : MonoBehaviour
         carriedLeafCols = leaf.GetComponentsInChildren<Collider>(includeInactive: true);
         foreach (var c in carriedLeafCols) c.enabled = false;
 
-        // 设为子物体（不保持世界姿态，便于直接设置本地位姿）
+        // Parent under carryPoint (don’t keep world pose so we can set local transform directly)
         leaf.SetParent(carryPoint, worldPositionStays: false);
 
-        // 还原世界尺度：localScale = worldScale / parent.lossyScale
+        // Restore world scale: localScale = worldScale / parent.lossyScale
         Vector3 pLossy = carryPoint.lossyScale;
         leaf.localScale = new Vector3(
             worldScale.x / (Mathf.Approximately(pLossy.x, 0f) ? 1f : pLossy.x),
@@ -112,17 +112,17 @@ public class ParachuteCarrier : MonoBehaviour
             worldScale.z / (Mathf.Approximately(pLossy.z, 0f) ? 1f : pLossy.z)
         );
 
-        // 指定“背上”的本地位置与角度
+        // Set the "carried" local position & rotation
         leaf.localPosition = attachLocalOffset;
         leaf.localRotation = Quaternion.Euler(attachLocalEuler);
 
         carriedLeaf = leaf;
 
-        // ★ SFX：成功吸附时播放一次（同拾取/丢下用同一音效）
+        //SFX: play once on successful attach (same sound as pickup/drop)
         GlobalSfx.PlayLeafPickupSfx(transform.position);
     }
 
-    // —— 每帧钉住姿态，防止被别的脚本/物理改掉 —— 
+    // —— Re-pin pose every frame, so other scripts/physics won't mess it up ——
     void LateUpdate()
     {
         if (carriedLeaf && carryPoint)
@@ -132,7 +132,7 @@ public class ParachuteCarrier : MonoBehaviour
         }
     }
 
-    // —— 丢弃到 dropPoint，并在当前姿态基础上 X 再 +90°，且 Y 上抬 dropYOffset —— 
+    // —— Drop at dropPoint, then add +90° to local X based on the current pose, and raise Y by dropYOffset ——
     public void DropLeaf()
     {
         if (!carriedLeaf) return;
@@ -140,26 +140,26 @@ public class ParachuteCarrier : MonoBehaviour
         Transform leaf = carriedLeaf;
         carriedLeaf = null;
 
-        // 解除父子关系（保持当前世界姿态）
+        // Unparent (keep current world pose)
         leaf.SetParent(null, true);
 
-        // 放到 dropPoint（若为空则保持当前位置）
+        // Move to dropPoint (if set; otherwise keep current position)
         if (dropPoint)
         {
             leaf.position = dropPoint.position;
             leaf.rotation = dropPoint.rotation;
         }
 
-        // 在当前姿态基础上，沿自身 X 轴 +90°
+        // Add +90° around its own X axis based on current pose
         leaf.Rotate(90f, 0f, 0f, Space.Self);
 
-        // ★ 修正：Y 轴抬高（你原来写成了 Vector3.left ）
+        //Fix: raise on Y (you previously used Vector3.left by mistake)
         if (!Mathf.Approximately(dropYOffset, 0f))
         {
             leaf.position += Vector3.up * dropYOffset;
         }
 
-        // 还原物理/碰撞
+        // Restore physics/collisions
         if (carriedLeafRb)
         {
             carriedLeafRb.isKinematic = false;
@@ -172,7 +172,7 @@ public class ParachuteCarrier : MonoBehaviour
         carriedLeafRb = null;
         carriedLeafCols = null;
 
-        // ★ SFX：丢下时也播同一个音效
+        //SFX: play the same sound on drop
         GlobalSfx.PlayLeafPickupSfx(transform.position);
     }
 }

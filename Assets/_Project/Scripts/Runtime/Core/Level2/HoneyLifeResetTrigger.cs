@@ -1,8 +1,7 @@
 using UnityEngine;
 
-/// 把它挂到“重生点”位置的一个小 BoxCollider(IsTrigger✔) 上
-/// 作用：玩家重生/路过时，重置“本命蜂蜜计数”为 0（又有两次自救机会）
-[RequireComponent(typeof(Collider))]
+/// Attach it to a small BoxCollider (IsTrigger) positioned at the “respawn point”
+/// Function: When the player respawns or passes by, reset the “Lifeline Honey Counter” to 0 (granting two more self-rescue opportunities)[RequireComponent(typeof(Collider))]
 public class HoneyLifeResetTrigger : MonoBehaviour
 {
     public bool onlyWhenPlayerTag = true;
@@ -24,6 +23,6 @@ public class HoneyLifeResetTrigger : MonoBehaviour
 
         StickyGooMashR.ResetGlobalHoneyCounter();
         _doneThisFrame = true;
-        // 可选：Debug.Log("[Honey] reset counter at checkpoint");
+        
     }
 }

@@ -2,9 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 /// <summary>
-/// 挂在粒子特效根物体上：实例化/激活后，自动等待所有
-/// ParticleSystem 播放完毕（含子节点），然后销毁自身。
-/// 不依赖 Stop Action 配置，更稳。
+/// Attach to particle effect root object: after instantiation/activation, automatically wait for all
+/// ParticleSystem to finish playing (including child nodes), then destroy self.
+/// Doesn't rely on Stop Action config, more stable.
 /// </summary>
 public class AutoDestroyParticle : MonoBehaviour
 {
@@ -15,19 +15,19 @@ public class AutoDestroyParticle : MonoBehaviour
 
     private IEnumerator WaitAndKill()
     {
-        // 收集自身及子物体里的所有粒子系统
+        // collect all particle systems in self and child objects
         ParticleSystem[] systems = GetComponentsInChildren<ParticleSystem>(true);
 
-        // 有些系统需要等一帧才进入播放状态
+        // some systems need to wait one frame to enter playing state
         yield return null;
 
-        // 如果有系统没有勾 Play On Awake，这里统一播放一下（安全起见）
+        // if any system doesn't have Play On Awake checked, play them here (just to be safe)
         foreach (var ps in systems)
         {
             if (ps && !ps.isPlaying) ps.Play(true);
         }
 
-        // 等到所有系统都完全“死亡”为止
+        // wait until all systems are completely "dead"
         bool anyAlive;
         do
         {
@@ -40,7 +40,7 @@ public class AutoDestroyParticle : MonoBehaviour
         }
         while (anyAlive);
 
-        // 全部播放完，销毁特效对象
+        // all finished playing, destroy effect object
         Destroy(gameObject);
     }
 }

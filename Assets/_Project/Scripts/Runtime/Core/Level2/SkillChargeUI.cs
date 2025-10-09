@@ -9,21 +9,21 @@ public class SkillChargeUI : MonoBehaviour
 
     [Header("Refs")]
     public GameObject hudRoot;          // HUD_Cookies
-    public Image skillCircle;           // 左侧圆圈 Image
-    public TMP_Text skillLabel;         // 圆圈里的技能名
+    public Image skillCircle;           // Left circle Image
+    public TMP_Text skillLabel;         // Skill name inside the circle
     public Transform shardContainer;    // ShardContainer
-    public GameObject cookieIconPrefab; // CookieIcon prefab（UI）
+    public GameObject cookieIconPrefab; // CookieIcon prefab (UI)
 
     [Header("Counts")]
-    public int maxShards = 10;          // 最多显示几个
-    public int readyThreshold = 3;      // >=3 点亮
+    public int maxShards = 10;          // Max number of icons to show
+    public int readyThreshold = 3;      // Light up when >= 3
 
     [Header("Visuals")]
-    public Sprite circleOff;            // 熄灭图（可空，用颜色替代）
-    public Sprite circleOn;             // 点亮图（可空）
+    public Sprite circleOff;            // Off sprite (optional; color fallback)
+    public Sprite circleOn;             // On sprite (optional)
     public Color offColor = new Color(1,1,1,0.5f);
     public Color onColor  = Color.white;
-    public float popScale = 1.25f;      // 新增时小弹一下
+    public float popScale = 1.25f;      // Tiny pop when a new shard appears
     public float popTime  = 0.08f;
 
     private readonly List<GameObject> _icons = new();
@@ -31,7 +31,7 @@ public class SkillChargeUI : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        if (hudRoot) hudRoot.SetActive(false); // 等第一枚出现再显示
+        if (hudRoot) hudRoot.SetActive(false); // Keep HUD hidden until the first shard shows up
     }
 
     void OnEnable()
@@ -48,7 +48,7 @@ public class SkillChargeUI : MonoBehaviour
 
     void Start()
     {
-        // 预先创建 maxShards 个格子（隐藏），避免运行时频繁 Instantiate
+        // Prebuild maxShards slots (hidden) so we don’t Instantiate at runtime
         EnsureIconsBuilt();
         int cur = CookiesInventory.Instance ? CookiesInventory.Instance.cookies : 0;
         Refresh(cur);
@@ -68,15 +68,15 @@ public class SkillChargeUI : MonoBehaviour
         }
     }
 
-    // 外部调用：背包变化时刷新
+    // Public API: call this when the inventory changes
     public void Refresh(int current)
     {
         //Debug.Log($"[UI] Refresh, count={current}, hudRoot={(hudRoot?hudRoot.name:"NULL")}, shard={(shardContainer?shardContainer.name:"NULL")}, prefab={(cookieIconPrefab?cookieIconPrefab.name:"NULL")}");
         Debug.Log($"[UI] Refresh, count={current}, hud={(hudRoot?hudRoot.name:"NULL")}, shard={(shardContainer?shardContainer.name:"NULL")}, prefab={(cookieIconPrefab?cookieIconPrefab.name:"NULL")}");
 
-        if (hudRoot) hudRoot.SetActive(current > 0); // 第1枚后显示
+        if (hudRoot) hudRoot.SetActive(current > 0); // Show HUD after we have at least 1 shard
 
-        // 点亮/熄灭圆圈
+        // Toggle the big circle on/off
         bool ready = current >= readyThreshold;
         if (skillCircle)
         {
@@ -84,7 +84,7 @@ public class SkillChargeUI : MonoBehaviour
             skillCircle.color = ready ? onColor : offColor;
         }
 
-        // 碎屑图标显示个数
+        // Show the right number of shard icons
         EnsureIconsBuilt();
 
         current = Mathf.Clamp(current, 0, maxShards);
@@ -93,7 +93,7 @@ public class SkillChargeUI : MonoBehaviour
             bool on = i < current;
             _icons[i].SetActive(on);
 
-            // 刚点亮的做个小弹动（可选）
+            // Newly lit icon gets a tiny pop (optional vibe)
             if (on)
             {
                 var t = _icons[i].transform;
@@ -118,18 +118,18 @@ public class SkillChargeUI : MonoBehaviour
         t.localScale = Vector3.one;
     }
 
-    // 供技能按钮检查是否可用
+    // For a skill button to check if it's usable
     public bool IsReady()
     {
         return CookiesInventory.Instance && CookiesInventory.Instance.cookies >= readyThreshold;
     }
 
-    // 供技能释放时扣除 & 刷新
+    // Spend shards when casting a skill & let UI auto-refresh via the event
     public bool TrySpendForSkill()
     {
         if (!CookiesInventory.Instance) return false;
         if (!CookiesInventory.Instance.Spend(readyThreshold)) return false;
-        // 扣除后 Refresh 会被事件自动触发
+        // After spending, Refresh is triggered by the inventory event
         return true;
     }
 }

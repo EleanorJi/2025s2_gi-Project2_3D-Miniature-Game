@@ -5,7 +5,7 @@ public class InsectLaneMover : MonoBehaviour
     public Transform pointA;
     public Transform pointB;
     public float speed = 2f;
-    public bool flipChildrenFacing = true; // 往返时让孩子们转向
+    public bool flipChildrenFacing = true;
 
     Vector3 _target;
     int _dir = 1; // 1->B, -1->A
@@ -23,7 +23,7 @@ public class InsectLaneMover : MonoBehaviour
 
         if (Vector3.Distance(transform.position, _target) < 0.01f)
         {
-            // 抵达拐点，切换目标并可选翻转朝向
+        
             _dir *= -1;
             _target = (_dir > 0) ? pointB.position : pointA.position;
 
@@ -31,7 +31,7 @@ public class InsectLaneMover : MonoBehaviour
             {
                 foreach (Transform child in transform)
                 {
-                    // 只翻转水平朝向（绕Y轴转180°）
+                    // only flip horizontal facing (180° around Y axis)
                     child.Rotate(0f, 0f, 180f);
                 }
             }

@@ -11,41 +11,41 @@ public class AmbientZoneTrigger : MonoBehaviour
     [Range(0f,1f)] public float baseVolume = 1f;
     public bool loop = true;
 
-    [Header("玩家定位")]
+    [Header("Player Location")]
     public Transform playerOverride;
     public string playerTag = "Player";
     public float reFindPlayerInterval = 1.0f;
 
-    [Header("范围")]
-    [Tooltip("半径（世界单位）")]
+    [Header("Range")]
+    [Tooltip("radius (world units)")]
     public float radius = 10f;
-    [Tooltip("是否叠加缩放：半径 × max(lossyScale)")]
+    [Tooltip("whether to apply scaling: radius × max(lossyScale)")]
     public bool scaleWithTransform = false;
 
-    [Header("淡入/淡出")]
+    [Header("Fade In/Out")]
     public float fadeInTime  = 0.35f;
     public float fadeOutTime = 0.35f;
 
-    [Header("距离→音量（t=0=边缘, t=1=中心）")]
-    // ⚠️ 默认曲线也改成 0->0, 1->1（边缘0音量，中心1音量）
+    [Header("Distance→Volume (t=0=edge, t=1=center)")]
+    //default curve changed to 0->0, 1->1 (edge 0 volume, center 1 volume)
     public AnimationCurve distanceToVolume = new AnimationCurve(
         new Keyframe(0f, 0f), new Keyframe(1f, 1f)
     );
 
-    [Tooltip("边缘静音带（米）：从外半径往里这么多米音量保持为0，再开始升高")]
+    [Tooltip("edge silent zone (meters): from outer radius inward this many meters volume stays 0, then starts rising")]
     public float edgeFeatherMeters = 0f;
 
-    [Header("2D/3D 声场")]
+    [Header("2D/3D Sound Field")]
     public bool use3D = false;
     [Range(0f,1f)] public float spatialBlend3D = 1f;
     public float minDistance3D = 1f;
     public float maxDistance3D = 30f;
 
-    [Header("启动控制")]
+    [Header("Startup Control")]
     public bool onlyAfterGameStarted = true;
     public bool autoGameStartOnStart = false;
 
-    [Header("调试")]
+    [Header("Debug")]
     public bool debugLogs = false;
 
     AudioSource _src;
@@ -62,7 +62,7 @@ public class AmbientZoneTrigger : MonoBehaviour
         if (!_src) _src = gameObject.AddComponent<AudioSource>();
         _src.playOnAwake = false;
         _src.loop = true;
-        _src.spatialBlend = 0f; // 默认2D
+        _src.spatialBlend = 0f; //default 2D
     }
 
     void Awake()
@@ -121,13 +121,13 @@ public class AmbientZoneTrigger : MonoBehaviour
         }
         else
         {
-            _src.spatialBlend = 0f; // 2D：仅脚本控制音量
+            _src.spatialBlend = 0f; //2D: only script controls volume
         }
     }
 
     void Update()
     {
-        // 找玩家（掉引用时也能恢复）
+        // find player (can recover when reference is lost)
         if (!_player)
         {
             _reFindTimer -= Time.unscaledDeltaTime;
@@ -144,15 +144,15 @@ public class AmbientZoneTrigger : MonoBehaviour
 
             if (inside)
             {
-                // —— 关键：反向映射，边缘=0，中心=1 —— //
-                // 原先是 dist/r（中心更小），现在改为 1 - dist/r
+                //key: reverse mapping, edge=0, center=1 —— //
+                // originally dist/r (center smaller), now changed to 1 - dist/r
                 float t = Mathf.Clamp01(1f - dist / Mathf.Max(0.0001f, r));
 
-                // 边缘静音带：比如设置 2m，则从半径r到r-2m这段保持0，再开始抬升
+                // edge silent zone: for example set 2m, then from radius r to r-2m this section stays 0, then starts rising
                 if (edgeFeatherMeters > 0f)
                 {
                     float feather01 = Mathf.Clamp01(edgeFeatherMeters / Mathf.Max(0.0001f, r));
-                    // t ∈ [0,feather01) 压成 0；其余重新归一化到 (0,1]
+                    // t [0,feather01) compressed to 0; rest renormalized to (0,1]
                     t = Mathf.InverseLerp(feather01, 1f, t);
                 }
 
@@ -178,14 +178,14 @@ public class AmbientZoneTrigger : MonoBehaviour
             _targetVol = 0f;
         }
 
-        // 平滑到目标
+        // smooth to target
         float tau = (_targetVol > _currentVol) ? Mathf.Max(0.0001f, fadeInTime)
                                                : Mathf.Max(0.0001f, fadeOutTime);
         _currentVol = Mathf.SmoothDamp(_currentVol, _targetVol, ref _fadeVel, tau);
         _currentVol = Mathf.Clamp01(_currentVol);
         _src.volume = _currentVol;
 
-        // 全淡出后停止
+        // stop after completely faded out
         if (_src.isPlaying && _currentVol <= 0.0005f && _targetVol <= 0.0005f)
         {
             _src.Stop();
@@ -217,7 +217,7 @@ public class AmbientZoneTrigger : MonoBehaviour
         Gizmos.color = new Color(0.2f, 0.8f, 1f, 0.15f);
         Gizmos.DrawWireSphere(transform.position, GetWorldRadius());
         Gizmos.DrawSphere(transform.position, 0.05f);
-        // 边缘静音带可视化
+        // edge silent zone visualization
         if (edgeFeatherMeters > 0f)
         {
             float r = GetWorldRadius();

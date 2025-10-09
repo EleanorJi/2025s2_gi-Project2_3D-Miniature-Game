@@ -5,12 +5,12 @@ using System.Collections;
 public class FloodSequence : MonoBehaviour
 {
     [Header("Start Trigger")]
-    public Collider startZone;               // 大区域（IsTrigger）
+    public Collider startZone;
     public string playerTag = "Player";
 
     [Header("References")]
-    public Transform floodWater;             // 水面（父/子都可）
-    public Collider floodWaterTrigger;       // 水面触发（IsTrigger）
+    public Transform floodWater;
+    public Collider floodWaterTrigger;
     public PlayerController playerController;
 
     [Header("Flood Settings")]
@@ -24,17 +24,17 @@ public class FloodSequence : MonoBehaviour
     [Header("On Water Slow")]
     [Range(0.1f, 1f)] public float slowFactor = 0.5f;
 
-    [Header("Death UI（可选覆盖）")]
-    [TextArea] public string deathMessage = "你被上涨的水淹没了…";
+    [Header("Death UI (optional override)")]
+    [TextArea] public string deathMessage = "You were drowned by the rising water…";
     public Sprite deathSprite;
-    public float deathDuration = 4f;  // <=0 时使用模板默认
+    public float deathDuration = 4f;  // <=0 uses the default from the template
 
-    [Header("Crumbs (攀爬能量)")]
+    [Header("Crumbs (climb energy)")]
     public int requiredCrumbs = 3;
     [SerializeField] int currentCrumbs = 0;
     public bool resetCrumbsOnDeath = true;
 
-    [Tooltip("把本关掉落的饼干都放到这个父物体下；拾取时不要Destroy，只要SetActive(false)。重置会全部SetActive(true)。")]
+    [Tooltip("Put all cookies dropped in THIS level under this parent; when picked up, don't Destroy — just SetActive(false). Reset will SetActive(true) on all of them.")]
     public Transform crumbRoot;
 
     [Header("Hint UI")]
@@ -42,27 +42,27 @@ public class FloodSequence : MonoBehaviour
     public TMP_Text hintText;
     public float hintFadeTime = 0.25f;
     public float hintStayTime = 2f;
-    public int hint1RemainSec = 40; public string hint1Text = "水位上涨了，得快一点！";
-    public int hint2RemainSec = 20; public string hint2Text = "不好！快被淹了，冲冲冲！";
-    public int hint3RemainSec = 10; public string hint3Text = "最后几秒！再不走就完蛋！";
+    public int hint1RemainSec = 40; public string hint1Text = "Water is rising — move faster!";
+    public int hint2RemainSec = 20; public string hint2Text = "Uh-oh! Almost flooded. Go go go!";
+    public int hint3RemainSec = 10; public string hint3Text = "Last seconds! Move or lose!";
     [Space(4)]
-    public string notEnoughEnergyText = "能量不足（需要 3 个饼干碎屑）";
+    public string notEnoughEnergyText = "Not enough energy (need 3 cookie crumbs)";
 
     [Header("SFX")]
     public AudioSource waterLoopSfx;
 
-    // ───── 离开区域清零策略（保持上版逻辑） ─────
-    [Header("Crumbs 清零策略（离开区域时）")]
-    [Tooltip("Always=总清；OnlyIfDiedInside=仅在本轮进区内发生过死亡时清；Never=从不清")]
+    // ───── Exit-area clearing policy (keep previous behavior) ─────
+    [Header("Crumbs clearing policy (on leaving the area)")]
+    [Tooltip("Always = always clear; OnlyIfDiedInside = clear only if a death happened inside during this run; Never = never clear")]
     public ExitClearMode exitClearMode = ExitClearMode.OnlyIfDiedInside;
     public enum ExitClearMode { Always, OnlyIfDiedInside, Never }
 
-    // ───── 重生点（新增 / 恢复） ─────
-    [Header("Respawn（关内死亡后重生）")]
-    public Transform respawnPoint;           // 放在第一关外的重生点
-    public bool warpOnDeath = true;          // 勾选=关内死亡立刻传送到重生点
+    // ───── Respawn point (added / restored) ─────
+    [Header("Respawn (die inside -> respawn)")]
+    public Transform respawnPoint;           // Place this respawn point outside Level 1
+    public bool warpOnDeath = true;          // If checked: instantly warp to respawn on death inside
 
-    // —— 内部状态 ——
+    // —— Internal state ——
     bool _running;
     bool _playerInside;
     bool _slowed;
@@ -75,13 +75,13 @@ public class FloodSequence : MonoBehaviour
 
     Transform _player;
 
-    // —— 本轮（本次进入区域→离开前）死亡标记 + 次数 —— 
+    // —— Flags + counter for deaths during THIS run (enter area -> leave area) ——
     bool _diedInsideSinceEnter = false;
     public int deathCountThisRun { get; private set; } = 0;
 
     void Start()
     {
-        // 拿到玩家 Transform（容错）
+        // Grab player's Transform (be forgiving)
         if (playerController) _player = playerController.transform;
         if (!_player)
         {
@@ -92,7 +92,7 @@ public class FloodSequence : MonoBehaviour
         SetWaterY(startY);
         if (hintGroup) hintGroup.alpha = 0f;
 
-        // 水面触发：进入减速，离开恢复
+        // Water contact trigger: enter to slow, exit to restore
         if (floodWaterTrigger)
         {
             var relay = floodWaterTrigger.GetComponent<WaterContactRelay>();
@@ -102,41 +102,41 @@ public class FloodSequence : MonoBehaviour
             relay.onExit  = OnWaterExit;
         }
 
-        // 开局根据玩家是否在区内来决定是否启动
+        // On start, decide whether to run based on whether player is already inside
         _playerInside = IsPlayerInsideStartZone();
         if (_playerInside) BeginSequence(); else ResetSequence();
     }
 
     void Update()
     {
-        // 主动判定玩家是否在 startZone 内
+        // Actively check if the player is inside startZone
         bool insideNow = IsPlayerInsideStartZone();
 
         if (insideNow && !_playerInside)
         {
             _playerInside = true;
-            BeginSequence(); // 重新进入：开始涨水 & 清本轮死亡计数
+            BeginSequence(); // re-enter: start flood & clear per-run death counter
         }
         else if (!insideNow && _playerInside)
         {
             _playerInside = false;
 
-            // 离开区域：复位水、提示等
+            // Left the area: reset water, hints, etc.
             ResetSequence();
 
-            // 根据策略决定是否清全局饼干/UI
+            // Decide whether to clear global crumbs/UI
             bool shouldClearGlobal = (exitClearMode == ExitClearMode.Always)
                                    || (exitClearMode == ExitClearMode.OnlyIfDiedInside && _diedInsideSinceEnter);
 
             if (shouldClearGlobal)
             {
-                ResetCrumbs();                  // ★ 清全局（UI 清零 + 复活碎屑）
-                deathCountThisRun = 0;          // 重生回来再次进入时从 0 开始
+                ResetCrumbs();                  // Clear global (UI to zero + respawn crumbs)
+                deathCountThisRun = 0;          // Next time we enter, start from 0 again
             }
             else
             {
-                ResetLevelLocalCrumbsOnly();    // ★ 只复位关内掉落，不清全局/UI
-                // 顺利过关 -> 保持 die=0 带到下一关
+                ResetLevelLocalCrumbsOnly();    // Only restore level drops, keep global/UI
+                // If we passed the gate successfully -> keep die=0 into next level
             }
         }
     }
@@ -149,7 +149,7 @@ public class FloodSequence : MonoBehaviour
         return (cp - p).sqrMagnitude < 1e-6f;
     }
 
-    // 统一设置水位（本地/世界）
+    // Set water Y either in local or world space
     void SetWaterY(float y)
     {
         if (!floodWater) return;
@@ -170,7 +170,7 @@ public class FloodSequence : MonoBehaviour
         _startTime = Time.timeAsDouble;
         _hint1Shown = _hint2Shown = _hint3Shown = false;
 
-        // 进入本轮：清死亡标记与计数
+        // New run: clear death flags/counter
         _diedInsideSinceEnter = false;
         deathCountThisRun = 0;
 
@@ -215,24 +215,24 @@ public class FloodSequence : MonoBehaviour
 
                 if (killWhenFull && playerController)
                 {
-                    // 区域内被水杀：记录死亡
+                    // Killed by water inside the area: record death
                     _diedInsideSinceEnter = true;
                     deathCountThisRun++;
 
                     playerController.Die();
                     GlobalSfx.PlayDeathSfx();
 
-                    // 死亡UI
+                    // Death UI
                     DeathUIOverlay.Instance?.Show(
                         string.IsNullOrEmpty(deathMessage) ? null : deathMessage,
                         deathSprite,
                         (deathDuration > 0f) ? deathDuration : (float?)null
                     );
 
-                    // 关内死亡：按照你原设定，清全局饼干并复活碎屑
+                    // Death inside area: per your design, clear global cookies and restore drops
                     if (resetCrumbsOnDeath) ResetCrumbs();
 
-                    // ★ 立刻传送到重生点（不等离开区域的判定）
+                    // ★ Instantly warp to respawn (don’t wait for “left area” to trigger)
                     if (warpOnDeath) WarpPlayerToRespawn();
                 }
 
@@ -240,7 +240,7 @@ public class FloodSequence : MonoBehaviour
                 yield break;
             }
 
-            // 容错：如果外部把 _playerInside 改成 false，协程也会及时结束
+            // Safety: if something flipped _playerInside to false externally, stop the coroutine
             if (!_playerInside)
             {
                 ResetSequence();
@@ -251,7 +251,7 @@ public class FloodSequence : MonoBehaviour
         }
     }
 
-    // 触水减速
+    // Touching water slows you down
     void OnWaterEnter(Collider other)
     {
         if (playerController == null || _slowed) return;
@@ -294,7 +294,7 @@ public class FloodSequence : MonoBehaviour
         hintGroup.alpha = 0f;
     }
 
-    // —— Crumbs 接口/复位 —— //
+    // —— Crumbs API / reset —— //
     public void AddCrumb(int amount = 1) { currentCrumbs = Mathf.Max(0, currentCrumbs + amount); }
     public int  GetCrumbCount() => currentCrumbs;
     public bool HasEnoughCrumbs() => currentCrumbs >= requiredCrumbs;
@@ -305,7 +305,7 @@ public class FloodSequence : MonoBehaviour
         if (resetCrumbs) ResetCrumbs();
     }
 
-    // 只复位关内掉落，不清全局库存/UI（顺利离开用）
+    // Only restore level-dropped cookies, don’t clear global stock/UI (used when leaving safely)
     void ResetLevelLocalCrumbsOnly()
     {
         currentCrumbs = 0;
@@ -316,15 +316,15 @@ public class FloodSequence : MonoBehaviour
         }
     }
 
-    // 清全局 + 复活掉落 + 刷UI（关内死亡或策略要求时）
+    // Clear global + restore dropped cookies + refresh UI (used on death inside or by policy)
     void ResetCrumbs()
     {
         currentCrumbs = 0;
     
         if (CookiesInventory.Instance != null)
-            CookiesInventory.Instance.Clear();   // 触发 UI 清零
+            CookiesInventory.Instance.Clear();   // Triggers UI to zero
     
-        // ☆ 递归复活：不管嵌套层级，都能把所有饼干启用回来
+        //Recursive restore: no matter how deep the nesting, reactivate all cookie pickups
         if (crumbRoot)
         {
             var allCrumbs = crumbRoot.GetComponentsInChildren<CookiePickup>(true);
@@ -336,7 +336,7 @@ public class FloodSequence : MonoBehaviour
     }
 
 
-    // ★ 外部致死时可调用：标记为“本轮区内发生过死亡”
+    //Call this when player dies due to other causes inside the zone: mark “died this run”
     public void NotifyPlayerDiedInside()
     {
         if (IsPlayerInsideStartZone())
@@ -346,12 +346,12 @@ public class FloodSequence : MonoBehaviour
         }
     }
 
-    // ★ 实际传送到重生点（容错处理 Rigidbody / CharacterController）
+    //Actually warp to respawn (with some safety for Rigidbody / CharacterController)
     public void WarpPlayerToRespawn()
     {
         if (!respawnPoint || !_player) return;
 
-        // 尝试拿到刚体/角色控制器
+        // Try grabbing rigidbody / character controller
         var rb = _player.GetComponent<Rigidbody>();
         var cc = _player.GetComponent<CharacterController>();
         var agent = _player.GetComponent<UnityEngine.AI.NavMeshAgent>();

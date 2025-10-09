@@ -18,7 +18,7 @@ public class ParachuteDropZone : MonoBehaviour
         var carrier = other.GetComponent<ParachuteCarrier>();
         if (carrier && carrier.HasLeaf())
         {
-            carrier.DropLeaf(); // ✨ 进入重生区就丢下，之后自由落体
+            carrier.DropLeaf();
         }
     }
 }

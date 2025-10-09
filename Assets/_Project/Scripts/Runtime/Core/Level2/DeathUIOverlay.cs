@@ -7,17 +7,17 @@ public class DeathUIOverlay : MonoBehaviour
 {
     public static DeathUIOverlay Instance { get; private set; }
 
-    [Header("UI 绑定")]
-    public CanvasGroup panel;         // 整个死亡UI的CanvasGroup
-    public TMP_Text    messageText;   // 文案（可留空）
-    public Image       pictureImage;  // 图片（可留空）
+    [Header("UI bond")]
+    public CanvasGroup panel;
+    public TMP_Text    messageText;
+    public Image       pictureImage;
 
-    [Header("默认内容")]
+    [Header("Default Context")]
     [TextArea]
-    public string defaultMessage = "你死了";
+    public string defaultMessage = "You dead...";
     public Sprite defaultSprite;
 
-    [Header("默认时长")]
+    [Header("Default Time")]
     public float defaultHoldSeconds = 4f;
 
     Coroutine _co;
@@ -29,19 +29,19 @@ public class DeathUIOverlay : MonoBehaviour
         if (panel) { panel.alpha = 0f; panel.blocksRaycasts = false; }
     }
 
-    // —— 兼容旧接口：只给时长 —— //
+    
     public void ShowForSeconds(float holdSeconds)
     {
         ShowInternal(holdSeconds, null, null);
     }
 
-    // —— 新接口1：可传自定义文案/图片/时长（任意可空）—— //
+    // New Interface 1: Supports custom text/images/duration  //
     public void Show(string overrideMessage = null, Sprite overrideSprite = null, float? holdSeconds = null)
     {
         ShowInternal(holdSeconds ?? defaultHoldSeconds, overrideMessage, overrideSprite);
     }
 
-    // —— 新接口2：只覆盖文案和图片，时长用默认 —— //
+    // New Interface 2: Only covers text and images; duration uses default settings. //
     public void ShowWithOverrides(string overrideMessage = null, Sprite overrideSprite = null)
     {
         ShowInternal(defaultHoldSeconds, overrideMessage, overrideSprite);
@@ -55,14 +55,14 @@ public class DeathUIOverlay : MonoBehaviour
 
     IEnumerator Run(float hold, string msgOverride, Sprite spriteOverride)
     {
-        // 内容赋值（留空就用默认）
+        // text message
         if (messageText)
             messageText.text = string.IsNullOrEmpty(msgOverride) ? defaultMessage : msgOverride;
 
         if (pictureImage)
             pictureImage.sprite = spriteOverride ? spriteOverride : defaultSprite;
 
-        // 淡入
+        // fade in
         if (panel)
         {
             panel.blocksRaycasts = true;
@@ -74,10 +74,10 @@ public class DeathUIOverlay : MonoBehaviour
             panel.alpha = 1f;
         }
 
-        // 停留
+        // stay
         yield return new WaitForSecondsRealtime(Mathf.Max(0f, hold));
 
-        // 淡出
+        // fade out
         if (panel)
         {
             for (float t = 0; t < 0.2f; t += Time.unscaledDeltaTime)

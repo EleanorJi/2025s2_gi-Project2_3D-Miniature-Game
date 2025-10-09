@@ -5,21 +5,21 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class SoftAirWall : MonoBehaviour
 {
-    [Header("谁会被挡")]
+    [Header("Who gets blocked")]
     public string playerTag = "Player";
 
-    [Header("推回设置")]
-    [Tooltip("从空气墙中心到玩家的“水平向外”推力")]
+    [Header("Push-back settings")]
+    [Tooltip("Horizontal outward push from the wall's center to the player")]
     public float pushBackStrength = 18f;
-    [Tooltip("每帧最多的水平速度（避免弹飞）")]
+    [Tooltip("Max horizontal speed per frame (so you don't yeet the player)")]
     public float maxHorizontalSpeed = 6f;
-    [Tooltip("附加的阻尼，进区时让速度迅速变小")]
+    [Tooltip("Extra damping so speed drops quickly when entering the zone")]
     public float damping = 12f;
 
-    [Header("提示UI")]
-    public CanvasGroup hintGroup;   // 拖你的提示面板
+    [Header("Hint UI")]
+    public CanvasGroup hintGroup;   // Drag your hint panel here
     public TMP_Text hintText;
-    [TextArea] public string message = "不能再靠近了，不然会被水花拍死。";
+    [TextArea] public string message = "Don't get any closer... I'll be knocked back by the spray";
     public float fade = 0.2f;
     public float stay = 1.5f;
 
@@ -45,23 +45,23 @@ public class SoftAirWall : MonoBehaviour
     {
         if (_rb == null || !other.CompareTag(playerTag)) return;
 
-        // 水平推回：从空气墙中心 -> 玩家 的方向
+        // Horizontal push-back: direction from wall center -> player
         Vector3 center = GetComponent<Collider>().bounds.center;
         Vector3 toPlayer = other.transform.position - center;
-        toPlayer.y = 0f; // 只管水平
+        toPlayer.y = 0f; // only worry about horizontal
         if (toPlayer.sqrMagnitude < 0.0001f) return;
 
         Vector3 dir = toPlayer.normalized;
 
-        // 先给点阻尼，防止硬闯
+        // Apply damping first to stop brute-forcing through
         Vector3 v = _rb.linearVelocity;
         Vector3 hv = new Vector3(v.x, 0f, v.z);
         hv = Vector3.Lerp(hv, Vector3.zero, 1f - Mathf.Exp(-damping * Time.deltaTime));
 
-        // 再加一个向外的推力
+        // Then add an outward push
         hv += dir * (pushBackStrength * Time.deltaTime);
 
-        // 限制水平速度
+        // Cap horizontal speed
         if (hv.magnitude > maxHorizontalSpeed) hv = hv.normalized * maxHorizontalSpeed;
 
         _rb.linearVelocity = new Vector3(hv.x, v.y, hv.z);
@@ -84,7 +84,7 @@ public class SoftAirWall : MonoBehaviour
     {
         if (hintText) hintText.text = message;
 
-        // 淡入
+        // Fade in
         for (float t=0; t<fade; t+=Time.unscaledDeltaTime)
         {
             hintGroup.alpha = Mathf.Lerp(0f, 1f, t/fade);
@@ -92,10 +92,10 @@ public class SoftAirWall : MonoBehaviour
         }
         hintGroup.alpha = 1f;
 
-        // 停留
+        // Hold
         yield return new WaitForSecondsRealtime(stay);
 
-        // 淡出
+        // Fade out
         for (float t=0; t<fade; t+=Time.unscaledDeltaTime)
         {
             hintGroup.alpha = Mathf.Lerp(1f, 0f, t/fade);
