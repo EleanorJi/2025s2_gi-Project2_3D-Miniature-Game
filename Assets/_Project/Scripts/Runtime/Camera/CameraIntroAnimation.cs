@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraIntroAnimation : MonoBehaviour
 {
-    [Header("开场动画路径点")]
+    [Header("Opening animation path points")]
     public Transform startPoint;           
     public Transform cookiePosition;          
     public Transform endPoint;          
@@ -11,7 +11,7 @@ public class CameraIntroAnimation : MonoBehaviour
     public Transform connerB;          
     public Transform returnPoint;
 
-    [Header("各阶段时间设置")]
+    [Header("Time settings for each stage")]
     public float startToCookieRotateTime = 1f;
     public float startToCookieMoveTime = 3f;
     public float cookieStayTime = 1f;
@@ -33,18 +33,18 @@ public class CameraIntroAnimation : MonoBehaviour
         cameraFollow = GetComponent<CameraFollow>();
         if (cameraFollow == null)
         {
-            Debug.LogError("CameraIntroAnimation需要CameraFollow组件！");
+            Debug.LogError("CameraIntroAnimation need CameraFollow component!");
             return;
         }
 
         playerInputController = FindObjectOfType<PlayerInputController>();
         if (playerInputController == null)
         {
-            Debug.LogError("未找到PlayerInputController！");
+            Debug.LogError("Not find PlayerInputController");
             return;
         }
 
-        // 检查所有路径点是否已设置
+        // Check whether all path points have been set up
         if (startPoint != null && cookiePosition != null && endPoint != null && 
             connerA != null && connerB != null && returnPoint != null)
         {
@@ -52,7 +52,7 @@ public class CameraIntroAnimation : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("缺少必要的路径点，开场动画将不会播放");
+            Debug.LogWarning("missing path, no level1 opening animation");
         }
     }
 
@@ -60,21 +60,21 @@ public class CameraIntroAnimation : MonoBehaviour
     {
         isIntroPlaying = true;
         
-        // 禁用玩家输入和相机跟随
+        // Disable player input and camera follow-up
         playerInputController.DisableInput();
         cameraFollow.SetCameraControl(false);
 
-        // 阶段1：起点 → 饼干
+        // Phase 1: Start → Cookie
         transform.position = startPoint.position;
 
         yield return StartCoroutine(RotateToPoint(cookiePosition.position, startToCookieRotateTime));
         yield return StartCoroutine(MoveToPoint(cookiePosition.position, startToCookieMoveTime, false));
         yield return new WaitForSeconds(cookieStayTime);
 
-        // 阶段2：饼干 → 第二个点
+        // Stage 2: Cookies → The second item
         yield return StartCoroutine(MoveAndRotateToPoint(endPoint.position, cookieToSecondTime, true));
 
-        // 阶段3-5：连续移动
+        // Stage 3-5: Continuous Movement
         yield return StartCoroutine(ContinuousMoveStage3To5(
             endPoint.position, 
             connerA.position,
@@ -83,20 +83,20 @@ public class CameraIntroAnimation : MonoBehaviour
             secondToThirdATime + thirdCurveTime + thirdToReturnTime
         ));
 
-        // 阶段6：返回点 → 玩家
+        // Stage 6: Return Point → Player
         yield return StartCoroutine(ReturnToPlayer(returnToPlayerTime));
 
-        // 最终过渡到玩家跟随视角
+        // Finally, it transitions to the player's perspective.
         yield return StartCoroutine(SmoothTransitionToPlayer());
 
-        // 重新启用玩家输入和相机跟随
+        // Re-enable player input and camera follow-up
         cameraFollow.SetCameraControl(true);
         playerInputController.EnableInput();
         
         isIntroPlaying = false;
     }
 
-    // 以下协程方法保持不变，从原CameraFollow中复制过来
+    // Coroutine method
     IEnumerator ContinuousMoveStage3To5(Vector3 stage3Start, Vector3 stage4Start, Vector3 stage4End, Vector3 stage5End, float totalTime)
     {
         float timer = 0f;

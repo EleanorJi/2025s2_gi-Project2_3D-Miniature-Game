@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [Header("目标与偏移")]
+    [Header("Goals and Deviations")]
     public Transform target;
     public Vector3 offset = new Vector3(0f, 1.5f, -4f);
 
-    [Header("跟随设置")]
+    [Header("Follow settings")]
     public float smoothSpeed = 5f;
     public float mouseSensitivity = 3f;
     public float minPitch = -35f;
@@ -16,13 +16,13 @@ public class CameraFollow : MonoBehaviour
     private float pitch = 10f;
     private bool cameraControlEnabled = true;
 
-    // 公开属性供其他脚本访问
+    // Public attribute for access by other scripts
     public Transform Target => target;
     public Vector3 Offset => offset;
     public float Yaw => yaw;
     public float Pitch => pitch;
 
-    // 新增：锁定垂直视角用
+    // Lock the vertical viewing angle with
     bool _lockPitch = false;
     float _lockedPitchValue = 0f;
 
@@ -40,7 +40,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (target == null || !cameraControlEnabled) return;
 
-        // 鼠标输入控制
+        // Mouse input control
         yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
         
         if (_lockPitch)
@@ -53,11 +53,11 @@ public class CameraFollow : MonoBehaviour
             pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
         }
 
-        // 计算目标位置和旋转
+        // Calculate the target position and rotation
         Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
         Vector3 desiredPosition = target.position + rotation * offset;
 
-        // 平滑移动
+        // Smooth movement
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         transform.LookAt(target);
     }

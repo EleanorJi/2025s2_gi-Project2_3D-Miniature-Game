@@ -6,12 +6,12 @@ public class CheckpointManager : MonoBehaviour
     public static CheckpointManager Instance { get; private set; }
     
     private List<Checkpoint> allCheckpoints = new List<Checkpoint>();
-    private Checkpoint lastActivatedCheckpoint; // 最后一个激活的存档点
-    private List<Checkpoint> activatedCheckpoints = new List<Checkpoint>(); // 所有激活过的存档点
+    private Checkpoint lastActivatedCheckpoint; // The last activated save point
+    private List<Checkpoint> activatedCheckpoints = new List<Checkpoint>(); // All activated save points
     
     void Awake()
     {
-        // 单例模式
+        // Singleton Pattern
         if (Instance == null)
         {
             Instance = this;
@@ -25,7 +25,7 @@ public class CheckpointManager : MonoBehaviour
     
     void Start()
     {
-        // 自动查找场景中所有存档点
+        // Automatically search for all save points in the scene
         FindAllCheckpoints();
     }
     
@@ -39,26 +39,26 @@ public class CheckpointManager : MonoBehaviour
     
     public void SetCheckpointActivated(Checkpoint checkpoint)
     {
-        // 如果这个存档点还没有在激活列表中，添加它
+        // If this save point is not already in the activation list, add it.
         if (!activatedCheckpoints.Contains(checkpoint))
         {
             activatedCheckpoints.Add(checkpoint);
         }
         
-        // 更新为最后一个激活的存档点
+        // Update to the last activated save point
         lastActivatedCheckpoint = checkpoint;
         Debug.Log($"Current respawn point set to: {checkpoint.gameObject.name}");
     }
     
     public Vector3 GetLastRespawnPosition()
     {
-        // 直接返回最后一个激活的存档点位置
+        // Directly return to the last activated save point location
         if (lastActivatedCheckpoint != null)
         {
             return lastActivatedCheckpoint.transform.position;
         }
         
-        // 如果没有激活的存档点，返回第一个存档点或默认位置
+        // If there is no active save point, return to the first save point or the default location.
         if (allCheckpoints.Count > 0)
         {
             return allCheckpoints[0].transform.position;
@@ -67,25 +67,25 @@ public class CheckpointManager : MonoBehaviour
         return Vector3.zero;
     }
     
-    // 获取所有激活过的存档点
+    // Retrieve all the activated save points
     public List<Checkpoint> GetActivatedCheckpoints()
     {
         return new List<Checkpoint>(activatedCheckpoints);
     }
     
-    // 获取最后一个激活的存档点
+    // Obtain the last activated save point
     public Checkpoint GetLastCheckpoint()
     {
         return lastActivatedCheckpoint;
     }
     
-    // 手动设置存档点（忽略重复激活限制）
+    // Manually set the save point (ignoring the repeated activation limit)
     public void SetCheckpointManually(Checkpoint checkpoint)
     {
         checkpoint.ForceActivate();
     }
     
-    // 手动注册存档点
+    // Manually register the archive point
     public void RegisterCheckpoint(Checkpoint checkpoint)
     {
         if (!allCheckpoints.Contains(checkpoint))
@@ -94,7 +94,7 @@ public class CheckpointManager : MonoBehaviour
         }
     }
     
-    // 手动取消注册存档点
+    // Manually cancel the registration archive point
     public void UnregisterCheckpoint(Checkpoint checkpoint)
     {
         allCheckpoints.Remove(checkpoint);
@@ -102,13 +102,13 @@ public class CheckpointManager : MonoBehaviour
         
         if (lastActivatedCheckpoint == checkpoint)
         {
-            // 如果移除的是当前存档点，回退到上一个激活的存档点
+            // If the current saved point is removed, revert to the previous activated saved point.
             lastActivatedCheckpoint = activatedCheckpoints.Count > 0 ? 
                 activatedCheckpoints[activatedCheckpoints.Count - 1] : null;
         }
     }
     
-    // 重置所有存档点状态（用于新游戏等）
+    // Reset the status of all save points
     public void ResetAllCheckpoints()
     {
         foreach (Checkpoint checkpoint in allCheckpoints)
@@ -117,15 +117,9 @@ public class CheckpointManager : MonoBehaviour
         }
         activatedCheckpoints.Clear();
         lastActivatedCheckpoint = null;
-        
-        // 重新激活第一个存档点
-        if (allCheckpoints.Count > 0)
-        {
-            allCheckpoints[0].ForceActivate();
-        }
     }
     
-    // 调试方法
+    // Debug
     public void DebugActivatedCheckpoints()
     {
         Debug.Log($"Total activated checkpoints: {activatedCheckpoints.Count}");
