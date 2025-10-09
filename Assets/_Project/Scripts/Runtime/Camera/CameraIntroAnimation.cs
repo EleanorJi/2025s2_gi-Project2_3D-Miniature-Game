@@ -37,7 +37,7 @@ public class CameraIntroAnimation : MonoBehaviour
             return;
         }
 
-        playerInputController = FindObjectOfType<PlayerInputController>();
+        playerInputController = FindAnyObjectByType<PlayerInputController>();
         if (playerInputController == null)
         {
             Debug.LogError("Not find PlayerInputController");

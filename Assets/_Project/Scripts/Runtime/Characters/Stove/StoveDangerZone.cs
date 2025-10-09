@@ -11,7 +11,6 @@ public class StoveDangerZone : MonoBehaviour
     
     [Header("Status tracking")]
     private bool wasDangerousLastCheck = true; // The default assumption is that it is initially dangerous.
-    private bool hasCheckedAtLeastOnce = false;
 
     void Start()
     {
@@ -46,7 +45,6 @@ public class StoveDangerZone : MonoBehaviour
     public bool IsCurrentlyDangerous()
     {
         bool isDangerousNow = IsCurrentlyDangerousInternal();
-        hasCheckedAtLeastOnce = true;
         
         // Check if the status has changed from dangerous to safe
         if (wasDangerousLastCheck && !isDangerousNow)
