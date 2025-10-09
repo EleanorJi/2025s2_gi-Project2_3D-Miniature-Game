@@ -1240,7 +1240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstLevelSceneName: Level1-2
-  tutorialSceneName: Tutorial
+  tutorialSceneName: Level0_Tutorial
   uiAudioSource: {fileID: 555656466}
   clickSound: {fileID: 8300000, guid: 5ccd2a1d15d98a94daab8de31b9606e0, type: 3}
   hoverSound: {fileID: 0}
@@ -1601,6 +1601,10 @@ MonoBehaviour:
   soundEffectAudioSource: {fileID: 777014028}
   defaultMusicVolume: 0.7
   defaultSoundEffectVolume: 0.7
+  fadeTransitionTime: 1
+  defaultBGM: {fileID: 8300000, guid: 50c2234ee71e0d542b974b6a33653af6, type: 3}
+  playBGMOnStart: 1
+  sceneBGMList: []
 --- !u!4 &755462227
 Transform:
   m_ObjectHideFlags: 0
