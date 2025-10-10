@@ -112,10 +112,10 @@ The game adopts a dynamic third-person perspective. The player need to control t
 ### Progression
 
 -   **Level structure:**
-    -   **Tutorial Level: ~1 min:** Set in a simplified environment to teach the player the core controls: WASD movement, Space for jumping, and C for grabbing objects.
+    -   **Tutorial Level: ~1 min:** Set in a simplified environment to teach the player the core controls: MOUSE to adjust viewpoint,WASD movement, Space for jumping, and C for grabbing objects.
     -   **Teaching level (kitchen area) 1.5-2min:** Introduces environmental hazards and basic puzzles using the learned controls.
     -   **Main level (outdoor mixed environment) 4-6min :** Integrates shrubbery and street elements, and introduces a complete summoning mechanism
-    -   **Ultimate Challenge (Dock Boss Battle) 2-4min:** Requires the comprehensive application of all the skills learned so far
+    -   **Ultimate Challenge (Beach Boss Battle) 1-2min:** Requires the comprehensive application of all the skills learned so far
 -   **Difficulty assessment:**
     -   Gradual introduction of new mechanisms.
     -   Each mechanism offers ample opportunities for practice.
@@ -162,6 +162,16 @@ The game is set in a fully 3D environment, but with level design that encourages
     <p align="center">
       <img src="images/ant_image.png" alt="Player Ant" width="400">
     </p>
+-   **The tutorial level (desk):**
+    <p align="center">
+      <img src="images/tutorial.png" alt="Tutorial Level 0" width="400">
+    </p>
+
+    -   **Teaching UI:** Players will receive instructional guidance after each section of the road, which is convenient for them to pass the subsequent levels.
+        -   **Books:** Teach the player control left and right and adjust the perspective to go around
+        -   **Handle:** Teach the player jump over it
+        -   **Sugar Cubes:** Teach players pick up things and pass the level
+
 -   **The first level (kitchen):**
     <p align="center">
       <img src="images/kitchen.png" alt="Kitchen Level 1" width="400">
@@ -188,17 +198,26 @@ The game is set in a fully 3D environment, but with level design that encourages
     -   **Environmental challenges:**
         -   Small puddle: Requires assembly ants to build a bridge
         -   Mobility obstacle: Insects with simple path movement capabilities
+
+
 -   **The third level (Boss battle at the dock):**
     <p align="center">
-      <img src="images/dock.png" alt="Dock Level" width="400">
+      <img src="images/beach.png" alt="Beach Level" width="400">
     </p>
     
-    -   **Boss Attack Mode:**
-        -   Wings flap the air: This phenomenon occurs periodically and requires hiding behind a fixed object.
-    -   **Resource Management:** During the Boss battle, food crumbs will drop. Need to collect them in time to maintain the summoning ability.
-    -   **Interaction mechanism:**
-        -   Trap the boss: Press E to let the worker ants to trap.
-        -   Water faucet: Worker ant interaction, triggers water spraying animation.
+    -   **Player Actions**
+        -   Manual Attack (P)
+            Shoots a straight-line poison projectile (no auto-aim). Requires line-of-sight and positioning.
+            Damage: 5 per hit. Cooldown: ~0.3s.
+        -   Special Summon (K)
+            Instantly spawns 3 Ant Minions around the player. Minions stay near the player and auto-target the Boss, firing their own projectiles.
+            Damage: 1 per minion hit. Lifetime / fire interval: short, then despawn (cannot exceed 3 active).
+    -   **Boss (Pigeon):**
+        -   Health: 100 HP with a visible boss health bar.
+        -   Takes damage from both the player’s poison shots and minion projectiles.
+
+    -   **Win Condition:**
+        -   Reduce the Boss HP to 0.
 
 ### Physics
 
