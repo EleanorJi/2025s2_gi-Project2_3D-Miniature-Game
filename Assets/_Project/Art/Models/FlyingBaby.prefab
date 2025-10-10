@@ -5282,7 +5282,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: e09bef837f6444ddda28e5066d5f99db, type: 3}
 --- !u!1 &1515032479607549010
@@ -5550,7 +5550,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2683426491551394223}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: cb980f485e490474f86b8c7105b69f69, type: 2}
   m_CullingMode: 0
