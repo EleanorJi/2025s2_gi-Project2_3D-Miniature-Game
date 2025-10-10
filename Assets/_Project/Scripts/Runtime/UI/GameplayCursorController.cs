@@ -1,4 +1,5 @@
 using UnityEngine;
+using Antventure.UI.Menus;
 
 namespace Antventure.UI
 {
@@ -21,8 +22,22 @@ namespace Antventure.UI
             Debug.Log("[GAMEPLAY CURSOR] GameplayCursorController started - cursor hidden");
         }
         
-        private void Update()
+        void Update()
         {
+            // Check if UnifiedCursorManager exists and pause menu is open
+            if (UnifiedCursorManager.Instance != null && UnifiedCursorManager.Instance.IsPauseMenuOpen())
+            {
+                // Don't interfere when pause menu is open
+                return;
+            }
+            
+            // Check if GamePauseSystem exists and is paused
+            if (GamePauseSystem.Instance != null && GamePauseSystem.Instance.IsPaused)
+            {
+                // Don't interfere when game is paused
+                return;
+            }
+            
             if (aggressiveMode)
             {
                 // Check every frame if cursor is visible
@@ -54,6 +69,20 @@ namespace Antventure.UI
         
         private void LateUpdate()
         {
+            // Check if UnifiedCursorManager exists and pause menu is open
+            if (UnifiedCursorManager.Instance != null && UnifiedCursorManager.Instance.IsPauseMenuOpen())
+            {
+                // Don't interfere when pause menu is open
+                return;
+            }
+            
+            // Check if GamePauseSystem exists and is paused
+            if (GamePauseSystem.Instance != null && GamePauseSystem.Instance.IsPaused)
+            {
+                // Don't interfere when game is paused
+                return;
+            }
+            
             // Final check at end of frame
             if (aggressiveMode && Cursor.visible)
             {

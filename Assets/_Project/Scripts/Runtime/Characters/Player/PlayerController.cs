@@ -1,6 +1,8 @@
 using UnityEngine;
 using Antventure.UI;
 
+using Antventure.UI.Menus;
+
 public class PlayerController : MonoBehaviour
 {
     [Header("Movement and Jumping Parameters")]
@@ -42,6 +44,7 @@ public class PlayerController : MonoBehaviour
     private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
     private PlayerInputController inputController;
 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -67,8 +70,12 @@ public class PlayerController : MonoBehaviour
             inputController = gameObject.AddComponent<PlayerInputController>();
         }
 
-        // Hide the cursor
-        if (CursorManager.Instance != null)
+        // Hide the cursor - use UnifiedCursorManager if available
+        if (UnifiedCursorManager.Instance != null)
+        {
+            UnifiedCursorManager.Instance.ForceHideCursor();
+        }
+        else if (CursorManager.Instance != null)
         {
             CursorManager.Instance.HideCursor();
         }
@@ -81,12 +88,25 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        // Make sure the cursor is hidden
-        if (Cursor.visible)
+        // Only hide cursor if pause menu is not open
+        if (UnifiedCursorManager.Instance != null)
         {
-            Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
+            // Let UnifiedCursorManager handle cursor state
+            if (!UnifiedCursorManager.Instance.IsPauseMenuOpen() && Cursor.visible)
+            {
+                Debug.LogWarning("[PLAYER] Cursor became visible during gameplay (pause not open), requesting hide");
+                UnifiedCursorManager.Instance.ForceHideCursor();
+            }
+        }
+        else
+        {
+            // Fallback behavior - only hide if no pause system is active
+            if (Cursor.visible && (GamePauseSystem.Instance == null || !GamePauseSystem.Instance.IsPaused))
+            {
+                Debug.LogWarning("[PLAYER] Cursor became visible during gameplay, hiding it again");
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
 
         if (inputController != null && !inputController.IsInputEnabled())

@@ -5,8 +5,8 @@ namespace Antventure.UI
     public class CursorManager : MonoBehaviour
     {
         [Header("Cursor Textures - 拖拽PNG文件到这里")]
-        [SerializeField] private Texture2D handCursor; // 手型光标 - 拖拽 hand.png 到这里
-        [SerializeField] private Texture2D defaultCursor; // 默认箭头光标 - 拖拽 cursor.png 到这里
+        [SerializeField] private Texture2D handCursor; // 手型光标 - 拖拽 hand 2.png 到这里
+        [SerializeField] private Texture2D defaultCursor; // 默认箭头光标 - 拖拽 cursor 1.png 到这里
         
         [Header("Cursor Settings")]
         [SerializeField] private bool useCustomCursors = true; // 使用自定义光标
@@ -218,7 +218,7 @@ namespace Antventure.UI
                 if (handCursor == null)
                 {
                     // Fallback: try to load from Assets folder directly
-                    handCursor = LoadTextureFromAssets("Assets/_Project/Art/UI/Cursor/hand.png");
+                    handCursor = LoadTextureFromAssets("Assets/_Project/Art/UI/Cursor/hand 2.png");
                 }
             }
             
@@ -227,7 +227,7 @@ namespace Antventure.UI
                 defaultCursor = Resources.Load<Texture2D>("UI/Cursor/cursor");
                 if (defaultCursor == null)
                 {
-                    defaultCursor = LoadTextureFromAssets("Assets/_Project/Art/UI/Cursor/cursor.png");
+                    defaultCursor = LoadTextureFromAssets("Assets/_Project/Art/UI/Cursor/cursor 1.png");
                 }
             }
             
