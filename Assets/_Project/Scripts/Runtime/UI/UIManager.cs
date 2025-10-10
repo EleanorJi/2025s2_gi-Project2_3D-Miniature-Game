@@ -20,9 +20,9 @@ namespace Antventure.UI
         [SerializeField] private GameObject pausePanel;
         [SerializeField] private GameObject loadingScreen;
 
-        [Header("提示文字")]
-        [SerializeField] private GameObject hintTextPanel; // 新增：提示文字面板
-        [SerializeField] private Text hintText; // 新增：提示文字组件
+        [Header("hint text")]
+        [SerializeField] private GameObject hintTextPanel;
+        [SerializeField] private Text hintText;
 
         [TextArea(3, 6)]
         [SerializeField] private string stoveSaveHintText = "Stove now is save";
@@ -129,7 +129,7 @@ namespace Antventure.UI
         }
         
         /// <summary>
-        /// 显示提示文字
+        /// show hint text
         /// </summary>
         public void ShowHintText(string text)
         {
@@ -141,7 +141,7 @@ namespace Antventure.UI
         }
 
         /// <summary>
-        /// 隐藏提示文字
+        /// hide hint text
         /// </summary>
         public void HideHintText()
         {
@@ -152,13 +152,13 @@ namespace Antventure.UI
         }
 
         /// <summary>
-        /// 显示灶台安全提示
+        /// show safe stove
         /// </summary>
         public void ShowStoveSafeHint()
         {
             ShowHintText(stoveSaveHintText);
             
-            // 5秒后自动隐藏提示
+            // The prompt will automatically disappear after 5 seconds.
             StartCoroutine(HideHintAfterDelay(5f));
         }
 

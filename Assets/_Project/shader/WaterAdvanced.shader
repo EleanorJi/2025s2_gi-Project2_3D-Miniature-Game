@@ -46,17 +46,17 @@ Shader "Custom/WaterAdvanced" {
             float _NoiseScale;
             float _NoiseStrength;
 
-            // 简单的噪声函数，用于生成更自然的波浪:cite[5]
+            // A simple noise function for generating more natural waves
             float noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
             }
 
-            // 平滑的噪声函数
+            // Smooth noise function
             float smoothNoise(float2 uv) {
                 float2 i = floor(uv);
                 float2 f = frac(uv);
                 
-                // 双线性插值
+                // Bilinear interpolation
                 float a = noise(i);
                 float b = noise(i + float2(1.0, 0.0));
                 float c = noise(i + float2(0.0, 1.0));
@@ -72,24 +72,24 @@ Shader "Custom/WaterAdvanced" {
             v2f vert (appdata v) {
                 v2f o;
                 
-                // 获取世界坐标
+                // Obtain world coordinates
                 float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 
-                // 正确的波浪计算：使用世界坐标的x和z作为输入，输出影响y坐标
+                // wave calculation: Use the x and z coordinates of the world as input, and output the influence on the y coordinate.
                 float wave1 = sin(worldPos.x * _WaveFrequency + _Time.y * _WaveSpeed) * _WaveHeight;
                 float wave2 = cos(worldPos.z * _WaveFrequency * 0.7 + _Time.y * _WaveSpeed * 1.3) * _WaveHeight * 0.8;
                 
-                // 噪声扰动
+                // Noise disturbance
                 float2 noiseUV = worldPos.xz * _NoiseScale;
                 float noiseValue = smoothNoise(noiseUV + _Time.y * _WaveSpeed * 0.5) * _NoiseStrength;
                 
-                // 组合波浪效果
+                // Combined wave effect
                 float combinedWave = (wave1 + wave2) * 0.5 + noiseValue;
                 
-                // 关键：将计算出的波浪值加到世界坐标的y分量上
+                // Add the calculated wave value to the y-component of the world coordinates
                 worldPos.y += combinedWave * _WaveSharpness;
                 
-                // 将修改后的世界坐标转换回裁剪空间
+                // Convert the modified world coordinates back to the clipping space
                 o.vertex = mul(UNITY_MATRIX_VP, float4(worldPos, 1.0));
                 o.uv = v.uv;
                 o.worldNormal = UnityObjectToWorldNormal(v.normal);
@@ -99,16 +99,16 @@ Shader "Custom/WaterAdvanced" {
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                // 基于视角和法线的简单菲涅尔效应:cite[6]
+                // Simple Fresnel effect based on perspective and normal
                 float3 normal = normalize(i.worldNormal);
                 float3 viewDir = normalize(i.viewDir);
                 float fresnel = pow(1.0 - saturate(dot(normal, viewDir)), 2.0);
                 
-                // 基础颜色加上菲涅尔效果
+                // Base color combined with Fresnel effect
                 fixed4 col = _MainColor;
                 col.a = _MainColor.a * (0.7 + fresnel * 0.3);
                 
-                // 添加一些基于UV的波纹细节:cite[3]
+                // Add some UV-based ripple details
                 float ripple = sin(i.uv.x * 15 + _Time.y * 2) * 0.02 + 
                               sin(i.uv.y * 12 + _Time.y * 1.7) * 0.02;
                 col.rgb += ripple;

@@ -1,34 +1,33 @@
 using UnityEngine;
-using System.Collections; // 需要使用协程
+using System.Collections;
 
 public class AutoNod : MonoBehaviour
 {
     private Animator animator;
-    public float nodInterval = 20.0f; // 点头间隔，可在Inspector中调整
+    public float nodInterval = 20.0f; // The nod interval can be adjusted in the Inspector.
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        // 启动协程，每隔一段时间触发一次点头
+        // Start the coroutine and trigger a nod every certain period of time.
         StartCoroutine(AutoNodHead());
     }
 
     IEnumerator AutoNodHead()
     {
-        // 这是一个无限循环
+        // This is an infinite loop.
         while (true)
         {
-            // 等待指定的间隔时间
+            // Wait for the specified interval of time
             yield return new WaitForSeconds(nodInterval);
 
-            // 只有当前不是end的时候才点头
+            // Nod only when it is not "end" at the moment.
             bool isEnd = animator.GetBool("IsEnd");
             if (!isEnd)
             {
-                // 触发DoNod参数，播放点头动画
+                // Trigger the DoNod parameter and play the nod animation
                 animator.SetTrigger("DoNod");
             }
-            // 如果已经结束，就跳过这次点头，等待下一个周期
         }
     }
 }

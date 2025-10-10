@@ -3,8 +3,8 @@ using UnityEngine;
 public class rollingCucumber : MonoBehaviour
 {
     public float speed = 2f;
-    public float leftDistance = 7f;  // 向左滚动的距离
-    public float rightDistance = 3f; // 向右滚动的距离
+    public float leftDistance = 7f;  // The distance scrolled to the left
+    public float rightDistance = 3f; // The distance scrolled to the right
     
     private Vector3 startPos;
     private Vector3 leftEndPos;
@@ -15,30 +15,30 @@ public class rollingCucumber : MonoBehaviour
     void Start()
     {
         startPos = transform.position;
-        leftEndPos = startPos - transform.right * leftDistance;  // 左边终点
-        rightEndPos = startPos + transform.right * rightDistance; // 右边终点
+        leftEndPos = startPos - transform.right * leftDistance;  // Left end point
+        rightEndPos = startPos + transform.right * rightDistance; // right end point
     }
 
     void Update()
     {
-        // 计算目标位置
+        // Calculate the target position
         Vector3 targetPos = movingToLeft ? leftEndPos : rightEndPos;
         
-        // 移动物体
+        // Moving object
         transform.position = Vector3.MoveTowards(
             transform.position, 
             targetPos, 
             speed * Time.deltaTime
         );
 
-        // 让黄瓜滚动（绕自身Z轴旋转）
+        // Make the cucumber roll (rotate around its own Z-axis)
         transform.Rotate(0, 0, rotationDirection * speed * 50 * Time.deltaTime);
 
-        // 检查是否到达目标位置
+        // Check if the target position has been reached
         if (Vector3.Distance(transform.position, targetPos) < 0.001f)
         {
-            movingToLeft = !movingToLeft; // 切换移动方向
-            rotationDirection *= -1; // 反转旋转方向
+            movingToLeft = !movingToLeft;
+            rotationDirection *= -1;
         }
     }
 }

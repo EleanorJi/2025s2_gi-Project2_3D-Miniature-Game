@@ -3,30 +3,30 @@ using System.Collections.Generic;
 
 public class PressurePlateController : MonoBehaviour
 {
-    // 用来记录当前在按钮上的糖块数量，防止一个糖块离开导致其他糖块还在上面时火焰就停止了
+    // It is used to record the current number of sugar cubes on the button, 
+    // to prevent the fire from stopping when one sugar cube leaves while the others are still on the button.
     private HashSet<GameObject> sugarCubesOnPlate = new HashSet<GameObject>();
 
-    // 公开一个事件，当触发状态改变时发出通知
-    // 我们使用System.Action，参数是bool（是否被激活）
+    // Publish an event and send a notification when the triggering state changes.
     public System.Action<bool> OnPlateActivated;
 
     void OnTriggerEnter(Collider other)
     {
-        // 只检测属于ButtonTrigger层的物体
+        // Only detect objects belonging to the ButtonTrigger layer
         if (other.gameObject.layer == LayerMask.NameToLayer("ButtonTrigger"))
         {
-            // 通过父物体获取糖块主体
+            // Obtain the main body of the candy from the parent object
             GameObject sugarParent = other.transform.parent.gameObject;
 
-            // 检查进入触发器的物体是否是糖块
+            // Check whether the object entering the trigger is a sugar cube
             if (sugarParent.CompareTag("Sugar"))
             {
                 sugarCubesOnPlate.Add(sugarParent);
                 if (sugarCubesOnPlate.Count == 1)
                 {
-                    // 只要有一个糖块上来，就激活按钮（true）
+                    // As long as a sugar cube is placed on it, the button will be activated (true)
                     OnPlateActivated?.Invoke(true);
-                    Debug.Log("按钮被激活！");
+                    Debug.Log("The button has been activated!");
                 }
             }
         }
@@ -36,20 +36,20 @@ public class PressurePlateController : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("ButtonTrigger"))
         {
-            // 通过父物体获取糖块主体
+            // Obtain the main body of the candy from the parent object
             GameObject sugarParent = other.transform.parent.gameObject;
 
-            // 检查离开触发器的物体是否是糖块
+            // Check whether the object that triggers the exit is a sugar cube.
             if (sugarParent.CompareTag("Sugar"))
             {
-                // 将这个糖块从集合中移除
+                // remove this sugar
                 sugarCubesOnPlate.Remove(sugarParent);
 
-                // 当所有糖块都离开时，才取消激活按钮（false）
+                // The activation button (false) will be deactivated only when all the sugar cubes have moved away.
                 if (sugarCubesOnPlate.Count == 0)
                 {
                     OnPlateActivated?.Invoke(false);
-                    Debug.Log("按钮取消激活。");
+                    Debug.Log("The button cancels the activation.");
                 }
             }
         }

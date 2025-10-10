@@ -62,12 +62,12 @@ public class FireController : MonoBehaviour
                 {
                     if (shrinkFromBottomCenter)
                     {
-                        // 从底部中心缩小
+                        // Shrink from the center at the bottom.
                         ApplyBottomCenterShrink(fireChildren[i], i, scaleFactor);
                     }
                     else
                     {
-                        // 普通缩小
+                        // Normal reduction
                         fireChildren[i].localScale = childInitialScales[i] * scaleFactor;
                     }
                 }
@@ -84,23 +84,23 @@ public class FireController : MonoBehaviour
 
     void ApplyBottomCenterShrink(Transform child, int index, float scaleFactor)
     {
-        // 应用缩放
+        // Apply scaling
         Vector3 newScale = childInitialScales[index] * scaleFactor;
         child.localScale = newScale;
 
         if (scaleFactor > 0)
         {
-            // 计算位置偏移以保持底部固定
+            // Calculate the position offset to maintain the bottom fixed
             float heightDifference = childInitialScales[index].y - newScale.y;
             Vector3 newPosition = childInitialPositions[index];
-            newPosition.y += heightDifference * 0.5f; // 向上移动一半的高度差
+            newPosition.y += heightDifference * 0.5f; // Move upwards by half of the height difference
             child.localPosition = newPosition;
         }
     }
 
     public void StartShrink()
     {
-        InitializeChildFires(); // 每次开始前重新初始化
+        InitializeChildFires(); // Reinitialize before each start
         shouldShrink = true;
         IsShrinking = true;
         IsFullyShrunk = false;

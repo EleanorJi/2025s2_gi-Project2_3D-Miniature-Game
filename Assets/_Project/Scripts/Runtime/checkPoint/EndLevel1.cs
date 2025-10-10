@@ -4,29 +4,28 @@ using UnityEngine.SceneManagement;
 
 public class EndLevel1 : MonoBehaviour
 {
-    [Header("玩家设置")]
-    public GameObject player; // 拖拽玩家对象到这里
+    [Header("Player Settings")]
+    public GameObject player;
+    
+    [Header("Camera transition settings")]
+    public Transform cameraEndPosition;    // The position where the camera has moved to (an empty object)
+    public Transform cameraLookAtTarget;   // The position that the camera is pointing at (an empty object)
+    public float transitionDuration = 2f;  // Camera movement time
 
-    [Header("相机转场设置")]
-    public Transform cameraEndPosition;    // 相机移动到的位置（空物体）
-    public Transform cameraLookAtTarget;   // 相机看向的位置（空物体）
-    public float transitionDuration = 2f;  // 相机移动时间
+    [Header("Animation control")]
+    public GameObject endAnimationObject;  // Drag the End object with Animator attached here
 
-    [Header("动画控制")]
-    public GameObject endAnimationObject;  // 拖拽带有Animator的End物体到这里
-
-    [Header("关卡设置")]
-    public string nextLevelName = "Level2"; // 下一关的场景名称
-    public float totalSequenceTime = 4f;   // 整个结束序列的总时间（相机移动+动画播放）
-
+    [Header("Level settings")]
+    public string nextLevelName = "Level2"; // The name of the scene for the next level
+    public float totalSequenceTime = 4f;   // The total time of the entire ending sequence (camera movement + animation playback)
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
-    private Animator endAnimator;          // End物体的Animator组件
-    private bool hasTriggered = false; // 防止重复触发
+    private Animator endAnimator;          // The Animator component of the End object
+    private bool hasTriggered = false; // Prevent repeated triggering
 
     void Start()
     {
-        // 如果未手动指定玩家对象，尝试自动查找
+        // If the player object has not been manually specified, attempt to automatically search for it.
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player");
@@ -39,17 +38,17 @@ public class EndLevel1 : MonoBehaviour
             
             if (playerInputController == null)
             {
-                Debug.LogError("在玩家对象上找不到 PlayerInputController 组件");
+                Debug.LogError("在cannot find PlayerInputController ");
             }
             
             if (cameraFollow == null)
             {
-                Debug.LogError("在主摄像机上找不到 CameraFollow 组件");
+                Debug.LogError("The CameraFollow component cannot be found on the main camera.");
             }
         }
         else
         {
-            Debug.LogError("找不到带有 Player 标签的对象");
+            Debug.LogError("Cannot find the object with the Player tag");
         }
 
         // 获取End物体的Animator组件
@@ -58,18 +57,18 @@ public class EndLevel1 : MonoBehaviour
             endAnimator = endAnimationObject.GetComponent<Animator>();
             if (endAnimator == null)
             {
-                Debug.LogError("在End物体上找不到Animator组件");
+                Debug.LogError("The Animator component cannot be found on the End object.");
             }
         }
         else
         {
-            Debug.LogError("请设置End Animation Object");
+            Debug.LogError("need set End Animation Object");
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        // 检查是否是玩家触发且尚未触发过
+        // Check if it was triggered by the player and has not been triggered before.
         if (!hasTriggered && other.CompareTag("Player"))
         {
             hasTriggered = true;
@@ -79,15 +78,15 @@ public class EndLevel1 : MonoBehaviour
 
     void EndLevelSequence()
     {
-        Debug.Log("开始关卡结束序列，总时长: " + totalSequenceTime + "秒");
+        Debug.Log("Start the level ending sequence. Total duration: " + totalSequenceTime + "seconds");
         
-        // 设置动画的IsEnd参数为true
+        // Set the IsEnd parameter of the animation to true
         if (endAnimator != null)
         {
             endAnimator.SetBool("IsEnd", true);
         }
         
-        // 禁用玩家输入和相机跟随
+        // Disable player input and camera follow-up
         if (playerInputController != null)
         {
             playerInputController.DisableInput();
@@ -98,43 +97,42 @@ public class EndLevel1 : MonoBehaviour
             cameraFollow.SetCameraControl(false);
         }
         
-        // 启动结束序列协程
+        // Start the end sequence coroutine
         StartCoroutine(EndSequenceCoroutine());
     }
 
     IEnumerator EndSequenceCoroutine()
     {
-        // 记录开始时间
+        // Record start time
         float sequenceStartTime = Time.time;
         
-        // 如果有相机转场设置，执行相机移动
+        // If there is a camera transition setting, execute the camera movement
         if (cameraEndPosition != null && cameraLookAtTarget != null)
         {
             yield return StartCoroutine(CameraTransition());
         }
         else
         {
-            Debug.LogWarning("相机转场目标位置未设置，跳过转场动画");
-            // 如果没有相机转场，直接等待相机移动时间
+            // If there is no camera cut, simply wait for the camera movement time to pass.
             yield return new WaitForSeconds(transitionDuration);
         }
 
-        // 计算剩余需要等待的时间
+        // Calculate the remaining time that needs to be waited.
         float elapsedTime = Time.time - sequenceStartTime;
         float remainingTime = totalSequenceTime - elapsedTime;
 
-        // 如果还有剩余时间，等待动画播放完毕
+        // If there is still time left, wait until the animation finishes playing.
         if (remainingTime > 0)
         {
-            Debug.Log("等待动画播放完成，剩余时间: " + remainingTime.ToString("F2") + "秒");
+            Debug.Log("Waiting for the animation to finish playing. Remaining time:" + remainingTime.ToString("F2") + "seconds");
             yield return new WaitForSeconds(remainingTime);
         }
         else
         {
-            Debug.LogWarning("总时间设置可能过短，立即加载下一关");
+            Debug.LogWarning("The total time setting might be too short. Load the next level immediately.");
         }
 
-        Debug.Log("结束序列完成，加载下一关");
+        Debug.Log("Sequence completed. Loading next level.");
         LoadNextLevel();
     }
 
@@ -144,7 +142,7 @@ public class EndLevel1 : MonoBehaviour
         Vector3 startPosition = cameraFollow.transform.position;
         Quaternion startRotation = cameraFollow.transform.rotation;
 
-        // 计算目标旋转：看向目标位置
+        // Calculate target rotation: Look towards the target position
         Vector3 lookDirection = cameraLookAtTarget.position - cameraEndPosition.position;
         Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
 
@@ -153,31 +151,27 @@ public class EndLevel1 : MonoBehaviour
             timer += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, timer / transitionDuration);
 
-            // 平滑移动位置
+            // Smoothly move the position
             cameraFollow.transform.position = Vector3.Lerp(startPosition, cameraEndPosition.position, t);
             
-            // 平滑旋转视角
+            // Smooth rotation of the view
             cameraFollow.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, t);
 
             yield return null;
         }
 
-        // 确保最终位置和旋转准确
+        // Ensure the final position and rotation are accurate
         cameraFollow.transform.position = cameraEndPosition.position;
         cameraFollow.transform.rotation = targetRotation;
 
-        Debug.Log("相机转场完成");
+        Debug.Log("Camera transition completed");
     }
 
     void LoadNextLevel()
     {
-        Debug.Log("加载下一关: " + nextLevelName);
+        Debug.Log("Load the next level:" + nextLevelName);
         
-        // 使用场景名称加载
+        // Load by using the scene name
         SceneManager.LoadScene(nextLevelName);
-        
-        // 如果需要使用Build Index，取消注释下面的代码
-        // int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        // SceneManager.LoadScene(currentSceneIndex + 1);
     }
 }

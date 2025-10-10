@@ -4,17 +4,17 @@ public class PlayerInputController : MonoBehaviour
 {
     private bool isInputEnabled = true;
     
-    // 提供给其他脚本调用的方法
+    // The method provided for other scripts to call
     public void EnableInput()
     {
         isInputEnabled = true;
-        Debug.Log($"输入已启用 - 时间: {Time.time}");
+        Debug.Log($"Input enabled - Time: {Time.time}");
     }
     
     public void DisableInput()
     {
         isInputEnabled = false;
-        Debug.Log($"输入已禁用 - 时间: {Time.time}");
+        Debug.Log($"Input disabled - Time: {Time.time}");
     }
     
     public bool IsInputEnabled()

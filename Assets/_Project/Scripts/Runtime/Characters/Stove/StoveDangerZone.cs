@@ -9,9 +9,8 @@ public class StoveDangerZone : MonoBehaviour
     [Header("Dangerous Settings")]
     public bool isDangerous = true;
     
-    [Header("状态跟踪")]
-    private bool wasDangerousLastCheck = true; // 默认假设初始是危险的
-    private bool hasCheckedAtLeastOnce = false;
+    [Header("Status tracking")]
+    private bool wasDangerousLastCheck = true; // The default assumption is that it is initially dangerous.
 
     void Start()
     {
@@ -20,16 +19,17 @@ public class StoveDangerZone : MonoBehaviour
             associatedFires = FindObjectsByType<FireController>(FindObjectsSortMode.None);
         }
         
-        // 初始化状态
+        // initial
         wasDangerousLastCheck = IsCurrentlyDangerousInternal();
     }
 
-    // 内部检查方法，不触发状态变化事件
+    // Internal inspection method, does not trigger a state change event
     private bool IsCurrentlyDangerousInternal()
     {
         if (!isDangerous) return false;
         
-        // 如果任何关联的火焰还在缩小或未完全缩小，就是危险的
+        // If any of the associated flames are still shrinking or 
+        // have not completely stopped shrinking, it indicates a dangerous situation.
         foreach (FireController fire in associatedFires)
         {
             if (fire != null && (fire.IsShrinking || !fire.IsFullyShrunk))
@@ -41,60 +41,58 @@ public class StoveDangerZone : MonoBehaviour
         return false;
     }
 
-    // 公开的检查方法，会触发状态变化事件
+    // The public inspection method will trigger a state change event.
     public bool IsCurrentlyDangerous()
     {
         bool isDangerousNow = IsCurrentlyDangerousInternal();
-        hasCheckedAtLeastOnce = true;
         
-        // 检查状态是否从危险变为安全
+        // Check if the status has changed from dangerous to safe
         if (wasDangerousLastCheck && !isDangerousNow)
         {
             OnBecameSafe();
         }
-        // 检查状态是否从安全变为危险
+        // Check if the status has changed from safe to dangerous
         else if (!wasDangerousLastCheck && isDangerousNow)
         {
             OnBecameDangerous();
         }
         
-        // 更新上次检查的状态
+        // Update the status of the last inspection
         wasDangerousLastCheck = isDangerousNow;
         
         return isDangerousNow;
     }
 
-    // 当灶台从危险变为安全时调用
+    // It is called when the stove changes from being dangerous to being safe.
     private void OnBecameSafe()
     {
-        Debug.Log("灶台已安全 - 从危险状态变为安全状态");
+        Debug.Log("The stove is now safe - it has transitioned from a dangerous state to a safe state.");
         
-        // 显示UI提示
+        // Display UI prompt
         if (UIManager.Instance != null)
         {
             UIManager.Instance.ShowStoveSafeHint();
         }
     }
 
-    // 当灶台从安全变为危险时调用（可选）
+    // Call when the stove changes from safe to dangerous
     private void OnBecameDangerous()
     {
-        Debug.Log("灶台变得危险了！");
-        // 这里可以添加变为危险时的UI提示或其他逻辑
+        Debug.Log("The stove has become dangerous!");
     }
 
-    // 手动调用检查状态变化（如果需要）
+    // Manually invoke to check for changes in the status
     public void CheckStateChange()
     {
         IsCurrentlyDangerous();
     }
 
-    // 当灶台安全时手动调用（用于按钮等其他触发方式）
+    // Manually activate when the stove is safe.
     public void OnStoveSafe()
     {
-        Debug.Log("灶台已安全");
+        Debug.Log("stove save now!");
         
-        // 显示UI提示
+        // Display UI prompt
         if (UIManager.Instance != null)
         {
             UIManager.Instance.ShowStoveSafeHint();
@@ -103,24 +101,23 @@ public class StoveDangerZone : MonoBehaviour
 
     public void OnPlayerEnter(PlayerController player)
     {
-        // 先检查当前状态
+        // check the current status
         bool isDangerousNow = IsCurrentlyDangerous();
         
         if (isDangerousNow)
         {
-            Debug.Log("玩家碰到危险的灶台！");
+            Debug.Log("The player encounters a dangerous stove!");
             player.Die();
         }
         else
         {
-            Debug.Log("灶台现在安全。");
+            Debug.Log("The stove is now safe.");
         }
     }
 
-    // 在Update中持续检查状态变化（如果需要实时监测）
+    // Continuously check for status changes in the Update
     private void Update()
     {
-        // 如果需要实时监测状态变化，可以取消注释下面这行
         IsCurrentlyDangerous();
     }
 }
