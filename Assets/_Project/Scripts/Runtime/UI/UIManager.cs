@@ -292,7 +292,7 @@ namespace Antventure.UI
         public void ReturnToMainMenu()
         {
             Time.timeScale = 1f;
-            LoadScene("HomeScene");
+            LoadScene("StartScene");
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace Antventure.Systems.Audio
         [SerializeField] private float bgmVolume = 0.7f;
         
         [Header("Scene Names (must match exactly)")]
-        [SerializeField] private string homeSceneName = "HomeScene";
+        [SerializeField] private string homeSceneName = "StartScene";
         [SerializeField] private string level1SceneName = "Level1";
         [SerializeField] private string level1_2SceneName = "Level1-2";
         [SerializeField] private string tutorialSceneName = "Tutorial";
@@ -188,7 +188,7 @@ namespace Antventure.Systems.Audio
         {
             switch (sceneName)
             {
-                case "HomeScene":
+                case "StartScene":
                     return mainMenuBGM;
                 case "Level1":
                 case "Level1-2":
