@@ -27,7 +27,7 @@ namespace Antventure.UI.Menus
         private bool isPaused = false;
         
         // Main menu scene name
-        private const string MAIN_MENU_SCENE = "HomeScene";
+        private const string MAIN_MENU_SCENE = "StartScene";
 
         private void Start()
         {

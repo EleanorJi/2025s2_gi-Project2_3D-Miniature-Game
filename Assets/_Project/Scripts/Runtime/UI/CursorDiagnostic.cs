@@ -19,7 +19,7 @@ namespace Antventure.UI
         {
             if (testButton != null)
             {
-                // 添加测试按钮的事件监听
+                // Add event listener to the test button
                 var buttonAnimator = testButton.GetComponent<ButtonAnimator>();
                 if (buttonAnimator == null)
                 {
