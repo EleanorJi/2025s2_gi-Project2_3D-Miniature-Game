@@ -33,6 +33,12 @@ public class BossHealthBarUI : MonoBehaviour
     [Tooltip("自动重试绑定的间隔秒")]
     public float findRetryInterval = 0.5f;
 
+    [Header("Game Over")]
+    [Tooltip("游戏结束画面的 GameObject")]
+    public GameObject gameOverCanvas;
+    [Tooltip("结束画面淡入时间")]
+    public float fadeInDuration = 1f;
+
     Coroutine _retryCo;
 
     void Awake()
@@ -53,6 +59,7 @@ public class BossHealthBarUI : MonoBehaviour
         // 绑定不到就自动找
         if (!bossHealth && autoFindBoss)
             _retryCo = StartCoroutine(RetryBindRoutine());
+        gameOverCanvas.SetActive(false);
     }
 
     void OnDisable()
@@ -131,13 +138,50 @@ public class BossHealthBarUI : MonoBehaviour
 
     void OnBossDeath()
     {
-        if (!hideOnDeath) return;
+        // 显示结束画面
+        if (gameOverCanvas)
+        {
+            gameOverCanvas.transform.SetAsLastSibling();
 
-        // 有 CanvasGroup 就淡出；没有就直接隐藏
-        var cg = GetComponent<CanvasGroup>();
-        if (cg) StartCoroutine(FadeOut(cg));
-        else gameObject.SetActive(false);
+            var gameOverCg = gameOverCanvas.GetComponent<CanvasGroup>();
+            if (gameOverCg == null)
+            {
+                gameOverCg = gameOverCanvas.AddComponent<CanvasGroup>();
+            }
+
+            gameOverCg.alpha = 0f;
+            gameOverCanvas.SetActive(true);
+
+            StartCoroutine(FadeIn(gameOverCg));
+        }
+
+        // 暂时注释掉血条隐藏逻辑来测试
+        // if (!hideOnDeath) return;
+        // var healthBarCg = GetComponent<CanvasGroup>();
+        // if (healthBarCg) StartCoroutine(FadeOut(healthBarCg));
+        // else gameObject.SetActive(false);
     }
+
+
+
+
+    IEnumerator FadeIn(CanvasGroup cg)
+    {
+        Debug.Log("开始淡入效果"); // 调试信息
+
+        cg.alpha = 0f;
+        float t = 0f;
+        while (t < fadeInDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            cg.alpha = Mathf.Clamp01(t / fadeInDuration);
+            Debug.Log($"淡入进度: {t}/{fadeInDuration}, Alpha: {cg.alpha}"); // 调试信息
+            yield return null;
+        }
+        cg.alpha = 1f;
+        Debug.Log("淡入效果完成"); // 调试信息
+    }
+
 
     IEnumerator FadeOut(CanvasGroup cg)
     {
