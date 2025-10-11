@@ -298,14 +298,42 @@ The game is set in a fully 3D environment, but with level design that encourages
 ### Assets
 
 -   **Artistic assets:**
-    - Ant Character Model (Base Model + Skins)
-    - Kitchen Props (Knives, Cucumbers, Milk Cartons, Cutting Boards, Honey Jars)
+    - Ant Character Model (Base Model + Skins + animation)
+    <p align="center">
+      <img src="images/ant_image.png" alt="Player Ant" width="400">
+    </p>
+    
+    - Kitchen Props (Knives, Cucumbers, Milk Cartons, Cutting Boards, Honey block, sugar square)
+    <p align="center">
+      <img src="images/knives.png" alt="knives" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/Cucumbers.png" alt="Cucumbers" width="400">
+    </p>
+    
+    <p align="center">
+      <img src="images/milkBox.png" alt="milk box" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/cuttingBoard.png" alt="Cutting Boards" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/honeyBlock.png" alt="Honey block" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/sugar.png" alt="sugar square" width="400">
+    </p>
+
     - Garden Resources (Gardens, Soil, Insect NPCs, Water Pipes, Leaves, Matches)
     - Road Resources (Vehicles, Traffic Signs, Trash Cans, Trees, Buildings)
     - Dock Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
     - Enemies (Spider, Pigeon Boss)
     - Collectibles (Food Scraps)
-    - Special Effects (Explosion Particles (rendered by shader), Venom Particles, Pheromones)
+    - Special Effects (Explosion Particles (rendered by shader), Venom Particles, pool shader)
 -   **Create source:**
     - Blender/Maya (3D models)
     - Substance Painter/Photoshop (textures)
@@ -399,6 +427,7 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
 
 
 
