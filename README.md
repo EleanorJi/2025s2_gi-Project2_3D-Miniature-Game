@@ -38,23 +38,34 @@
 
 ### Core Concept
 
-The player takes on the role of a brave little ant on a quest to reclaim a stolen cookie from a greedy seagull. From the perspective of an insect, everyday environments become giant and dangerous playgrounds. Players must traverse kitchens, streets, and outdoor areas, overcoming hazards and using the unique ability to summon fellow ants to solve puzzles, cross obstacles, and ultimately confront the seagull in a final showdown. The game's title, *Antventure*, is a portmanteau of "Ant" and "Adventure," reflecting the grand journey of our tiny protagonist.
+Players take on the role of a brave little ant on a quest to reclaim cookies stolen by greedy seagulls. From the ant's perspective, the everyday, overlooked human environment transforms into a giant, perilous playground. Players must traverse kitchens, street flower beds, and outdoor areas, ultimately reaching the pier. Overcoming countless obstacles, they'll utilize unique abilities—summoning fellow ants, spraying venom, and cooperative combat—to solve puzzles, overcome barriers, and finally face the seagull in an ultimate showdown. The game's title, *Antventure*, is a portmanteau of "Ant" and "Adventure," reflecting the grand journey of our tiny protagonist.
+Step into the ant's world through their eyes!
 
 ### Related Genre
 
 1.  3D platformer + light puzzle adventure
 2.  Inspirations include *Pikmin* (group coordination), *It Takes Two* (creative level design), and *Grounded* (miniature perspective).
-3.  Unlike these titles, our game offers a short, focused experience (~10 minutes) built around the summoning mechanic and creative environmental puzzles from a miniature perspective.
+3.  Unlike these titles, our game offers a short, focused experience (~10 minutes) built around summoning mechanics and ant biology, featuring creative environmental puzzles viewed from a microscopic perspective.
 
 ### Target Audience
 
-Primary audience is university students and young adults who enjoy fast-paced, light puzzle-solving and 3D platformer games.
+#### Primary Audience
+- **Light puzzle and action-platformer players**
+  - Enjoy quick onboarding and replayable levels; willing to try unique perspectives and creative mechanics.
+- **Edutainment / science-curious players**
+  - Prefer "learn-while-playing": ant pheromone trails, swarm intelligence, venom/acid spray, adhesive pads, living bridges/ant structures, etc.
+- **Casual players and content creators (game reviewers/streamers/short-form video)**
+  - Need strong, eye-catching hooks (e.g., reviewing a University of Melbourne IT student project), and low-cost replay/commentary (short levels, fail-without-punishment).
+
+#### Secondary Audience
+- **City & culture enthusiasts**
+  - Local student groups who enjoy observing Melbourne's everyday life and culture.
 
 ### Unique Selling Points (USPs)
 
--   **Summoning Mechanic:** Collect cookie crumbs to summon different types of ants (workers for carrying, builders for bridges/ladders, soldiers for defense). This introduces strategy and variety within a short playtime.
--   **Creative Environmental Interactions:** Each level features unique obstacles: bubble machines in the kitchen, car traffic and shoe gaps on the street, puddles requiring bridges, and fishing lines or water spouts during the boss fight.
--   **Miniature Melbourne Setting:** The game is built with recognizable Melbourne landmarks (streets, cafés, seaside piers), turning the familiar into adventurous landscapes.
+-   **Summoning Mechanics:** Collecting cookie crumbs summons ant helpers (worker ants assist in combat, while nest-building ants construct bridges/ladders). This introduces strategy and variety within the game's short playtime.
+-   **Creative Environmental Interaction:** Each level features unique obstacles: kitchen stovetops, milk cartons, curbside stone paths, flower beds requiring hopping over, and docks coveted by the street's dominant seagulls.
+-   **Science Micro-Facts (Edutainment):** Bite-sized ant facts (pheromone trails, swarm intelligence, venom/acid spray, adhesive pads, living bridges/ant ladders) are unlocked as you play; presented as optional HUD tips and loading-screen cards for “learn-while-playing.”
 
 ---
 
@@ -66,7 +77,7 @@ In the hidden corners of Melbourne lies a world unnoticed by humans—the kingdo
 
 The story begins on a tranquil morning. The protagonist is a small ant, stubborn and brave. It stumbles upon a fallen cookie on the kitchen counter—a “golden feast” in ant terms. Just as it prepares to feast, a cunning pigeon swoops through the window, snatching the cookie and leaving scattered crumbs behind. To humans, this is an insignificant scene, but in the eyes of the little ant, it is a challenge from fate and a call to adventure.
 
-In the ants' worldview, human kitchens, streets, cafes, and docks are not ordinary spaces, but towering labyrinths and turbulent battlefields. Tableware becomes colossal obstacles, human footsteps on the streets feel like impending doom, and a single drop of coffee could drown an entire squad.
+In the ant's worldview, human kitchens, streets, and docks were not ordinary spaces, but towering labyrinths and raging battlefields. Human food became colossal obstacles, the pull of sewer pipes felt like the apocalypse, and a single leaking pipe could drown an entire colony.
 
 To reclaim its precious cookie, the little ant embarks on a journey of pursuit and resistance. It is not alone: food scraps gathered along the way summon companions. Ants unite to carry burdens, build bridges, and ward off dangers. Through this journey, the protagonist evolves into a leader—no longer merely a food-seeking individual, but a vanguard guiding its colony toward glory.
 
@@ -78,7 +89,7 @@ The ultimate adversary is the tyrannical seagull—a “dragon” in the ant wor
    -   **Role:** The hero controlled by the player, on an adventure to reclaim the cookie.
    -   **Personality & Motivation:** Brave and determined, it fears nothing despite its tiny size. Its core drive is to reclaim the precious cookie stolen by the pigeon, a mission of honor for the entire ant colony.
    -   **Appearance:** A stylized, earth-toned (sandy brown) ant with simple texturing on its body for detail. Features a smooth, six-legged crawling animation, making its movement look natural and insect-like.
-   -   **Abilities:** Can run, jump, climb walls, and grab (with the C key) small objects (e.g., sugar cubes). Also possesses the ability to summon specific helper ants.
+   -   **Abilities:** Can run, jump, climb walls, and grab (with the C key) small objects (e.g., sugar cubes). Also possesses the ability to summon specific support ants and spray venom.
 -   **The Pigeon (Main Antagonist)**
     -   **Role:** The final boss and the greedy thief who stole the cookie.
     -   **Personality & Motivation:** Arrogant and possessive, it views the ant's world as its personal pantry, plundering at will.
@@ -97,7 +108,7 @@ The ultimate adversary is the tyrannical seagull—a “dragon” in the ant wor
 
 ### Player Perspective
 
-The game adopts a dynamic third-person perspective. The player need to control the ant character, and this character is always visible in the center of the screen. The camera system will adjust according to the environment. Provide the standard following view in flat terrain. In special scenarios (such as the vertical wall of a kitchen), the viewing angle will automatically rotate , thereby creating an immersive spatial experience. The character is designed in a polygonal form, which not only retains the basic features of an ant but also avoids any potentially uncomfortable realistic details through cartoonish treatment.
+The game employs a dynamic third-person perspective. Players control an ant character that remains permanently visible at the center of the screen. The camera system automatically adjusts based on the environment: providing a standard follow-cam perspective on flat terrain, while switching angles in special scenarios (such as vertical walls) to ensure a seamless experience. The character design blends cartoonish elements with realistic styling—preserving fundamental ant characteristics while avoiding potentially unsettling hyper-realistic details through stylized cartooning.
 
 ### Controls
 
@@ -105,20 +116,20 @@ The game adopts a dynamic third-person perspective. The player need to control t
 -   **Jumping action:** Pressing the space will perform a normal jump.
 -   **Pick up：** The "C" key is used for grabbing/picking up objects. 
 -   **Environmental Interaction:** The "E" key is used for interacting with scene objects and summoning points.
--   **Launch attack:** The "P" key is used for shooting venom.
+-   **Launch attack:** Left mouse button is used to shoot venom.
 -   **Viewpoint control:** Adjust the camera direction by moving the mouse.
 -   **Special operation:** The "J" key is used to escape from a trapped situation. The "V" key is used for some special gameplay methods.
 
 ### Progression
 
 -   **Level structure:**
-    -   **Tutorial Level: ~1 min:** Set in a simplified environment to teach the player the core controls: WASD movement, Space for jumping, and C for grabbing objects.
+    -   **Tutorial Level: ~1 min:** Set in a simplified environment to teach the player the core controls: MOUSE to adjust viewpoint,WASD movement, Space for jumping, and C for grabbing objects.
     -   **Teaching level (kitchen area) 1.5-2min:** Introduces environmental hazards and basic puzzles using the learned controls.
-    -   **Main level (outdoor mixed environment) 4-6min :** Integrates shrubbery and street elements, and introduces a complete summoning mechanism
-    -   **Ultimate Challenge (Dock Boss Battle) 2-4min:** Requires the comprehensive application of all the skills learned so far
+    -   **Main level (outdoor mixed environment) 4-6min :** Integrates garden and Melbourne street elements with customized gameplay mechanics, introducing a complete summoning system
+    -   **Ultimate Challenge (Beach Boss Battle) 1-2min:** Requires the comprehensive application of all the skills learned so far
 -   **Difficulty assessment:**
     -   Gradual introduction of new mechanisms.
-    -   Each mechanism offers ample opportunities for practice.
+    -   Each level features multiple save points, providing ample opportunity to practice each mechanic.
     -   The Boss battle focuses on strategy rather than operational difficulty.
 -   **Failure and Renewal:**
     -   **Failure conditions:** Being attacked by enemies (such as being pecked by pigeons) or coming into contact with dangerous environments (such as falling into water)
@@ -126,7 +137,7 @@ The game adopts a dynamic third-person perspective. The player need to control t
     -   Simplify the health system and adopt a one-hit-death mechanism but combine it with quick respawn to maintain the game pace.
 -   **Continuous play motivation comes from:**
     -   Collect food scraps to unlock the skin color of the new ant character.
-    -   Set several hidden collectibles for each level to encourage exploration.
+    -   Each level features multiple hidden food scraps to encourage exploration (linked to the summoning mechanism for the final boss battle).
     -   The time record function for completing the game can be considered to encourage repeated challenges.
 
 ### Gameplay Mechanics
@@ -134,8 +145,8 @@ The game adopts a dynamic third-person perspective. The player need to control t
 -   **Core mechanism:**
     -   **Basic movement system:** Running, jumping, wall-climbing movement
     -   **Environmental Interaction:**
-        -   Interact with the preset trigger point
-        -   Interacting with dynamic obstacles (such as moving chopsticks, dripping faucets)
+        -   Interact with the preset trigger point (e.g., stove switch, spider)
+        -   Interacting with dynamic obstacles (e.g., moving vegetables, water pipes)
     -   **Combat:** The player ant can perform a basic attack to defeat insects and clear a path.
     -   **Team collaboration:** Summon a limited number of ants to assist in completing the mission.
 -   **Summoning Skill:**
@@ -154,7 +165,7 @@ The game adopts a dynamic third-person perspective. The player need to control t
 
 ### Game World
 
-The game is set in a fully 3D environment, but with level design that encourages movement and gameplay primarily on a two-dimensional plane, creating a 2.5D-style experience. Each level follows a linear progression structure, but there are a few branching paths for exploration. There is no mini map, but visual cues about the level layout assist in navigation.
+The game is set in a fully 3D environment, but with level design that encourages movement and gameplay primarily on a two-dimensional plane, creating a 2.5D-style experience. Each level follows a linear progression structure while incorporating several areas for exploration. There is no mini map, but visual cues about the level layout assist in navigation.
 
 ### Objects
 
@@ -162,6 +173,16 @@ The game is set in a fully 3D environment, but with level design that encourages
     <p align="center">
       <img src="images/ant_image.png" alt="Player Ant" width="400">
     </p>
+-   **The tutorial level (desk):**
+    <p align="center">
+      <img src="images/tutorial.png" alt="Tutorial Level 0" width="400">
+    </p>
+
+    -   **Teaching UI:** Players will receive instructional guidance after each section of the road, which is convenient for them to pass the subsequent levels.
+        -   **Books:** Teach the player control left and right and adjust the perspective to go around
+        -   **Handle:** Teach the player jump over it
+        -   **Sugar Cubes:** Teach players pick up things and pass the level
+
 -   **The first level (kitchen):**
     <p align="center">
       <img src="images/kitchen.png" alt="Kitchen Level 1" width="400">
@@ -178,27 +199,51 @@ The game is set in a fully 3D environment, but with level design that encourages
         
         -    **Cake Spatula Bridge:** A long cake spatula spans over a sink filled with water. The player must carefully cross this narrow bridge. Falling into the water results in failure.
 
--   **Second Level (Outdoor Comprehensive):**
+-   **Second Level (Outdoor Comprehensive :Street & Flower Beds):**
     <p align="center">
       <img src="images/outdoor.png" alt="Outdoor Level" width="400">
     </p>
-    
-    -   **Collection item:** Food scraps
-    -   **Summoning Point:** Fixed location, capable of summoning worker ants or assembly ants
-    -   **Environmental challenges:**
-        -   Small puddle: Requires assembly ants to build a bridge
-        -   Mobility obstacle: Insects with simple path movement capabilities
+
+    -   **Obstacles & Puzzles:**
+      -   **Timed Wall-Climb Survival:** The player must explore the stone path area within a time limit and successfully climb the wall. If time runs out, the continuous water flow from a pipe will flood the area and cause failure.
+      -   **Conditional Summon Climb:** The player must promptly use the summoning skill to climb onto the flower bed to avoid the incoming water—but only after collecting enough cookie crumbs (energy).
+        <p align="center">
+          <img src="images/ClimbWall.png" alt="Summoned Climb design Level 2" width="400">
+        </p>
+      -   **Venom Run Through the Flower Bed:** Use the left mouse button to fire venom and push through insect-filled flower beds, avoiding death by swarms.
+        <p align="center">
+          <img src="images/FlowerBed.png" alt="Flower Bed design Level 2" width="400">
+        </p>
+      -   **Leaf Parachute:** Discover that leaves can be used as a “parachute” to increase drag, preventing fatal falls when dropping from the flower bed.
+        <p align="center">
+          <img src="images/Parachute.png" alt="Ant with parachute design Level 2" width="400">
+        </p>
+      -   **Charged Rock Hops & “Trash Soup”:** Perform charged jumps across multiple rocks to avoid the sticky “trash soup” on the ground, which can trap the player repeatedly and lead to unavoidable death.
+      -   **Global Exploration Events:** Multiple optional areas can be explored, but they may trigger unexpected environmental effects (risk–reward tradeoffs).
+      -   **Hidden Progress Condition:** Through repeated attempts, players will discover that collecting as many cookie crumbs as possible in Level 2 directly affects whether they can use the summoning skill to repel the BOSS in Level 3.
+        <p align="center">
+          <img src="images/cookieCrumbs.png" alt="maze design Level 2" width="400">
+        </p>
+
+
 -   **The third level (Boss battle at the dock):**
     <p align="center">
-      <img src="images/dock.png" alt="Dock Level" width="400">
+      <img src="images/beach.png" alt="Beach Level" width="400">
     </p>
     
-    -   **Boss Attack Mode:**
-        -   Wings flap the air: This phenomenon occurs periodically and requires hiding behind a fixed object.
-    -   **Resource Management:** During the Boss battle, food crumbs will drop. Need to collect them in time to maintain the summoning ability.
-    -   **Interaction mechanism:**
-        -   Trap the boss: Press E to let the worker ants to trap.
-        -   Water faucet: Worker ant interaction, triggers water spraying animation.
+    -   **Player Actions**
+        -   Manual Attack (P)
+            Shoots a straight-line poison projectile (no auto-aim). Requires line-of-sight and positioning.
+            Damage: 5 per hit. Cooldown: ~0.3s.
+        -   Special Summon (K)
+            Instantly spawns 3 Ant Minions around the player. Minions stay near the player and auto-target the Boss, firing their own projectiles.
+            Damage: 1 per minion hit. Lifetime / fire interval: short, then despawn (cannot exceed 3 active).
+    -   **Boss (Pigeon):**
+        -   Health: 100 HP with a visible boss health bar.
+        -   Takes damage from both the player’s poison shots and minion projectiles.
+
+    -   **Win Condition:**
+        -   Reduce the Boss HP to 0.
 
 ### Physics
 
@@ -219,13 +264,14 @@ The game is set in a fully 3D environment, but with level design that encourages
 -   **Art**
     -   **Color**
         - **Kitchen**: warm tones (wood, metal gray, yellow lighting)
-        - **Bushes**: lush greens, earthy browns, soft sunlight filtering
-        - **Road**: dark asphalt gray with white/yellow lines, muted city colors
+        - **Garden**: Simple earthy browns with soft, sunlit effects
+        - **Urban Street Scene**: Constructed using low-poly assets, featuring an upbeat, sunny palette with slightly elevated saturation
+        - **Road**: Deep asphalt gray base with red running lanes, maintaining a steady, grounded tone
         - **Dock**: cool grays and blues, wooden planks, reflective water surfaces
     -   **Shape**
         - Rounded and exaggerated for safe/interactive objects; jagged and sharp for hazards like knives, claws, and debris.
     -   **Texture**
-        - Hand-painted textures for food scraps and natural elements; semi-realistic surfaces for metal, stone, and water.
+        - Hand-painted textures for food scraps and natural elements; metals, soil, sandy beaches, sea surfaces, and stone exhibit semi-realistic surfaces.
 -   **Aesthetic:**
     - Each stage contrasts domestic, natural, and urban-industrial environments. The progression blends playful exploration with increasing danger, culminating in large-scale boss encounters.
 -   **Concept art:**
@@ -236,30 +282,58 @@ The game is set in a fully 3D environment, but with level design that encourages
 ### Sound and Music
 
 -   **Sound Design:**
-    - Dynamic ambient layers (kitchen clinks, sewer drips, rooftop wind) combined with responsive character and hazard sounds.
--   **Basic sound effects:**
-    - Footsteps, jumps, collisions, knife slashes, dripping water, bubble pops, insect buzzes, pigeon screeches.
--   **Fitness:**
-    - SFX provide clear cues for danger (e.g., knife swing “whoosh”), reward feedback for collection, and tactile reinforcement for platforming.
+    - Dynamic environmental sound layers (water flowing through pipes, sewer suction sounds) combined with character interactions and hazard warning effects.
+-   **Base Sound Effects:**
+    - Pickup sounds, poison spray sounds, explosion sounds, wind sounds, pigeon screeching.
+- **Interactive Feedback:**
+    - Clear audio cues for danger (e.g., spider silk-spinning), collection reward feedback (food gathering sound), and platform jumping (powered jump sound) with enhanced auditory reinforcement.
 -   **Music used:**
     - **Kitchen**: playful orchestral with plucked strings
-    - **Bushes**: light woodwinds and ambient forest soundscape
-    - **Road**: rhythmic percussion with low urban ambience, tense buildup
+    - **Garden**: Soft, natural element ambient soundscape
+    - **Highway**: Sound effects and custom melodies integrated with player actions and narrative progression (synchronized with camera movement)
     - **Dock/Boss**: dramatic orchestral with heavy percussion and tension-filled crescendos
 -   **Fitness:**
-    - Adaptive music system that changes with player state (exploration, hazard, boss fight) to maintain immersion and tension.
+    - Adaptive music system that changes with player state (Summon Advance/BOSS Battle) to maintain immersion and tension.
 
 ### Assets
 
 -   **Artistic assets:**
-    - Ant character models (base + skins)
-    - Kitchen props (knives, spoons, pots, bubbles)
-    - Bush assets (leaves, branches, insect NPCs)
-    - Road assets (cars, streetlights, traffic signs, trash)
-    - Dock assets (wooden planks, crates, water surface, pigeon boss model)
-    - Enemies (bees, rats, pigeon boss)
-    - Collectibles (food crumbs, summon shards, glowing tokens)
-    - VFX (bubble teleport, splash, wind gusts, feather scatter)
+    - Ant Character Model (Base Model + Skins + animation)
+    <p align="center">
+      <img src="images/ant_image.png" alt="Player Ant" width="400">
+    </p>
+    
+    - Kitchen Props (Knives, Cucumbers, Milk Cartons, Cutting Boards, Honey block, sugar square)
+    <p align="center">
+      <img src="images/knives.png" alt="knives" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/Cucumbers.png" alt="Cucumbers" width="400">
+    </p>
+    
+    <p align="center">
+      <img src="images/milkBox.png" alt="milk box" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/cuttingBoard.png" alt="Cutting Boards" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/honeyBlock.png" alt="Honey block" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/sugar.png" alt="sugar square" width="400">
+    </p>
+
+    - Garden Resources (Gardens, Soil, Insect NPCs, Water Pipes, Leaves, Matches)
+    - Road Resources (Vehicles, Traffic Signs, Trash Cans, Trees, Buildings)
+    - Dock Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
+    - Enemies (Spider, Pigeon Boss)
+    - Collectibles (Food Scraps)
+    - Special Effects (Explosion Particles (rendered by shader), Venom Particles, pool shader)
 -   **Create source:**
     - Blender/Maya (3D models)
     - Substance Painter/Photoshop (textures)
@@ -274,7 +348,7 @@ The game is set in a fully 3D environment, but with level design that encourages
 
 ## UI
 
--   **UI tool：** Figma, Photoshop
+-   **UI tool：** Figma, Photoshop, Unity(Canvas)
 -   **UI resource:**
     -   **icon:** [Vector Icons and Stickers - PNG, SVG, EPS, PSD and CSS](https://www.flaticon.com/free-icons/ant)
 -   **UI Mockups:**
@@ -353,6 +427,8 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
+
 
 
 
