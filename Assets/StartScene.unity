@@ -277,7 +277,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f23f39536e8c0d7479265dc49f890d4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setupOnStart: 1
 --- !u!4 &150930252
 Transform:
   m_ObjectHideFlags: 0
@@ -3205,6 +3204,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1603405211}
   m_CullTransparentMesh: 1
+--- !u!1 &1608466210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1608466212}
+  - component: {fileID: 1608466211}
+  m_Layer: 0
+  m_Name: CursorSetup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1608466211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608466210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e409900dcff7fd4394126c76f86f915, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  setupOnStart: 0
+--- !u!4 &1608466212
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608466210}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 86.00879, y: 2.82089, z: -341.29367}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1624891788
 GameObject:
   m_ObjectHideFlags: 0
@@ -3414,6 +3458,57 @@ MonoBehaviour:
   hoverSound: {fileID: 0}
   clickSound: {fileID: 0}
   enableHapticFeedback: 0
+--- !u!1 &1667255009
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1667255011}
+  - component: {fileID: 1667255010}
+  m_Layer: 0
+  m_Name: WebGLCursorFix
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1667255010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667255009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 918eb2d571a2687428aae35f742e6df4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  originalDefaultCursor: {fileID: 2800000, guid: 9ca07bac823785d479cb49c17fc8dbf5, type: 3}
+  originalHoverCursor: {fileID: 2800000, guid: 3d81401497e2c4a43a0eba3317d40ea0, type: 3}
+  webGLCursorSize: 32
+  useScaledCursorsInWebGL: 1
+  defaultCursorHotspot: {x: 0, y: 0}
+  hoverCursorHotspot: {x: 16, y: 16}
+  showDebugInfo: 1
+--- !u!4 &1667255011
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667255009}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1681243021
 GameObject:
   m_ObjectHideFlags: 0
@@ -3848,10 +3943,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2d81ca8529e6a4d8f9d235ecca152c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  createOnStart: 0
-  removeAfterSetup: 1
-  defaultCursor: {fileID: 0}
-  hoverCursor: {fileID: 0}
 --- !u!4 &1870430604
 Transform:
   m_ObjectHideFlags: 0
@@ -4141,3 +4232,5 @@ SceneRoots:
   - {fileID: 1724014792}
   - {fileID: 1255512897}
   - {fileID: 1870430604}
+  - {fileID: 1608466212}
+  - {fileID: 1667255011}
