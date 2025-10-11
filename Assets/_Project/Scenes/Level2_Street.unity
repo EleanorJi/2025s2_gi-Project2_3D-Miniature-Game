@@ -75104,7 +75104,8 @@ MonoBehaviour:
   canReactivate: 0
   hintText: 'Finally made it up here! COOKIES on bugs!!
 
-    Press P to release venom!!!!!'
+    Press LEFT MOUSE BUTTON
+    to release venom!!!!!'
   autoHideDelay: 5
   showHintOnActivation: 1
 --- !u!65 &2110696525
