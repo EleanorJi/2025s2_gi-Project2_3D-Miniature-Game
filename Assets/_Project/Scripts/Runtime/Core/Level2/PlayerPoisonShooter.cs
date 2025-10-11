@@ -17,9 +17,9 @@ public class PlayerPoisonShooter : MonoBehaviour
     [Range(0f,1f)] public float sprayVolume = 1f;      // Spray volume
     public bool sprayAs2D = true;                      // true = 2D; false = 3D
     public AudioMixerGroup output;                     // Optional: route to your SFX mixer
-    [Tooltip("Fade-in time (press P)")]
+    [Tooltip("Fade-in time")]
     public float fadeInTime = 0.05f;
-    [Tooltip("Fade-out time (release P); set 0 to stop immediately")]
+    [Tooltip("Fade-out time; set 0 to stop immediately")]
     public float fadeOutTime = 0.0f;
 
     [Header("3D Settings (when sprayAs2D = false)")]
@@ -85,10 +85,10 @@ public class PlayerPoisonShooter : MonoBehaviour
 
     void Update()
     {
-        // Start spraying
-        if (Input.GetKeyDown(KeyCode.P)) StartSpray();
-        // Stop on release
-        if (Input.GetKeyUp(KeyCode.P)) StopSpray();
+        // Start spraying (Left Mouse Button)
+        if (Input.GetMouseButtonDown(0)) StartSpray();
+        // Stop on release (Left Mouse Button)
+        if (Input.GetMouseButtonUp(0)) StopSpray();
 
         // Allow tweaking the cone at runtime
         if (_shape.angle != coneAngle) _shape.angle = coneAngle;

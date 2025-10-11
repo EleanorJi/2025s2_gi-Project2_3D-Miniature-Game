@@ -68358,13 +68358,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699580714}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.11986084, y: 0.696874, z: -0.1198609, w: -0.69687396}
-  m_LocalPosition: {x: 71.38, y: 1.68, z: -339.61807}
+  m_LocalRotation: {x: 0, y: 0.619231, z: -0, w: 0.78520894}
+  m_LocalPosition: {x: 66.7, y: 3.4, z: -343.9}
   m_LocalScale: {x: 0.086630374, y: 0.04612172, z: 0.4613096}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -199.519, y: 90, z: 180}
+  m_LocalEulerAnglesHint: {x: 180, y: 256.52, z: 180}
 --- !u!114 &1699580718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75104,7 +75104,8 @@ MonoBehaviour:
   canReactivate: 0
   hintText: 'Finally made it up here! COOKIES on bugs!!
 
-    Press P to release venom!!!!!'
+    Press LEFT MOUSE BUTTON
+    to release venom!!!!!'
   autoHideDelay: 5
   showHintOnActivation: 1
 --- !u!65 &2110696525

@@ -414,6 +414,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c53917a2a5f8ed419adc14034d36ddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonTriggerLayerName: ButtonTrigger
+  sugarTag: Sugar
 --- !u!1 &6727435 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -2435314199933751565, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
@@ -6944,8 +6946,8 @@ Transform:
   m_GameObject: {fileID: 550379582}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.28580162, z: -0, w: 0.95828885}
-  m_LocalPosition: {x: -71.6, y: 10, z: 92.1}
-  m_LocalScale: {x: 126.90877, y: 66.26743, z: 66.26743}
+  m_LocalPosition: {x: -61.9, y: 10, z: 98.4}
+  m_LocalScale: {x: 105.97009, y: 55.33397, z: 55.33397}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
