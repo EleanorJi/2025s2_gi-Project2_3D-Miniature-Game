@@ -334,6 +334,18 @@ The game is set in a fully 3D environment, but with level design that encourages
     - Enemies (Spider, Pigeon Boss)
     - Collectibles (Food Scraps)
     - Special Effects (Explosion Particles (rendered by shader), Venom Particles, pool shader)
+    <p align="center">
+      <img src="images/Explosion.png" alt="Explosion" width="400">
+    </p>
+    
+    <p align="center">
+      <img src="images/ExplosionParticles.png" alt="Explosion Particles by Blender" width="400">
+    </p>
+
+    <p align="center">
+      <img src="images/VenomParticles.png" alt="Venom Particles in Level2(simple)" width="400">
+    </p>
+
 -   **Create source:**
     - Blender/Maya (3D models)
     - Substance Painter/Photoshop (textures)
@@ -427,6 +439,7 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 -   It's not easy to find a suitable model.
 
 -   Time limit: too many idea need to complete
+
 
 
 
