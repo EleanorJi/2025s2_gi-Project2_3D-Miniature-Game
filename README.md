@@ -208,7 +208,7 @@ The game is set in a fully 3D environment, but with level design that encourages
       -   **Timed Wall-Climb Survival:** The player must explore the stone path area within a time limit and successfully climb the wall. If time runs out, the continuous water flow from a pipe will flood the area and cause failure.
       -   **Conditional Summon Climb:** The player must promptly use the summoning skill to climb onto the flower bed to avoid the incoming water—but only after collecting enough cookie crumbs (energy).
         <p align="center">
-          <img src="Images\ClimbWall.png" alt="Summoned Climb design Level 2" width="400">
+          <img src="images/ClimbWall.png" alt="Summoned Climb design Level 2" width="400">
         </p>
       -   **Venom Run Through the Flower Bed:** Use the left mouse button to fire venom and push through insect-filled flower beds, avoiding death by swarms.
         <p align="center">
