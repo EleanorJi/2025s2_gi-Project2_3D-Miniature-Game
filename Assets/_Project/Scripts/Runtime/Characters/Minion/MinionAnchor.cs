@@ -3,15 +3,15 @@ using UnityEngine;
 public class MinionAnchor : MonoBehaviour
 {
     [Header("Follow Target")]
-    public Transform follow;                // 玩家
-    public Vector3 localOffset;             // 围绕玩家的偏移（由召唤时设置）
-    public float stickSpeed = 20f;          // 越大越紧跟
+    public Transform follow;                // player
+    public Vector3 localOffset;             // Offset around the player (set during summoning)
+    public float stickSpeed = 20f;          // The larger, the tighter the follow
 
     [Header("Ground Snap")]
     public bool snapToGround = true;
-    public float rayHeight = 3f;            // 从上往下起点高度
-    public float extraGroundOffset = 0.02f; // 轻微抬高避免卡地
-    public LayerMask groundMask = ~0;       // 只勾 Ground 更好
+    public float rayHeight = 3f;            // Starting height from above
+    public float extraGroundOffset = 0.02f; // Slightly raised to avoid sticking
+    public LayerMask groundMask = ~0;       // Only check Ground
 
     Collider col;
     float footExtentY = 0.1f;
@@ -24,7 +24,7 @@ public class MinionAnchor : MonoBehaviour
 
     void OnValidate()
     {
-        // 在编辑器参数变化时也更新一下
+        // Update in-editor parameters as well
         if (!Application.isPlaying)
         {
             col = GetComponent<Collider>();
@@ -36,7 +36,7 @@ public class MinionAnchor : MonoBehaviour
     {
         if (col != null)
         {
-            // 世界对齐包围盒的一半高度，适配任何朝向/缩放
+            // Ensure a minimum foot extent to avoid sinking into the ground
             footExtentY = Mathf.Max(col.bounds.extents.y, 0.05f);
         }
     }
@@ -45,14 +45,14 @@ public class MinionAnchor : MonoBehaviour
     {
         if (!follow) return;
 
-        // 水平跟随
+        // Base position
         Vector3 basePos = follow.position + localOffset;
 
         float desiredY = basePos.y;
 
         if (snapToGround)
         {
-            // 从上方发射射线
+            // Raycast downwards to find the ground
             Vector3 rayStart = basePos + Vector3.up * rayHeight;
             float castDist = rayHeight + 5f;
 
@@ -60,7 +60,7 @@ public class MinionAnchor : MonoBehaviour
                                        out RaycastHit hitInfo, castDist,
                                        groundMask, QueryTriggerInteraction.Ignore);
 
-            // 兜底：用 SphereCast 更宽容（薄地面/小台阶）
+            // If not hit, try a small sphere cast to avoid missing thin ground
             if (!hit)
             {
                 hit = Physics.SphereCast(rayStart, 0.15f, Vector3.down,
@@ -76,7 +76,7 @@ public class MinionAnchor : MonoBehaviour
 
         Vector3 desired = new Vector3(basePos.x, desiredY, basePos.z);
 
-        // 平滑插值，避免跳动
+        // Smoothly interpolate to avoid jitter
         float t = 1f - Mathf.Exp(-stickSpeed * Time.deltaTime);
         transform.position = Vector3.Lerp(transform.position, desired, t);
     }
