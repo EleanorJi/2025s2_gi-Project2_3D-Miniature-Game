@@ -7,36 +7,36 @@ using System.Collections;
 public class BossHealthBarUI : MonoBehaviour
 {
     [Header("References")]
-    [Tooltip("Boss 的生命组件。可留空，脚本会按 Tag 查找并绑定")]
+
     public Health bossHealth;
 
-    [Tooltip("血条 Slider（建议把脚本挂在 Slider 上，没填会自动 GetComponent）")]
+
     public Slider slider;
 
-    [Tooltip("Slider 的 Fill 图像（不填会尝试 slider.fillRect → GetComponent<Image>() 自动获取）")]
+
     public Image fill;
 
     [Header("Visual")]
-    [Tooltip("Fill 的固有颜色（默认红色）。脚本不会在运行时改它，避免变白问题")]
+
     public Color fillColor = new Color(0.83f, 0.18f, 0.18f, 1f); // #D32F2F
 
-    [Tooltip("血条是否在 Boss 死亡时隐藏")]
+    [Tooltip("Whether to hide the health bar when the Boss dies")]
     public bool hideOnDeath = true;
 
     [Header("Auto Find")]
-    [Tooltip("用于自动查找 Boss 的 Tag")]
+
     public string bossTag = "Boss";
 
-    [Tooltip("启动时未找到 Boss 时，是否定时重试绑定")]
+
     public bool autoFindBoss = true;
 
-    [Tooltip("自动重试绑定的间隔秒")]
+
     public float findRetryInterval = 0.5f;
 
     [Header("Game Over")]
-    [Tooltip("游戏结束画面的 GameObject")]
+
     public GameObject gameOverCanvas;
-    [Tooltip("结束画面淡入时间")]
+
     public float fadeInDuration = 1f;
 
     Coroutine _retryCo;
@@ -50,13 +50,13 @@ public class BossHealthBarUI : MonoBehaviour
 
     void Start()
     {
-        // 初始化 UI 外观（不影响数值）
+        // Initialize the UI appearance (without affecting the values)
         if (fill) fill.color = fillColor;
 
-        // 先尝试立即绑定
+        // Try to bind immediately
         TryBind(bossHealth);
 
-        // 绑定不到就自动找
+        // If not bound, try to find automatically
         if (!bossHealth && autoFindBoss)
             _retryCo = StartCoroutine(RetryBindRoutine());
         gameOverCanvas.SetActive(false);
@@ -68,7 +68,7 @@ public class BossHealthBarUI : MonoBehaviour
         if (_retryCo != null) { StopCoroutine(_retryCo); _retryCo = null; }
     }
 
-    // —— 绑定 & 事件 ————————————————————————————————————————
+    // —— binding ————————————————————————————————————————
 
     void TryBind(Health h)
     {
@@ -79,7 +79,7 @@ public class BossHealthBarUI : MonoBehaviour
         }
         if (!h) return;
 
-        // 成功找到：绑定
+        // Successfully found: Binding
         bossHealth = h;
         Subscribe();
         InitSliderValues();
@@ -98,7 +98,7 @@ public class BossHealthBarUI : MonoBehaviour
     void Subscribe()
     {
         if (!bossHealth) return;
-        // 先防止重复绑
+        // Prevent duplicate binding
         Unsubscribe();
         bossHealth.onHealthChanged.AddListener(OnHealthChanged);
         bossHealth.onDeath.AddListener(OnBossDeath);
@@ -111,7 +111,7 @@ public class BossHealthBarUI : MonoBehaviour
         bossHealth.onDeath.RemoveListener(OnBossDeath);
     }
 
-    // —— UI 更新 ————————————————————————————————————————————————
+    // —— UI update ————————————————————————————————————————————————
 
     void InitSliderValues()
     {
@@ -124,7 +124,7 @@ public class BossHealthBarUI : MonoBehaviour
         slider.maxValue = max;
         slider.value   = cur;
 
-        // 只设置一次颜色，避免“开局变白”
+        // Set the fill color
         if (fill) fill.color = fillColor;
     }
 
@@ -133,12 +133,11 @@ public class BossHealthBarUI : MonoBehaviour
         if (!slider) return;
         slider.maxValue = max;
         slider.value = Mathf.Clamp(current, 0, max);
-        // 不在这里改 fill.color，避免颜色被覆盖成默认白
     }
 
     void OnBossDeath()
     {
-        // 显示结束画面
+        // Show game over screen
         if (gameOverCanvas)
         {
             gameOverCanvas.transform.SetAsLastSibling();
@@ -155,7 +154,7 @@ public class BossHealthBarUI : MonoBehaviour
             StartCoroutine(FadeIn(gameOverCg));
         }
 
-        // 暂时注释掉血条隐藏逻辑来测试
+        // Temporarily comment out the health bar hiding logic for testing
         // if (!hideOnDeath) return;
         // var healthBarCg = GetComponent<CanvasGroup>();
         // if (healthBarCg) StartCoroutine(FadeOut(healthBarCg));
@@ -167,7 +166,7 @@ public class BossHealthBarUI : MonoBehaviour
 
     IEnumerator FadeIn(CanvasGroup cg)
     {
-        Debug.Log("开始淡入效果"); // 调试信息
+
 
         cg.alpha = 0f;
         float t = 0f;
@@ -175,11 +174,10 @@ public class BossHealthBarUI : MonoBehaviour
         {
             t += Time.unscaledDeltaTime;
             cg.alpha = Mathf.Clamp01(t / fadeInDuration);
-            Debug.Log($"淡入进度: {t}/{fadeInDuration}, Alpha: {cg.alpha}"); // 调试信息
             yield return null;
         }
         cg.alpha = 1f;
-        Debug.Log("淡入效果完成"); // 调试信息
+
     }
 
 
@@ -198,7 +196,7 @@ public class BossHealthBarUI : MonoBehaviour
 #if UNITY_EDITOR
     void OnValidate()
     {
-        // 在编辑器中也尽量自动补引用
+        // Editor-time auto-assign references
         if (!slider) slider = GetComponent<Slider>();
         if (!fill && slider && slider.fillRect)
             fill = slider.fillRect.GetComponent<Image>();

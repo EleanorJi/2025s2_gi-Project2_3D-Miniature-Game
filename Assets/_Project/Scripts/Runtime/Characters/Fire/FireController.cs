@@ -39,7 +39,7 @@ public class FireController : MonoBehaviour
             childInitialPositions[i] = fireChildren[i].localPosition;
             childInitialScales[i] = fireChildren[i].localScale;
             
-            // 计算每个子火焰的边界
+            // Store initial bounds for potential future use
             Renderer renderer = fireChildren[i].GetComponent<Renderer>();
             if (renderer != null)
             {

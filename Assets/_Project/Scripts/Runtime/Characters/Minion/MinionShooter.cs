@@ -3,24 +3,24 @@ using UnityEngine;
 public class MinionShooter : MonoBehaviour
 {
     [Header("Target")]
-    public Transform target;            // 优先使用这个
-    public string targetTag = "Boss";   // 为空时按 Tag 查找
+    public Transform target;            // player
+    public string targetTag = "Boss";   // boss tag
 
     [Header("Shoot")]
-    public Transform firePoint;         // 小兵的开火点（Prefab 里放一个名为 firePoint 的子物体）
-    public GameObject projectilePrefab; // 与玩家同一颗子弹
-    public float fireEvery = 0.7f;      // 开火间隔
-    public int minionDamage = 1;        // 小兵造成的伤害
-    public float rotateSpeed = 10f;     // 朝向转身速度
+    public Transform firePoint;         // Minion's fire point (a child object named firePoint in the prefab)
+    public GameObject projectilePrefab; // Projectile prefab (same as player's)
+    public float fireEvery = 0.7f;      // Fire interval
+    public int minionDamage = 1;        // Minion damage
+    public float rotateSpeed = 10f;     // Rotation speed
 
     [Header("Life")]
-    public float lifeTime = 20f;        // N 秒后自动销毁
+    public float lifeTime = 20f;        // Auto-destroy after N seconds
 
     private float lastFireTime;
 
     void Start()
     {
-        // 自动找 firePoint（名称里含 fire 的 Transform）
+        // Auto find firePoint if not assigned
         if (firePoint == null)
         {
             var t = transform.Find("firePoint");
@@ -50,14 +50,14 @@ public class MinionShooter : MonoBehaviour
 
     void Update()
     {
-        // 持续尝试获取目标
+        // Auto find target if lost
         if (target == null)
         {
             var go = GameObject.FindGameObjectWithTag(targetTag);
             if (go) target = go.transform;
         }
 
-        // 朝向目标：小兵本体水平转，firePoint 对准三维方向
+        // auto rotate towards target
         if (target != null)
         {
             Vector3 flat = target.position - transform.position; flat.y = 0f;
@@ -72,7 +72,7 @@ public class MinionShooter : MonoBehaviour
                 firePoint.rotation = Quaternion.LookRotation(aim.normalized, Vector3.up);
         }
 
-        // 自动开火
+        // Auto fire
         if (Time.time - lastFireTime >= fireEvery && projectilePrefab != null)
         {
             lastFireTime = Time.time;
@@ -81,7 +81,7 @@ public class MinionShooter : MonoBehaviour
             var proj = go.GetComponent<PoisonProjectile>();
             if (proj != null)
             {
-                proj.damage = minionDamage;   // 小兵伤害 = 1
+                proj.damage = minionDamage;   // damage = 1
                 proj.targetTag = targetTag;
             }
         }

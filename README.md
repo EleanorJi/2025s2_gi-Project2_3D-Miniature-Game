@@ -330,8 +330,16 @@ The game is set in a fully 3D environment, but with level design that encourages
 
     - Garden Resources (Gardens, Soil, Insect NPCs, Water Pipes, Leaves, Matches)
     - Road Resources (Vehicles, Traffic Signs, Trash Cans, Trees, Buildings)
-    - Dock Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
+    - Beach Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
+    <p align="center">
+      <img src="images/beach.png" alt="Honey block" width="400">
+    </p>  
+
     - Enemies (Spider, Pigeon Boss)
+    <p align="center">
+      <img src="images/pigeon.png" alt="Honey block" width="400">
+    </p> 
+    
     - Collectibles (Food Scraps)
     - Special Effects (Explosion Particles (rendered by shader), Venom Particles, pool shader)
     <p align="center">

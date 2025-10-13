@@ -3,27 +3,28 @@ using UnityEngine;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Shoot")]
-    public Transform firePoint;               // 玩家身上的开火点
-    public GameObject projectilePrefab;       // 火球/毒液的预制体
+    public Transform firePoint;               // The firing point on the player's body
+    public GameObject projectilePrefab;       // Projectile prefab (fireball/poison)
     public float fireCooldown = 0.3f;
-    public int playerDamage = 5;              // ★ 玩家子弹伤害（别在 Inspector 里设成 0）
+    public int playerDamage = 5;              // ★ Player bullet damage (don't set to 0 in Inspector)
     private float lastShotTime;
 
     [Header("Summon")]
-    public GameObject minionPrefab;           // 小兵预制体（带 MinionAnchor + MinionShooter）
+    public GameObject minionPrefab;           // Minion prefab (with MinionAnchor + MinionShooter)
     public int minionCount = 3;
     public float summonSpread = 0.6f;
     public float minionLifetime = 20f;
     public float minionFireInterval = 0.7f;
-    public int minionDamage = 1;              // ★ 小兵子弹伤害 = 1
+    public int minionDamage = 1;              // ★ Minion bullet damage = 1
 
     [Header("Boss")]
-    public Transform boss;                    // 可留空，运行时按 Tag 自动找
+    public Transform boss;                    // Can be left empty, will auto-find by Tag at runtime
     public string bossTag = "Boss";
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P)) TryShoot();
+        if (Input.GetMouseButton(0)) TryShoot();
+
         if (Input.GetKeyDown(KeyCode.K)) SummonMinions();
     }
 
@@ -38,9 +39,9 @@ public class PlayerCombat : MonoBehaviour
         var proj = go.GetComponent<PoisonProjectile>();
         if (proj != null)
         {
-            proj.damage   = playerDamage; // 你 Inspector 里是 5
-            proj.targetTag = "";          // ← 暂时禁用 Tag 过滤，先确保能掉血
-            proj.logHits  = true;         // ← 强制打开日志，保证你能看到命中打印
+            proj.damage   = playerDamage; // ★ Player damage
+            proj.targetTag = "";          // ← Empty means it can hit anything (including Boss)
+            proj.logHits  = true;         // ← Force enable log to ensure you can see hit prints
         }
     }
 
