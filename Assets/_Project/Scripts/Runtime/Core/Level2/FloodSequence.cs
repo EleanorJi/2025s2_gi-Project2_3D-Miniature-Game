@@ -192,6 +192,22 @@ public class FloodSequence : MonoBehaviour
         _hint1Shown = _hint2Shown = _hint3Shown = false;
         _startTime = 0;
     }
+    // 公开个只读接口，外部能判断“此刻是否在本水域内”
+    public bool IsPlayerInsideZonePublic() => IsPlayerInsideStartZone();
+    
+    // 供外部（蜘蛛、电击等）调用：把这次死亡当作“死在水域内”来收尾
+    public void HandleDeathInsideExternal()
+    {
+        if (!IsPlayerInsideStartZone()) return;   // 只在确实在本区域内时生效
+    
+        _diedInsideSinceEnter = true;
+        deathCountThisRun++;
+    
+        if (resetCrumbsOnDeath) ResetCrumbs();    // 清零全局饼干 + 恢复关内掉落
+        if (warpOnDeath) WarpPlayerToRespawn();   // 立刻回重生点（与你水满时的逻辑一致）
+    
+        ResetSequence();                          // 停止涨水、收起提示、复位水位/音效
+    }
 
     IEnumerator RunFlood()
     {
