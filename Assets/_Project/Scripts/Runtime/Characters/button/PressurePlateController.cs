@@ -7,14 +7,12 @@ public class PressurePlateController : MonoBehaviour
     [SerializeField] private string buttonTriggerLayerName = "ButtonTrigger";
     [SerializeField] private string sugarTag = "Sugar";
 
-    // 旧：板子整体激活/取消（如果别处在用可以继续用）
     public System.Action<bool> OnPlateActivated;
-    // 新：某一块糖被“放下”到板子上（只触发一次）
     public System.Action<GameObject> OnSugarPlaced;
 
     private int buttonTriggerLayer;
-    private readonly HashSet<GameObject> sugarsOnPlate = new();   // 当前在板上的糖
-    private readonly HashSet<GameObject> announcedPlaced = new(); // 已经宣布“放置成功”的糖
+    private readonly HashSet<GameObject> sugarsOnPlate = new();   // The sugar currently on the board
+    private readonly HashSet<GameObject> announcedPlaced = new(); // The sugar that has been announced as "placed successfully"
 
     private void Awake()
     {
@@ -43,7 +41,7 @@ public class PressurePlateController : MonoBehaviour
         if (!IsSugarTrigger(other, out var sugar)) return;
 
         sugarsOnPlate.Remove(sugar);
-        announcedPlaced.Remove(sugar); // 离开后下次再放还能再次触发
+        announcedPlaced.Remove(sugar); // After leaving, it can be triggered again the next time you release it
         if (sugarsOnPlate.Count == 0)
         {
             OnPlateActivated?.Invoke(false);
@@ -55,10 +53,9 @@ public class PressurePlateController : MonoBehaviour
     {
         if (!IsSugarTrigger(other, out var sugar)) return;
 
-        // 方案 B：只看“是否还是玩家体系的子物体”
         bool isCarried = sugar.GetComponentInParent<PlayerController>() != null;
 
-        // 在板上 && 已放下（不是被拿着）&& 这块糖还没宣布过
+        // On the plate && Placed (not being carried) && This sugar has not been announced yet
         if (sugarsOnPlate.Contains(sugar) && !isCarried && !announcedPlaced.Contains(sugar))
         {
             announcedPlaced.Add(sugar);
@@ -67,7 +64,6 @@ public class PressurePlateController : MonoBehaviour
         }
     }
 
-    // 工具：从子触发器拿到糖的父物体，并校验层/Tag
     private bool IsSugarTrigger(Collider other, out GameObject sugarParent)
     {
         sugarParent = null;

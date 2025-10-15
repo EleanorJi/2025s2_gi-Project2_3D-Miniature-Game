@@ -9,7 +9,7 @@ public class PoisonProjectile : MonoBehaviour
 
     [Header("Damage")]
     public int damage = 1;
-    public string targetTag = "Boss"; // 可留空；留着兼容 PlayerCombat/MinionShooter 的赋值
+    public string targetTag = "Boss";
 
     [Header("Debug")]
     public bool logHits = false;
@@ -24,11 +24,11 @@ public class PoisonProjectile : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         selfCol = GetComponent<Collider>();
 
-        // 触发器 + 运动由我们驱动
+        // The movement of the trigger is driven by us
         if (selfCol) selfCol.isTrigger = true;
         if (rb) { rb.isKinematic = true; rb.useGravity = false; }
 
-        // 取球半径（如果用的是 SphereCollider）
+        // Get the sphere radius (if using a SphereCollider)
         var sc = GetComponent<SphereCollider>();
         if (sc != null) sphereRadius = Mathf.Max(0.01f, sc.radius * Mathf.Max(transform.lossyScale.x, Mathf.Max(transform.lossyScale.y, transform.lossyScale.z)));
     }
@@ -41,10 +41,10 @@ public class PoisonProjectile : MonoBehaviour
 
     void FixedUpdate()
     {
-        // 先计算下一帧位置
+        // First, calculate the next frame position
         Vector3 nextPos = transform.position + transform.forward * speed * Time.fixedDeltaTime;
 
-        // 在 lastPos → nextPos 之间做扫掠，包含 Trigger
+        // Sweep between lastPos → nextPos, including Trigger
         Vector3 dir = nextPos - lastPos;
         float dist = dir.magnitude;
         if (dist > 0f)
@@ -55,13 +55,13 @@ public class PoisonProjectile : MonoBehaviour
                 var hit = hits[i];
                 if (hit.collider == null || hit.collider == selfCol) continue;
 
-                // 先找父层级的 Health（命中 Boss 的任意子碰撞体都能扣血）
+                
                 var h = hit.collider.GetComponentInParent<Health>();
                 if (h != null)
                 {
                     if (!string.IsNullOrEmpty(targetTag))
                     {
-                        // 如果你坚持按 Tag 过滤，就要求 Health 节点或其父节点有这个 Tag
+                        
                         var root = h.gameObject;
                         if (!root.CompareTag(targetTag) && !(root.transform.parent && root.transform.parent.CompareTag(targetTag)))
                         {
@@ -78,7 +78,7 @@ public class PoisonProjectile : MonoBehaviour
             }
         }
 
-        // 没命中就推进
+        // If not hit, just move forward
         if (rb && rb.isKinematic) rb.MovePosition(nextPos);
         else transform.position = nextPos;
 

@@ -330,8 +330,16 @@ The game is set in a fully 3D environment, but with level design that encourages
 
     - Garden Resources (Gardens, Soil, Insect NPCs, Water Pipes, Leaves, Matches)
     - Road Resources (Vehicles, Traffic Signs, Trash Cans, Trees, Buildings)
-    - Dock Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
+    - Beach Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
+    <p align="center">
+      <img src="images/beach.png" alt="Honey block" width="400">
+    </p>  
+
     - Enemies (Spider, Pigeon Boss)
+    <p align="center">
+      <img src="images/pigeon.png" alt="Honey block" width="400">
+    </p> 
+    
     - Collectibles (Food Scraps)
     - Special Effects (Explosion Particles (rendered by shader), Venom Particles, pool shader)
     <p align="center">
@@ -360,54 +368,83 @@ The game is set in a fully 3D environment, but with level design that encourages
 
 ## UI
 
--   **UI tool：** Figma, Photoshop, Unity(Canvas)
--   **UI resource:**
-    -   **icon:** [Vector Icons and Stickers - PNG, SVG, EPS, PSD and CSS](https://www.flaticon.com/free-icons/ant)
--   **UI Mockups:**
-    <p align="center">
-      <img src="images/interface.png" alt="UI Interface" width="500">
-    </p>
-    <p align="center">
-      <img src="images/component.png" alt="UI Components" width="500">
-    </p>
+-   **UI Tools:** Figma, Photoshop, Unity Canvas
+-   **Resources:** Custom cursor designs, UI icons, hand-drawn interface elements
 
-### UI/UX Flow
-A visual or descriptive flowchart of the user's navigation through the game's interfaces.
-*(A visual flowchart will be added here.)*
-*   **Example Flow:** `Main Menu` -> `(Level Select)` -> `Loading Screen` -> `In-Game HUD` -> `Pause Menu` -> `Level Complete/Fail Screen` -> `Return to Main Menu`
+### Custom Cursor System
+The game features a custom cursor system with two distinct designs:
 
-### In-Game HUD (Heads-Up Display)
-Core information displayed on-screen during gameplay.
-*(A visual mockup of the HUD will be added here.)*
-*   **Cookie Crumb Counter:** Clearly displays the quantity of the summoning resource.
-*   **Summoned/Available Ants:** Shows the types and number of ants currently available.
-*   **Ability Cooldowns:** Visual indicator for skills like Sprint.
-*   **Interaction Prompts:** Contextual prompts like "Press E to Interact" when near objects.
-*   **Objective Reminder:** A simple text reminder of the current goal (e.g., "Reclaim the cookie!").
+**Cursor Types:**
+- **Default Cursor:** Arrow pointer for general navigation
+- **Hover Cursor:** Hand icon indicating interactive elements
 
-### Menu Details
-Detailed breakdown of what each menu contains.
-*(Visual mockups for these menus will be added as they are designed.)*
-*   **Pause Menu:**
-    *   `Resume`
-    *   `Restart Level`
-    *   `Options`
-    *   `Back to Main Menu`
-*   **Options Menu:**
-    *   `Audio Settings`: Sliders/toggles for master, music, and SFX volume.
-    *   `Graphics Settings`: Options for quality (Low, Medium, High).
-    *   `Controls`: Display of keybindings.
-*   **Level Complete Screen:**
-    *   `Time Taken`
-    *   `Collectibles Found` (e.g., Total cookie crumbs)
-    *   Buttons for `Next Level` or `Replay`.
+<p align="center">
+  <img src="images/cursor_default.png" alt="Default Cursor" width="120">
+  <img src="images/cursor_hover.png" alt="Hover Cursor" width="120">
+</p>
 
-### Interaction & Feedback
-How UI elements respond to user input.
-*(Examples of these states will be visualized later.)*
-*   **Button States:** Visual changes for `Hover`, `Clicked`, and `Disabled` states.
-*   **Feedback on Collection:** A brief animation or sound effect when picking up cookie crumbs.
-*   **Summoning Feedback:** Visual and audio cues to confirm an ant has been successfully summoned.
+**Cursor Behavior:**
+- **Main Menu & Settings:** Visible, switches between default and hover on buttons
+- **Active Gameplay:** Hidden and locked for immersion
+- **Pause Menu (ESC):** Automatically shows when paused, hides when resumed
+
+**Platform Optimization:**
+- Desktop: 64x64 original size
+- WebGL: Auto-scaled to 32x32 for browser window mode
+- Managed by `UnifiedCursorManager` for consistent behavior across all scenes
+
+### UI Flow
+```
+Main Menu (Start Scene) → [Play/Tutorial] → In-Game → [ESC] → Pause Menu
+     ↓                                                              ↓
+Settings Panel ←------------------------------------------------ Exit
+```
+
+### Main Menu
+- **Play Button (A):** Start game
+- **Tut Button (B):** Tutorial level
+- **Settings Icon (⚙️):** Audio settings panel
+
+<p align="center">
+  <img src="images/home_menu.png" alt="Main Menu" width="600">
+</p>
+
+### Settings Panel
+Audio controls accessible from main menu:
+- **Music Volume:** 0-100% slider with real-time preview
+- **SFX Volume:** Independent sound effects control
+- Settings persist via PlayerPrefs
+
+<p align="center">
+  <img src="images/settings_panel.png" alt="Settings Panel" width="500">
+</p>
+
+### In-Game HUD
+Minimalist display showing:
+- Cookie crumb counter
+- Summoned ants status
+- Interaction prompts (Press E/C)
+- Objective text
+
+<p align="center">
+  <img src="images/in_game_hud.png" alt="In-Game HUD" width="600">
+</p>
+
+### Pause Menu (ESC)
+Accessible during gameplay by pressing ESC:
+- **Resume:** Return to game
+- **Music/SFX Sliders:** Adjust audio in real-time
+- **Exit:** Return to main menu
+- Pauses all physics (Time.timeScale = 0)
+
+<p align="center">
+  <img src="images/pause_menu.png" alt="Pause Menu" width="500">
+</p>
+
+### UI Interactions
+- **Hover:** 105% scale, 90% opacity, hand cursor
+- **Click:** 95% scale, audio feedback
+- **Audio:** Subtle sounds for hover/click/slider adjustments
 
 ---
 
