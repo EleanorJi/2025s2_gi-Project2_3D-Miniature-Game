@@ -20961,7 +20961,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 0}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!114 &314364175
 MonoBehaviour:
@@ -32919,7 +32919,7 @@ RectTransform:
   m_GameObject: {fileID: 661826228}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.3, z: 0.5}
+  m_LocalScale: {x: 0.55, y: 0.55, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1388619328}
@@ -32955,7 +32955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.38431373}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -32995,7 +32995,7 @@ MonoBehaviour:
   panel: {fileID: 661826230}
   messageText: {fileID: 1388619329}
   pictureImage: {fileID: 661826231}
-  defaultMessage: "\u4F60\u6B7B\u4E86"
+  defaultMessage: You dead!!!
   defaultSprite: {fileID: 0}
   defaultHoldSeconds: 4
 --- !u!1 &663657745 stripped
@@ -35363,7 +35363,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &756971219 stripped
 GameObject:
@@ -36034,7 +36034,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &853520135
 GameObject:
@@ -43503,7 +43503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &989162843
 GameObject:
@@ -44452,7 +44452,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   overrideMessage: You were swept away by a powerful underground wind...
-  overrideSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  overrideSprite: {fileID: 21300000, guid: 3a9204f24ebf0484ca3f6ef8610a3f63, type: 3}
   holdSeconds: 4
 --- !u!1001 &1062172034
 PrefabInstance:
@@ -45788,7 +45788,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1001 &1110318121
 PrefabInstance:
@@ -45970,7 +45970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1001 &1110477256
 PrefabInstance:
@@ -47051,7 +47051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &1171339532
 GameObject:
@@ -50490,8 +50490,8 @@ Transform:
   m_GameObject: {fileID: 1289857011}
   serializedVersion: 2
   m_LocalRotation: {x: 1.8290181e-18, y: 0.1758193, z: 0.000000020959291, w: 0.9844225}
-  m_LocalPosition: {x: 4.126999, y: 0.41871, z: 3.3054504}
-  m_LocalScale: {x: 0.5610873, y: 1, z: 1}
+  m_LocalPosition: {x: 4.126999, y: -0.03, z: 3.3054504}
+  m_LocalScale: {x: 0.5610873, y: 1, z: 1.355}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1171339533}
@@ -50510,7 +50510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   overrideMessage: You're trapped in a spider's web, destined to be its lunch...
-  overrideSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  overrideSprite: {fileID: 21300000, guid: b0247bd2254384faf85d531018abea9c, type: 3}
   holdSeconds: 4
 --- !u!1 &1291791030 stripped
 GameObject:
@@ -51772,7 +51772,7 @@ MonoBehaviour:
   killWhenFull: 1
   slowFactor: 0.75
   deathMessage: You were submerged by the rising water...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 30da753d1e3fc469a828baec5de56930, type: 3}
   deathDuration: 4
   requiredCrumbs: 3
   currentCrumbs: 0
@@ -51950,7 +51950,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 0}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!114 &1375684159
 MonoBehaviour:
@@ -52020,7 +52020,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -390}
-  m_SizeDelta: {x: 600, y: 300}
+  m_SizeDelta: {x: 2000, y: 600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1388619329
 MonoBehaviour:
@@ -52051,8 +52051,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279765912
-  m_fontColor: {r: 0.5943396, g: 0.042052325, b: 0.09595556, a: 1}
+    rgba: 4278190268
+  m_fontColor: {r: 0.735849, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -52069,8 +52069,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
-  m_fontSizeBase: 72
+  m_fontSize: 90
+  m_fontSizeBase: 90
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -52341,7 +52341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1001 &1417416311
 PrefabInstance:
@@ -67629,7 +67629,7 @@ MonoBehaviour:
   setKinematicWhileStuck: 0
   zeroVelocityWhileStuck: 1
   deathMessage: Trapped by honey, failed to break free...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: e5944f3c558a54974aafa3acd4fff43a, type: 3}
   deathDuration: 4
   mashPressSfx: {fileID: 8300000, guid: 956bb3f727e7945399764e74f6a4e1cd, type: 3}
   mashPressVolume: 1
@@ -68168,7 +68168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 0}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!114 &1693235944
 MonoBehaviour:
@@ -69474,7 +69474,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &1768417473
 GameObject:
@@ -70986,7 +70986,7 @@ MonoBehaviour:
   snapRotation: 1
   snapOffset: {x: 0, y: 0, z: 0}
   deathMessage: Without something to slow me down, I crashed to my death...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 9169f09b9507c4cf687b30dbaf5f7c4e, type: 3}
   deathDuration: 4
 --- !u!4 &1868009338 stripped
 Transform:
@@ -71223,7 +71223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 0}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!114 &1884663882
 MonoBehaviour:
@@ -72197,7 +72197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1001 &1939954430
 PrefabInstance:
@@ -72461,7 +72461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 0}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!114 &1941794239
 MonoBehaviour:
@@ -72846,7 +72846,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &1945602577 stripped
 GameObject:
@@ -74509,7 +74509,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &2071180876
 GameObject:
@@ -75790,7 +75790,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 21300000, guid: 1539d03e1986f96458554f814e40b3a8, type: 3}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!1 &2135577477 stripped
 GameObject:
@@ -75833,7 +75833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathMessage: You got bugged out...
-  deathSprite: {fileID: 0}
+  deathSprite: {fileID: 21300000, guid: 4138b359cf5c24b5d89a9952873847b7, type: 3}
   deathDuration: 4
 --- !u!114 &2135577481
 MonoBehaviour:
