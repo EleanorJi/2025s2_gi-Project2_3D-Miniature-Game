@@ -3877,6 +3877,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 719573356}
+  - {fileID: 1020787933}
   - {fileID: 819234421}
   - {fileID: 1658887132}
   - {fileID: 1441741337}
@@ -6359,6 +6360,79 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1588332092}
   m_SourcePrefab: {fileID: 100100000, guid: 6d7b1b7dbbae8b04999632ec36943117, type: 3}
+--- !u!1 &492040228
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 492040229}
+  - component: {fileID: 492040231}
+  - component: {fileID: 492040230}
+  m_Layer: 0
+  m_Name: rightCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &492040229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492040228}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1020787933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &492040230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492040228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65927f56d53364ed58f04de6d6fc701d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  overrideMessage: You were crushed to death.
+  overrideSprite: {fileID: 21300000, guid: 2b1ff3ce0a086488c922b6e0f2c9e6f0, type: 3}
+  holdSeconds: 4
+  enableWaterAreaIntegration: 0
+  waterArea: {fileID: 0}
+  autoFindContainingArea: 1
+--- !u!65 &492040231
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492040228}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.5753953, y: 0.2882688, z: 4.765981}
+  m_Center: {x: -0.1778296, y: -0.35587066, z: 0.2812973}
 --- !u!1 &494543626
 GameObject:
   m_ObjectHideFlags: 0
@@ -8567,6 +8641,79 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2774220344278030320, guid: b73e6047f25bdd241b1c319eb0f5b19e, type: 3}
   m_PrefabInstance: {fileID: 719573355}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &725293873
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 725293874}
+  - component: {fileID: 725293875}
+  - component: {fileID: 725293877}
+  m_Layer: 0
+  m_Name: leftCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &725293874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725293873}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1020787933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &725293875
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725293873}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.48045248, y: 0.2882688, z: 4.765981}
+  m_Center: {x: 0.24344635, y: -0.35587072, z: 0.28129733}
+--- !u!114 &725293877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 725293873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65927f56d53364ed58f04de6d6fc701d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  overrideMessage: You were crushed to death.
+  overrideSprite: {fileID: 21300000, guid: 2b1ff3ce0a086488c922b6e0f2c9e6f0, type: 3}
+  holdSeconds: 4
+  enableWaterAreaIntegration: 0
+  waterArea: {fileID: 0}
+  autoFindContainingArea: 1
 --- !u!1001 &727823848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10268,7 +10415,7 @@ RectTransform:
   m_GameObject: {fileID: 865430957}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4609031, y: 0.4609031, z: 0.4609031}
+  m_LocalScale: {x: 0.29748493, y: 0.29748493, z: 0.29748493}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 889126344}
@@ -11366,6 +11513,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 661459616}
   m_LocalEulerAnglesHint: {x: 0, y: 58.012, z: 0}
+--- !u!1 &1020787932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1020787933}
+  - component: {fileID: 1020787934}
+  m_Layer: 0
+  m_Name: BottomDeathController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1020787933
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020787932}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.475438, z: -0, w: 0.87974924}
+  m_LocalPosition: {x: -14.699997, y: 7.3099995, z: -6.2699966}
+  m_LocalScale: {x: 1.5000001, y: 1.5, z: 2.5}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 725293874}
+  - {fileID: 492040229}
+  m_Father: {fileID: 280338552}
+  m_LocalEulerAnglesHint: {x: 0, y: 56.776, z: 0}
+--- !u!114 &1020787934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1020787932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d56d4d3b465844f97e9fc0eb391b13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cucumberTarget: {fileID: 819234421}
+  leftBottomCollider: {fileID: 492040231}
+  rightBottomCollider: {fileID: 725293875}
 --- !u!1001 &1023340593
 PrefabInstance:
   m_ObjectHideFlags: 0
