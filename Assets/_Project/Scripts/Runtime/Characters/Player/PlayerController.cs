@@ -220,6 +220,9 @@ public class PlayerController : MonoBehaviour
                 Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
                 if (itemRb) itemRb.isKinematic = true;
 
+                // 添加拿起物品的音效
+                GlobalSfx.PlayLeafPickupSfx(transform.position);
+
                 Debug.Log("Picked up: " + carriedItem.name);
             }
             else if (carriedItem != null)
@@ -271,6 +274,8 @@ public class PlayerController : MonoBehaviour
                 // Give the object a small forward push to make it fall more naturally.
                 itemRb.linearVelocity = Vector3.zero;
             }
+            // 添加放下物品的音效
+            GlobalSfx.PlayLeafPickupSfx(transform.position);
 
             Debug.Log("Dropped: " + carriedItem.name + " at position: " + dropPoint.position);
             carriedItem = null;
