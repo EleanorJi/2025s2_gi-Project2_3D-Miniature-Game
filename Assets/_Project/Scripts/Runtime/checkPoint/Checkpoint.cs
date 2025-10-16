@@ -79,20 +79,28 @@ public class Checkpoint : MonoBehaviour
     {
         if (UIManager.Instance != null && !string.IsNullOrEmpty(hintText))
         {
-            UIManager.Instance.ShowHintText(hintText);
-            
-            // If there is an ongoing hidden coroutine, stop it first.
-            if (hideCoroutine != null)
-            {
-                StopCoroutine(hideCoroutine);
-            }
-            
-            // Start a new automatic hiding coroutine
-            hideCoroutine = StartCoroutine(AutoHideAfterDelay());
-            
-            Debug.Log($"Display the checkpoint prompt will disappear automatically in {gameObject.name}, {autoHideDelay}seconds");
+            // 使用 UIManager 的新方法，传递自动隐藏延迟时间
+            UIManager.Instance.ShowHintText(hintText, autoHideDelay);
+
+            Debug.Log($"Display checkpoint prompt: {gameObject.name}, will auto-hide in {autoHideDelay} seconds");
         }
     }
+
+
+    /// <summary>
+    /// Display the checkpoint prompt text with custom text
+    /// </summary>
+    public void ShowCheckpointHint(string customHintText)
+    {
+        if (UIManager.Instance != null && !string.IsNullOrEmpty(customHintText))
+        {
+            // 使用 UIManager 的新方法，传递自动隐藏延迟时间
+            UIManager.Instance.ShowHintText(customHintText, autoHideDelay);
+
+            Debug.Log($"Display custom checkpoint prompt: {gameObject.name}, will auto-hide in {autoHideDelay} seconds");
+        }
+    }
+
     
     private IEnumerator AutoHideAfterDelay()
     {
