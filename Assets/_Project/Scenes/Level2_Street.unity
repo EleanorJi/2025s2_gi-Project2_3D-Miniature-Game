@@ -7742,7 +7742,7 @@ MonoBehaviour:
   root: {fileID: 107656097}
   bodyText: {fileID: 1379410492}
   typingAudio: {fileID: 904548699}
-  secondsPerChar: 0.1
+  secondsPerChar: 0.01
 --- !u!1 &117907913
 GameObject:
   m_ObjectHideFlags: 0
@@ -46324,7 +46324,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -53465,7 +53465,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
