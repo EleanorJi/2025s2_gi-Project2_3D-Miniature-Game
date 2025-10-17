@@ -27,7 +27,7 @@ public class StickyGooMashR : MonoBehaviour
     public Transform smallLevelStart = null; // leave null: on fail/Nth time we call pc.Die()
 
     [Header("Key")]
-    public KeyCode mashKey = KeyCode.J;
+    public KeyCode mashKey = KeyCode.Space;
 
     [Header("Freeze")]
     public bool setKinematicWhileStuck = true;
