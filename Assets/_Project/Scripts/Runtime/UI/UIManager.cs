@@ -44,6 +44,9 @@ namespace Antventure.UI
         public bool IsPauseMenuOpen { get; private set; }
         public bool IsLoadingScreenActive { get; private set; }
 
+        // Hint text management
+        private Coroutine autoHideCoroutine;
+
         private void Awake()
         {
             // Singleton pattern implementation
@@ -129,14 +132,35 @@ namespace Antventure.UI
         }
         
         /// <summary>
-        /// show hint text
+        /// show hint text without auto-hide
         /// </summary>
         public void ShowHintText(string text)
         {
             if (hintTextPanel != null && hintText != null)
             {
+                // Stop any existing auto-hide coroutine
+                if (autoHideCoroutine != null)
+                {
+                    StopCoroutine(autoHideCoroutine);
+                    autoHideCoroutine = null;
+                }
+                
                 hintText.text = text;
                 hintTextPanel.SetActive(true);
+            }
+        }
+
+        /// <summary>
+        /// show hint text with auto-hide after specified delay
+        /// </summary>
+        public void ShowHintText(string text, float autoHideDelay)
+        {
+            ShowHintText(text);
+            
+            if (autoHideDelay > 0)
+            {
+                // Start new auto-hide coroutine
+                autoHideCoroutine = StartCoroutine(HideHintAfterDelay(autoHideDelay));
             }
         }
 
@@ -148,6 +172,13 @@ namespace Antventure.UI
             if (hintTextPanel != null)
             {
                 hintTextPanel.SetActive(false);
+                
+                // Stop any running auto-hide coroutine
+                if (autoHideCoroutine != null)
+                {
+                    StopCoroutine(autoHideCoroutine);
+                    autoHideCoroutine = null;
+                }
             }
         }
 
@@ -156,10 +187,7 @@ namespace Antventure.UI
         /// </summary>
         public void ShowStoveSafeHint()
         {
-            ShowHintText(stoveSaveHintText);
-            
-            // The prompt will automatically disappear after 5 seconds.
-            StartCoroutine(HideHintAfterDelay(5f));
+            ShowHintText(stoveSaveHintText, 5f);
         }
 
         private IEnumerator HideHintAfterDelay(float delay)

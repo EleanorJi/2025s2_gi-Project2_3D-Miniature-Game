@@ -12,6 +12,12 @@ public class StoveDangerZone : MonoBehaviour
     [Header("Status tracking")]
     private bool wasDangerousLastCheck = true; // The default assumption is that it is initially dangerous.
 
+    [Header("Death UI Settings (Stove Specific)")]
+    [TextArea] public string deathMessage = "你被火焰吞噬了！";
+    public Sprite deathSprite;
+    [Tooltip("<=0 uses default duration")]
+    public float deathHoldSeconds = 4f;
+
     void Start()
     {
         if (associatedFires == null || associatedFires.Length == 0)
@@ -107,6 +113,20 @@ public class StoveDangerZone : MonoBehaviour
         if (isDangerousNow)
         {
             Debug.Log("The player encounters a dangerous stove!");
+
+            // 播放死亡音效
+            GlobalSfx.PlayDeathSfx();
+
+            // 显示可配置的死亡 UI
+            if (DeathUIOverlay.Instance != null)
+            {
+                if (deathHoldSeconds > 0f)
+                    DeathUIOverlay.Instance.Show(deathMessage, deathSprite, deathHoldSeconds);
+                else
+                    DeathUIOverlay.Instance.Show(deathMessage, deathSprite, null);
+            }
+
+            // 杀死玩家
             player.Die();
         }
         else

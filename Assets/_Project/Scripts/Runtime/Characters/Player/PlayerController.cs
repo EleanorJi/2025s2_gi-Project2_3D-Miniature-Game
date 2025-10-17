@@ -27,8 +27,6 @@ public class PlayerController : MonoBehaviour
     [Header("Death and Rebirth Parameters")]
     public float maxSafeFallDistance = 5f;
     public Transform respawnPoint;
-    private float lastAirY;
-    private bool wasGrounded;
 
     // Component reference
     private Rigidbody rb;
@@ -126,19 +124,9 @@ public class PlayerController : MonoBehaviour
         // Update the movement status (for animation)
         UpdateMovementState();
 
-        // Update the ground status
-        UpdateGroundState();
-
         // Handling jumps and pickup
         HandleJump();
         HandlePickup();
-
-        // Record the height at the moment of leaving the ground
-        if (!(groundContactCount > 0) && wasGrounded)
-        {
-            lastAirY = transform.position.y;
-        }
-        wasGrounded = groundContactCount > 0;
 
         // Debugging: Pressing the R key results in death.
         if (Input.GetKeyDown(KeyCode.R))
@@ -175,20 +163,6 @@ public class PlayerController : MonoBehaviour
         if (antAnimator != null)
         {
             antAnimator.SetBool("IsMoving", isMoving);
-        }
-    }
-
-    void UpdateGroundState()
-    {
-        bool newGroundedState = groundContactCount > 0;
-
-        if (!wasGrounded && newGroundedState)
-        {
-            float fallDistance = lastAirY - transform.position.y;
-            if (fallDistance > maxSafeFallDistance)
-            {
-                Die();
-            }
         }
     }
 
@@ -246,6 +220,9 @@ public class PlayerController : MonoBehaviour
                 Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
                 if (itemRb) itemRb.isKinematic = true;
 
+                // 添加拿起物品的音效
+                GlobalSfx.PlayLeafPickupSfx(transform.position);
+
                 Debug.Log("Picked up: " + carriedItem.name);
             }
             else if (carriedItem != null)
@@ -297,6 +274,8 @@ public class PlayerController : MonoBehaviour
                 // Give the object a small forward push to make it fall more naturally.
                 itemRb.linearVelocity = Vector3.zero;
             }
+            // 添加放下物品的音效
+            GlobalSfx.PlayLeafPickupSfx(transform.position);
 
             Debug.Log("Dropped: " + carriedItem.name + " at position: " + dropPoint.position);
             carriedItem = null;
@@ -326,11 +305,6 @@ public class PlayerController : MonoBehaviour
             {
                 stove.OnPlayerEnter(this);
             }
-        }
-        // Detecting collisions with the Water
-        else if (collision.gameObject.CompareTag("Water"))
-        {
-            Die();
         }
 
     }
