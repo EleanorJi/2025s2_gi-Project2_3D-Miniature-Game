@@ -1,4 +1,6 @@
 using UnityEngine;
+
+#if UNITY_EDITOR
 using UnityEditor;
 
 public class SetMaterialOpaque : EditorWindow
@@ -41,3 +43,4 @@ public class SetMaterialOpaque : EditorWindow
         Debug.Log($"✅ 已将 {count} 个材质改为 Opaque。");
     }
 }
+#endif
