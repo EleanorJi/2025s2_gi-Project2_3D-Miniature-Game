@@ -23,7 +23,7 @@ public class ChargeJumpZone : MonoBehaviour
     [Header("Entry Hint UI (Optional)")]
     public CanvasGroup hintGroup;           // drag a panel (CanvasGroup), default alpha=0
     public TMP_Text hintText;               // text on panel
-    [TextArea] public string enterMessage = "在这个区域不要被粘稠的垃圾汤粘住！";
+    [TextArea] public string enterMessage = "Don't get stuck in the sticky garbage soup in this area!";
     public float hintFadeIn = 0.2f;
     public float hintStay   = 2.0f;
     public float hintFadeOut= 0.2f;
