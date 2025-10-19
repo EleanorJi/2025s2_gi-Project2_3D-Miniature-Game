@@ -5706,7 +5706,7 @@ MonoBehaviour:
   homeButton: {fileID: 0}
   winTitle: Congratulations!
   subTemplate: "You\u2019ve completed the tutorial.\nBack to Home in {0}s"
-  homeSceneName: StartScene
+  homeSceneName: Level1-2
   autoReturnDelay: 5
 --- !u!1 &1840654378
 GameObject:
