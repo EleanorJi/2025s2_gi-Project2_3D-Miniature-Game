@@ -7,6 +7,7 @@ namespace Antventure.UI.Menus
     {
         [Header("Scene Settings")]
         [SerializeField] private string  firstLevelSceneName = "Level1";
+        [SerializeField] private string secondLevelSceneName = "Level1-2";
         [SerializeField] private string tutorialSceneName = "Tutorial";
 
         [Header("Audio Settings")]
@@ -40,7 +41,7 @@ namespace Antventure.UI.Menus
         public void OnPlayClicked()
         {
             PlayClickSound();
-            SceneManager.LoadScene(firstLevelSceneName);
+            SceneManager.LoadScene(tutorialSceneName);
         }
 
         // Team Button Clicks (formerly Tutorial Button)
