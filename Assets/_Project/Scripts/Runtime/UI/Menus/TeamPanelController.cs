@@ -60,36 +60,57 @@ namespace Antventure.UI.Menus
         /// </summary>
         private void FindTeamPanel()
         {
+            Debug.Log("[TEAM PANEL] Starting FindTeamPanel()...");
+            
             // Method 1: Try direct find first (for backward compatibility)
             teamPanel = GameObject.Find("TeamPanel");
-            
-            if (teamPanel == null)
+            if (teamPanel != null)
             {
-                // Method 2: Search in Canvas hierarchy
-                Canvas canvas = FindObjectOfType<Canvas>();
-                if (canvas != null)
+                Debug.Log("[TEAM PANEL] Found TeamPanel using GameObject.Find()");
+                return;
+            }
+            
+            Debug.Log("[TEAM PANEL] TeamPanel not found with GameObject.Find(), searching in Canvas...");
+            
+            // Method 2: Search in Canvas hierarchy
+            Canvas canvas = FindObjectOfType<Canvas>();
+            if (canvas != null)
+            {
+                Debug.Log($"[TEAM PANEL] Found Canvas: {canvas.name}");
+                Transform teamPanelTransform = canvas.transform.Find("TeamPanel");
+                if (teamPanelTransform != null)
                 {
-                    Transform teamPanelTransform = canvas.transform.Find("TeamPanel");
-                    if (teamPanelTransform != null)
+                    teamPanel = teamPanelTransform.gameObject;
+                    Debug.Log("[TEAM PANEL] Found TeamPanel in Canvas");
+                    return;
+                }
+                else
+                {
+                    Debug.Log("[TEAM PANEL] TeamPanel not found as direct child, searching deeper...");
+                    // Method 3: Search deeper in Canvas children
+                    Transform[] allChildren = canvas.GetComponentsInChildren<Transform>(true);
+                    Debug.Log($"[TEAM PANEL] Searching through {allChildren.Length} children...");
+                    
+                    foreach (Transform child in allChildren)
                     {
-                        teamPanel = teamPanelTransform.gameObject;
-                        Debug.Log(" Found TeamPanel in Canvas");
-                    }
-                    else
-                    {
-                        // Method 3: Search deeper in Canvas children
-                        Transform[] allChildren = canvas.GetComponentsInChildren<Transform>(true);
-                        foreach (Transform child in allChildren)
+                        Debug.Log($"[TEAM PANEL] Checking child: {child.name}");
+                        if (child.name == "TeamPanel")
                         {
-                            if (child.name == "TeamPanel")
-                            {
-                                teamPanel = child.gameObject;
-                                Debug.Log($" Found TeamPanel in Canvas children: {GetGameObjectPath(teamPanel)}");
-                                break;
-                            }
+                            teamPanel = child.gameObject;
+                            Debug.Log($"[TEAM PANEL] Found TeamPanel in Canvas children: {GetGameObjectPath(teamPanel)}");
+                            break;
                         }
                     }
                 }
+            }
+            else
+            {
+                Debug.LogError("[TEAM PANEL] No Canvas found in scene!");
+            }
+
+            if (teamPanel == null)
+            {
+                Debug.LogError("[TEAM PANEL] TeamPanel could not be found anywhere in the scene!");
             }
 
             // Set up background button if TeamPanel was found
@@ -99,7 +120,7 @@ namespace Antventure.UI.Menus
                 if (backgroundButton == null)
                 {
                     backgroundButton = teamPanel.AddComponent<Button>();
-                    Debug.Log(" Added Button component to TeamPanel");
+                    Debug.Log("[TEAM PANEL] Added Button component to TeamPanel");
                 }
             }
         }
@@ -124,23 +145,35 @@ namespace Antventure.UI.Menus
         /// </summary>
         public void OpenTeamPanel()
         {
+            Debug.Log("[TEAM PANEL] OpenTeamPanel() called");
+            
             // If teamPanel is null, try to find it
             if (teamPanel == null)
             {
+                Debug.Log("[TEAM PANEL] teamPanel is null, trying to find it...");
                 FindTeamPanel();
             }
 
             if (teamPanel != null)
             {
+                Debug.Log($"[TEAM PANEL] Found teamPanel: {teamPanel.name}, setting active to true");
                 teamPanel.SetActive(true);
                 PlaySound(openSound);
                 
-                Debug.Log("Team panel opened");
+                Debug.Log("[TEAM PANEL] Team panel opened successfully");
             }
             else
             {
-                Debug.LogWarning("Team panel reference is not assigned and could not be found!");
-                Debug.LogWarning("Please ensure TeamPanel exists in the Canvas hierarchy");
+                Debug.LogError("[TEAM PANEL] Team panel reference is not assigned and could not be found!");
+                Debug.LogError("[TEAM PANEL] Please ensure TeamPanel exists in the Canvas hierarchy");
+                
+                // Let's also try to find all Canvas objects for debugging
+                Canvas[] allCanvases = FindObjectsOfType<Canvas>();
+                Debug.Log($"[TEAM PANEL] Found {allCanvases.Length} Canvas objects in scene:");
+                foreach (Canvas canvas in allCanvases)
+                {
+                    Debug.Log($"[TEAM PANEL] Canvas: {canvas.name}");
+                }
             }
         }
 
