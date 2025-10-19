@@ -16,6 +16,9 @@ namespace Antventure.UI.Menus
         
         [Header("Settings")]
         [SerializeField] private GameSettingsManager gameSettingsManager;
+        
+        [Header("Team Panel")]
+        [SerializeField] private TeamPanelController teamPanelController;
 
         private void Start()
         {
@@ -40,11 +43,18 @@ namespace Antventure.UI.Menus
             SceneManager.LoadScene(firstLevelSceneName);
         }
 
-        // Tutorial Button Clicks
-        public void OnTutorialClicked()
+        // Team Button Clicks (formerly Tutorial Button)
+        public void OnTeamClicked()
         {
             PlayClickSound();
-            SceneManager.LoadScene(tutorialSceneName);
+            if (teamPanelController != null)
+            {
+                teamPanelController.OpenTeamPanel();
+            }
+            else
+            {
+                Debug.LogWarning("Team Panel Controller not assigned!");
+            }
         }
 
         public void OnOptionsClicked()
