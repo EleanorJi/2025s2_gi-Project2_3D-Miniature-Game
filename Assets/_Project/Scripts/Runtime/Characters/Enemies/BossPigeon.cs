@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// Simple boss driver: periodically face the player, windup, then fire a sand burst
@@ -71,6 +73,19 @@ public class BossPigeon : MonoBehaviour
             // fall back: use particle's own transform as origin
             fireOrigin = sandBurst.transform;
         }
+        if (!animator)
+        {
+            animator = GetComponent<Animator>();
+            if (animator)
+            {
+                Debug.Log("自动获取到 Animator: " + animator.name);
+            }
+            else
+            {
+                Debug.LogWarning("在当前物体上找不到 Animator 组件");
+            }
+        }
+
     }
 
     void OnEnable()
@@ -110,7 +125,7 @@ public class BossPigeon : MonoBehaviour
             if (windupTime > 0f)
             {
                 if (sfxSource && windupClip) sfxSource.PlayOneShot(windupClip);
-                if (animator) animator.SetTrigger("Windup"); // 可在 Animator 里配一个 Windup 触发
+                // if (animator) animator.SetTrigger("Windup"); // 可在 Animator 里配一个 Windup 触发
                 yield return new WaitForSeconds(windupTime);
             }
 
@@ -124,7 +139,9 @@ public class BossPigeon : MonoBehaviour
 
     private void FireOnce()
     {
+        Debug.Log("调用了FireOnce");
         if (!sandBurst) return;
+        Debug.Log("过return");
 
         // ensure origin & rotation
         if (fireOrigin)
@@ -148,7 +165,12 @@ public class BossPigeon : MonoBehaviour
 
         // SFX/动画
         if (sfxSource && burstClip) sfxSource.PlayOneShot(burstClip);
-        if (animator) animator.SetTrigger("Flap"); // 发射时的翅膀拍打
+        Debug.Log("触发攻击动画: Flap");
+        if (animator)
+        {
+            animator.SetTrigger("Flap"); // 发射时的翅膀拍打
+            Debug.Log("Flap trigger 已设置");
+        }
     }
 
 #if UNITY_EDITOR
