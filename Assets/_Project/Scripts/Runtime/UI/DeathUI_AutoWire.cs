@@ -13,6 +13,12 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     [Header("Cursor (optional)")]
     [SerializeField] private bool unlockCursorOnDeath = true;
+    
+    [Header("Background Transparency")]
+    [SerializeField] [Range(0f, 1f)] private float backgroundAlpha = 0.8f; // 背景透明度，0=完全透明，1=完全不透明
+    [SerializeField] [Range(0f, 1f)] private float imageAlpha = 1f; // 死亡图片透明度
+    [SerializeField] [Range(0f, 1f)] private float textAlpha = 1f; // 提示文字透明度
+    [SerializeField] private bool separateImageTextAlpha = false; // 是否分别控制图片和文字透明度
 
     // runtime state
     private bool _isShown;
@@ -91,6 +97,7 @@ public class DeathUI_AutoWire : MonoBehaviour
     {
         if (hintText) hintText.text = hint;
         ShowPanel(true);
+        ApplyTransparencySettings();
     }
 
     private void HandleRespawned()
@@ -153,9 +160,61 @@ public class DeathUI_AutoWire : MonoBehaviour
         // 使用 CanvasGroup 在同一对象上做优雅显隐（不破坏激活链）
         var cg = GetComponent<CanvasGroup>();
         if (!cg) cg = gameObject.AddComponent<CanvasGroup>();
-        cg.alpha = visible ? 1f : 0f;
+        cg.alpha = visible ? backgroundAlpha : 0f; // 使用可调节的背景透明度
         cg.interactable = visible;
         cg.blocksRaycasts = visible;
+    }
+    
+    /// <summary>
+    /// 应用透明度设置到各个UI元素
+    /// </summary>
+    private void ApplyTransparencySettings()
+    {
+        if (!separateImageTextAlpha) return;
+        
+        // 对图片组件应用透明度
+        Image[] images = GetComponentsInChildren<Image>(true);
+        foreach (Image img in images)
+        {
+            if (img != null)
+            {
+                Color color = img.color;
+                color.a = imageAlpha;
+                img.color = color;
+            }
+        }
+        
+        // 对文字组件应用透明度
+        if (hintText != null)
+        {
+            Color textColor = hintText.color;
+            textColor.a = textAlpha;
+            hintText.color = textColor;
+        }
+        
+        // 对所有Text组件应用透明度
+        Text[] texts = GetComponentsInChildren<Text>(true);
+        foreach (Text text in texts)
+        {
+            if (text != null)
+            {
+                Color color = text.color;
+                color.a = textAlpha;
+                text.color = color;
+            }
+        }
+        
+        // 对所有TMP_Text组件应用透明度
+        TMP_Text[] tmpTexts = GetComponentsInChildren<TMP_Text>(true);
+        foreach (TMP_Text tmpText in tmpTexts)
+        {
+            if (tmpText != null)
+            {
+                Color color = tmpText.color;
+                color.a = textAlpha;
+                tmpText.color = color;
+            }
+        }
     }
 
     private void BuildDisableLists(GameObject playerGO, GameObject cameraGO)
