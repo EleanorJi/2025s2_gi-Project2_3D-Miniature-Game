@@ -11642,7 +11642,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &107656096
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25106,9 +25106,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  message: "Follow the smelly road: Ants lay pheromone "highways." Stronger
-    smell = busier route. The scent fades, so bad routes vanish on their own."
-  infoId: 2.1Smell
+  message: 'Follow the smelly road: Ants lay pheromone '
+  infoId: Level2_Street/KnowledgeTriggerBox/2.1Smell
   autoIdFromHierarchy: 1
 --- !u!65 &277881945
 BoxCollider:
@@ -54581,6 +54580,7 @@ MonoBehaviour:
   defaultMessage: You dead!!!
   defaultSprite: {fileID: 0}
   defaultHoldSeconds: 4
+  useGlobalController: 1
 --- !u!1 &663200518
 GameObject:
   m_ObjectHideFlags: 0
@@ -115539,7 +115539,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.6
+  m_fontSize: 19.55
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
