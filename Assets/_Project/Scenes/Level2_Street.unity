@@ -134364,8 +134364,8 @@ MonoBehaviour:
   targetObject: {fileID: 395506391}
   moveTime: 2
   stayTime: 1
-  fadeInTime: 0.3
-  fadeInDelay: 0.1
+  fadeInTime: 0.5
+  fadeInDelay: 0.2
   blackFadeImage: {fileID: 1009398435}
 --- !u!1 &1700933998 stripped
 GameObject:
