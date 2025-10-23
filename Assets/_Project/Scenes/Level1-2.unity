@@ -5234,7 +5234,7 @@ PrefabInstance:
     - target: {fileID: -1504981713932161579, guid: 6d7b1b7dbbae8b04999632ec36943117, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: a89a0e35bd9957c46ab4f8446709e7f7, type: 2}
+      objectReference: {fileID: 2100000, guid: 65a2dfe5e0584624db835d26bc5c197f, type: 2}
     - target: {fileID: -927199367670048503, guid: 6d7b1b7dbbae8b04999632ec36943117, type: 3}
       propertyPath: m_Name
       value: Milk (1)
