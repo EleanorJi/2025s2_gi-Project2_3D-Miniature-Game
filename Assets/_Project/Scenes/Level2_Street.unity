@@ -134362,9 +134362,10 @@ MonoBehaviour:
   targetAnimator: {fileID: 1103553594}
   animationTrigger: IsLevel2
   targetObject: {fileID: 395506391}
-  moveTime: 1.5
+  moveTime: 2
   stayTime: 1
-  fadeInTime: 1
+  fadeInTime: 0.3
+  fadeInDelay: 0.1
   blackFadeImage: {fileID: 1009398435}
 --- !u!1 &1700933998 stripped
 GameObject:

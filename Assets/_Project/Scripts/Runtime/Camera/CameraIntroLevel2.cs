@@ -21,6 +21,7 @@ public class CameraIntroLevel2 : MonoBehaviour
     public float moveTime = 1.5f;          // 移动时间
     public float stayTime = 1f;            // 停留时间
     public float fadeInTime = 1f;          // 黑色淡入时间
+    public float fadeInDelay = 0f;         // 开始淡入前的延迟时间
 
     [Header("Fade Settings")]
     public Image blackFadeImage;           // 黑色UI面板
@@ -78,9 +79,6 @@ public class CameraIntroLevel2 : MonoBehaviour
         if (playerObject != null)
             playerObject.SetActive(false);
 
-        // 先执行黑色淡入效果
-        yield return StartCoroutine(FadeInBlackScreen());
-
         // 触发target的动画
         if (targetAnimator != null && !string.IsNullOrEmpty(animationTrigger))
         {
@@ -103,9 +101,9 @@ public class CameraIntroLevel2 : MonoBehaviour
                 transform.rotation = Quaternion.LookRotation(direction);
             }
         }
-        
-        // 移动到结束点
-        yield return StartCoroutine(MoveToEndPoint());
+
+        // 同时开始淡入效果和移动动画
+        yield return StartCoroutine(PlayFadeAndMoveSimultaneously());
         
         // 停留一会儿
         yield return new WaitForSeconds(stayTime);
@@ -127,28 +125,48 @@ public class CameraIntroLevel2 : MonoBehaviour
         isIntroPlaying = false;
     }
 
+    IEnumerator PlayFadeAndMoveSimultaneously()
+    {
+        // 同时启动淡入和移动协程
+        Coroutine fadeCoroutine = StartCoroutine(FadeInBlackScreen());
+        Coroutine moveCoroutine = StartCoroutine(MoveToEndPoint());
+
+        // 等待两个动画都完成
+        yield return fadeCoroutine;
+        yield return moveCoroutine;
+    }
+
     IEnumerator FadeInBlackScreen()
     {
         if (blackFadeImage == null) yield break;
 
+        // 延迟一段时间再开始淡入
+        if (fadeInDelay > 0)
+        {
+            yield return new WaitForSeconds(fadeInDelay);
+        }
+
         float timer = 0f;
         Color color = blackFadeImage.color;
-        float startAlpha = color.a;
+        float startAlpha = color.a; // 应该是1
 
         while (timer < fadeInTime)
         {
             timer += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, timer / fadeInTime);
+            float t = timer / fadeInTime; // 使用线性插值，与EndLevel1保持一致
             
+            // 从不透明渐变到透明（黑色消失）
             color.a = Mathf.Lerp(startAlpha, 0f, t);
             blackFadeImage.color = color;
             
             yield return null;
         }
 
-        // 完全透明后禁用UI以提升性能
+        // 确保最终完全透明
         color.a = 0f;
         blackFadeImage.color = color;
+        
+        // 完全透明后禁用UI以提升性能
         blackFadeImage.gameObject.SetActive(false);
     }
 
@@ -170,7 +188,7 @@ public class CameraIntroLevel2 : MonoBehaviour
         while (timer < moveTime)
         {
             timer += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, timer / moveTime);
+            float t = timer / moveTime; // 使用线性插值，与EndLevel1保持一致
 
             transform.position = Vector3.Lerp(startPos, endPoint.position, t);
 
@@ -211,7 +229,7 @@ public class CameraIntroLevel2 : MonoBehaviour
         while (timer < transitionDuration)
         {
             timer += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, timer / transitionDuration);
+            float t = timer / transitionDuration; // 使用线性插值
 
             Quaternion targetRot = Quaternion.Euler(cameraFollow.Pitch, cameraFollow.Yaw, 0);
             Vector3 targetPos = target.position + targetRot * cameraFollow.Offset;
@@ -227,10 +245,16 @@ public class CameraIntroLevel2 : MonoBehaviour
         }
     }
 
-    // 可选：添加一个公共方法用于其他地方的淡出效果
-    public IEnumerator FadeOutBlackScreen(float duration = 1f)
+    // 可选：添加一个公共方法用于其他地方的淡出效果（与EndLevel1保持一致）
+    public IEnumerator FadeOutBlackScreen(float duration = 1f, float delay = 0f)
     {
         if (blackFadeImage == null) yield break;
+
+        // 延迟
+        if (delay > 0)
+        {
+            yield return new WaitForSeconds(delay);
+        }
 
         blackFadeImage.gameObject.SetActive(true);
         
@@ -241,7 +265,7 @@ public class CameraIntroLevel2 : MonoBehaviour
         while (timer < duration)
         {
             timer += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, timer / duration);
+            float t = timer / duration;
             
             color.a = Mathf.Lerp(startAlpha, 1f, t);
             blackFadeImage.color = color;
