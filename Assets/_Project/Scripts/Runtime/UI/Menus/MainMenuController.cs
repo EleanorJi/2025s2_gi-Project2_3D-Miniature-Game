@@ -41,7 +41,7 @@ namespace Antventure.UI.Menus
         public void OnPlayClicked()
         {
             PlayClickSound();
-            SceneManager.LoadScene(tutorialSceneName);
+            SceneOrderManager.Instance.LoadNextScene(); // 从主菜单开始按顺序跳转
         }
 
         // Team Button Clicks (formerly Tutorial Button)

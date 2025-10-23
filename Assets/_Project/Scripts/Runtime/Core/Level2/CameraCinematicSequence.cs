@@ -326,8 +326,8 @@ public class CameraCinematicSequence : MonoBehaviour
             if (holdAtPoint6BeforeLoad > 0f)
                 yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
 
-            if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: {nextLevelName}");
-            SceneManager.LoadScene(nextLevelName);
+            if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: 使用场景顺序跳转");
+            SceneOrderManager.Instance.LoadNextScene();
             yield break; // scene switched, end coroutine
         }
 
