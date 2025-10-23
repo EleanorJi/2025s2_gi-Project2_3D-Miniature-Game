@@ -5707,9 +5707,9 @@ MonoBehaviour:
   subText: {fileID: 0}
   homeButton: {fileID: 0}
   winTitle: Congratulations!
-  subTemplate: 'You''ve completed the tutorial.
+  subTemplate: 'You''ve completed the tutorial
 
-    Back to Home in {0}s'
+    Entering Next Level in {0}s'
   homeSceneName: Level1-2
   autoReturnDelay: 5
 --- !u!1 &1840654378
