@@ -131,17 +131,6 @@ public class EndLevel1 : MonoBehaviour
         float elapsedTime = Time.time - sequenceStartTime;
         float remainingTime = totalSequenceTime - elapsedTime;
 
-        // // If there is still time left, wait until the animation finishes playing.
-        // if (remainingTime > 0)
-        // {
-        //     Debug.Log("Waiting for the animation to finish playing. Remaining time:" + remainingTime.ToString("F2") + "seconds");
-        //     yield return new WaitForSeconds(remainingTime);
-        // }
-        // else
-        // {
-        //     Debug.LogWarning("The total time setting might be too short. Load the next level immediately.");
-        // }
-
         if (endAnimationObject != null)
         {
             Debug.Log("Hiding the first animation object after it finishes playing.");
