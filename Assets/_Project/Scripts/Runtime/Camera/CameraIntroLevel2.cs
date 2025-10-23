@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CameraIntroLevel2 : MonoBehaviour
@@ -9,7 +10,7 @@ public class CameraIntroLevel2 : MonoBehaviour
     public Transform lookAtTarget;         // 朝向目标点
 
     [Header("Player Settings")]
-    public GameObject playerObject;        // 要隐藏的玩家物体（拖拽到这里）
+    public GameObject playerObject;        // 要隐藏的玩家物体
 
     [Header("Animation Settings")]
     public Animator targetAnimator;        // target物体的Animator组件
@@ -19,6 +20,10 @@ public class CameraIntroLevel2 : MonoBehaviour
     [Header("Time Settings")]
     public float moveTime = 1.5f;          // 移动时间
     public float stayTime = 1f;            // 停留时间
+    public float fadeInTime = 1f;          // 黑色淡入时间
+
+    [Header("Fade Settings")]
+    public Image blackFadeImage;           // 黑色UI面板
 
     private CameraFollow cameraFollow;
     private PlayerInputController playerInputController;
@@ -42,6 +47,16 @@ public class CameraIntroLevel2 : MonoBehaviour
             return;
         }
 
+        // 初始化黑色面板
+        if (blackFadeImage != null)
+        {
+            // 开始时设置为完全不透明（全黑）
+            Color startColor = blackFadeImage.color;
+            startColor.a = 1f;
+            blackFadeImage.color = startColor;
+            blackFadeImage.gameObject.SetActive(true);
+        }
+
         // 检查路径点是否设置
         if (startPoint != null && endPoint != null && lookAtTarget != null)
         {
@@ -51,9 +66,7 @@ public class CameraIntroLevel2 : MonoBehaviour
         {
             Debug.LogWarning("Missing path points, no Level2 opening animation");
             // 如果没有设置点，直接启用玩家控制
-            cameraFollow.SetCameraControl(true);
-            if (playerInputController != null)
-                playerInputController.EnableInput();
+            StartCoroutine(FadeInOnly());
         }
     }
 
@@ -65,6 +78,9 @@ public class CameraIntroLevel2 : MonoBehaviour
         if (playerObject != null)
             playerObject.SetActive(false);
 
+        // 先执行黑色淡入效果
+        yield return StartCoroutine(FadeInBlackScreen());
+
         // 触发target的动画
         if (targetAnimator != null && !string.IsNullOrEmpty(animationTrigger))
         {
@@ -75,10 +91,10 @@ public class CameraIntroLevel2 : MonoBehaviour
         playerInputController.DisableInput();
         cameraFollow.SetCameraControl(false);
 
-        // 设置起始位置和朝向（立即设置，没有过渡时间）
+        // 设置起始位置和朝向
         transform.position = startPoint.position;
         
-        // 立即看向目标点（没有旋转过渡时间）
+        // 立即看向目标点
         if (lookAtTarget != null)
         {
             Vector3 direction = lookAtTarget.position - transform.position;
@@ -88,7 +104,7 @@ public class CameraIntroLevel2 : MonoBehaviour
             }
         }
         
-        // 移动到结束点（移动过程中持续看向target）
+        // 移动到结束点
         yield return StartCoroutine(MoveToEndPoint());
         
         // 停留一会儿
@@ -111,6 +127,41 @@ public class CameraIntroLevel2 : MonoBehaviour
         isIntroPlaying = false;
     }
 
+    IEnumerator FadeInBlackScreen()
+    {
+        if (blackFadeImage == null) yield break;
+
+        float timer = 0f;
+        Color color = blackFadeImage.color;
+        float startAlpha = color.a;
+
+        while (timer < fadeInTime)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, timer / fadeInTime);
+            
+            color.a = Mathf.Lerp(startAlpha, 0f, t);
+            blackFadeImage.color = color;
+            
+            yield return null;
+        }
+
+        // 完全透明后禁用UI以提升性能
+        color.a = 0f;
+        blackFadeImage.color = color;
+        blackFadeImage.gameObject.SetActive(false);
+    }
+
+    IEnumerator FadeInOnly()
+    {
+        // 仅执行淡入效果，然后启用控制
+        yield return StartCoroutine(FadeInBlackScreen());
+        
+        cameraFollow.SetCameraControl(true);
+        if (playerInputController != null)
+            playerInputController.EnableInput();
+    }
+
     IEnumerator MoveToEndPoint()
     {
         float timer = 0f;
@@ -121,10 +172,8 @@ public class CameraIntroLevel2 : MonoBehaviour
             timer += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, timer / moveTime);
 
-            // 移动位置
             transform.position = Vector3.Lerp(startPos, endPoint.position, t);
 
-            // 持续看向目标点（每帧更新，即使target移动也会跟随）
             if (lookAtTarget != null)
             {
                 Vector3 currentDirection = lookAtTarget.position - transform.position;
@@ -137,10 +186,8 @@ public class CameraIntroLevel2 : MonoBehaviour
             yield return null;
         }
 
-        // 确保最终位置准确
         transform.position = endPoint.position;
         
-        // 最终再确认一次朝向
         if (lookAtTarget != null)
         {
             Vector3 finalDirection = lookAtTarget.position - transform.position;
@@ -166,13 +213,11 @@ public class CameraIntroLevel2 : MonoBehaviour
             timer += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, timer / transitionDuration);
 
-            // 计算目标位置和旋转（使用CameraFollow的偏移）
             Quaternion targetRot = Quaternion.Euler(cameraFollow.Pitch, cameraFollow.Yaw, 0);
             Vector3 targetPos = target.position + targetRot * cameraFollow.Offset;
 
             transform.position = Vector3.Lerp(startPosition, targetPos, t);
 
-            // 平滑看向玩家
             Vector3 lookDir = target.position - transform.position;
             if (lookDir != Vector3.zero)
             {
@@ -180,5 +225,31 @@ public class CameraIntroLevel2 : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    // 可选：添加一个公共方法用于其他地方的淡出效果
+    public IEnumerator FadeOutBlackScreen(float duration = 1f)
+    {
+        if (blackFadeImage == null) yield break;
+
+        blackFadeImage.gameObject.SetActive(true);
+        
+        float timer = 0f;
+        Color color = blackFadeImage.color;
+        float startAlpha = color.a;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, timer / duration);
+            
+            color.a = Mathf.Lerp(startAlpha, 1f, t);
+            blackFadeImage.color = color;
+            
+            yield return null;
+        }
+
+        color.a = 1f;
+        blackFadeImage.color = color;
     }
 }

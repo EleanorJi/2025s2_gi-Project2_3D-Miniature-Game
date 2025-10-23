@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EndLevel1 : MonoBehaviour
 {
@@ -19,6 +20,12 @@ public class EndLevel1 : MonoBehaviour
     [Header("Level settings")]
     public string nextLevelName = "Level2"; // The name of the scene for the next level
     public float totalSequenceTime = 4f;   // The total time of the entire ending sequence (camera movement + animation playback)
+    
+    [Header("Fade Out Settings")]
+    public Image blackFadePanel;           // 黑色淡出面板
+    public float fadeOutDuration = 2f;     // 淡出持续时间
+    public float fadeOutDelay = 1f;        // 开始淡出前的延迟时间
+
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
     private Animator endAnimator;          // The Animator component of the End object
@@ -73,6 +80,15 @@ public class EndLevel1 : MonoBehaviour
             {
                 Debug.LogError("The Animator component cannot be found on the next animation object.");
             }
+        }
+
+        // 初始化黑色面板（确保开始时是隐藏的）
+        if (blackFadePanel != null)
+        {
+            Color color = blackFadePanel.color;
+            color.a = 0f;
+            blackFadePanel.color = color;
+            blackFadePanel.gameObject.SetActive(false);
         }
     }
 
@@ -144,6 +160,9 @@ public class EndLevel1 : MonoBehaviour
             yield return new WaitForSeconds(3f); // 可选：等待第二个动画播放 2 秒
         }
 
+        // 在加载下一关前执行黑色淡出效果
+        yield return StartCoroutine(FadeOutBlackScreen());
+
         Debug.Log("Sequence completed. Loading next level.");
         LoadNextLevel();
     }
@@ -179,11 +198,57 @@ public class EndLevel1 : MonoBehaviour
         Debug.Log("Camera transition completed");
     }
 
+    IEnumerator FadeOutBlackScreen()
+    {
+        if (blackFadePanel == null)
+        {
+            Debug.LogWarning("BlackFadePanel is not assigned!");
+            yield break;
+        }
+
+        // 延迟一段时间再开始淡出
+        if (fadeOutDelay > 0)
+        {
+            yield return new WaitForSeconds(fadeOutDelay);
+        }
+
+        // 激活黑色面板
+        blackFadePanel.gameObject.SetActive(true);
+
+        float timer = 0f;
+        Color color = blackFadePanel.color;
+        float startAlpha = color.a; // 应该是0
+
+        while (timer < fadeOutDuration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, timer / fadeOutDuration);
+            
+            // 从透明渐变到不透明（黑色）
+            color.a = Mathf.Lerp(startAlpha, 1f, t);
+            blackFadePanel.color = color;
+            
+            yield return null;
+        }
+
+        // 确保最终完全不透明
+        color.a = 1f;
+        blackFadePanel.color = color;
+
+        Debug.Log("Fade out completed");
+    }
+
     void LoadNextLevel()
     {
         Debug.Log("Load the next level:" + nextLevelName);
         
         // Load by using the scene name
         SceneManager.LoadScene(nextLevelName);
+    }
+
+    // 可选：添加一个公共方法用于在其他地方触发淡出
+    public void TriggerFadeOut()
+    {
+        StartCoroutine(FadeOutBlackScreen());
     }
 }
