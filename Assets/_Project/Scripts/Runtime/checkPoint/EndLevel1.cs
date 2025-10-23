@@ -14,6 +14,7 @@ public class EndLevel1 : MonoBehaviour
 
     [Header("Animation control")]
     public GameObject endAnimationObject;  // Drag the End object with Animator attached here
+    public GameObject nextAnimationObject;  
 
     [Header("Level settings")]
     public string nextLevelName = "Level2"; // The name of the scene for the next level
@@ -21,6 +22,7 @@ public class EndLevel1 : MonoBehaviour
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
     private Animator endAnimator;          // The Animator component of the End object
+    private Animator nextAnimator;
     private bool hasTriggered = false; // Prevent repeated triggering
 
     void Start()
@@ -63,6 +65,14 @@ public class EndLevel1 : MonoBehaviour
         else
         {
             Debug.LogError("need set End Animation Object");
+        }
+        if (nextAnimationObject != null)
+        {
+            nextAnimator = nextAnimationObject.GetComponent<Animator>();
+            if (nextAnimator == null)
+            {
+                Debug.LogError("The Animator component cannot be found on the next animation object.");
+            }
         }
     }
 
@@ -121,15 +131,28 @@ public class EndLevel1 : MonoBehaviour
         float elapsedTime = Time.time - sequenceStartTime;
         float remainingTime = totalSequenceTime - elapsedTime;
 
-        // If there is still time left, wait until the animation finishes playing.
-        if (remainingTime > 0)
+        // // If there is still time left, wait until the animation finishes playing.
+        // if (remainingTime > 0)
+        // {
+        //     Debug.Log("Waiting for the animation to finish playing. Remaining time:" + remainingTime.ToString("F2") + "seconds");
+        //     yield return new WaitForSeconds(remainingTime);
+        // }
+        // else
+        // {
+        //     Debug.LogWarning("The total time setting might be too short. Load the next level immediately.");
+        // }
+
+        if (endAnimationObject != null)
         {
-            Debug.Log("Waiting for the animation to finish playing. Remaining time:" + remainingTime.ToString("F2") + "seconds");
-            yield return new WaitForSeconds(remainingTime);
+            Debug.Log("Hiding the first animation object after it finishes playing.");
+            endAnimationObject.SetActive(false);
         }
-        else
+
+        if (nextAnimator != null)
         {
-            Debug.LogWarning("The total time setting might be too short. Load the next level immediately.");
+            Debug.Log("Triggering the second animation's IsEnd parameter...");
+            nextAnimator.SetBool("IsEnd", true);
+            yield return new WaitForSeconds(3f); // 可选：等待第二个动画播放 2 秒
         }
 
         Debug.Log("Sequence completed. Loading next level.");
