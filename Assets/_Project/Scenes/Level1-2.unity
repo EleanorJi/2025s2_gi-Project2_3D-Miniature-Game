@@ -4338,7 +4338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   message: "Sticky feet, not suction cups: Ant foot pads ooze tiny amounts of fluid
-    for grip\u2014even on glass. Too much dust? Slip city."
+    for grip - even on glass. Too much dust? Slip city."
   infoId: 1.3Smooth
   autoIdFromHierarchy: 1
 --- !u!65 &328200071
@@ -6438,7 +6438,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  message: "Small but mighty: Shrink size, boost strength\u2014ants can haul 10\u201350\xD7
+  message: "Small but mighty: Shrink size, boost strength - ants can haul 10-50x
     their body weight."
   infoId: 1.1Carry
   autoIdFromHierarchy: 1
@@ -8195,7 +8195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   message: "Crowd brains > single brain: Keep walking the best path and it emerges
-    as the shortest. That\u2019s swarm smarts in action."
+    as the shortest. That's swarm smarts in action."
   infoId: 1.2Road
   autoIdFromHierarchy: 1
 --- !u!65 &637873320
@@ -10913,6 +10913,7 @@ MonoBehaviour:
   defaultMessage: You dead!!!
   defaultSprite: {fileID: 0}
   defaultHoldSeconds: 4
+  useGlobalController: 1
 --- !u!225 &865430960
 CanvasGroup:
   m_ObjectHideFlags: 0

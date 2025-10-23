@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Antventure.UI;
 
 public class DeathUI_AutoWire : MonoBehaviour
 {
@@ -19,6 +20,11 @@ public class DeathUI_AutoWire : MonoBehaviour
     [SerializeField] [Range(0f, 1f)] private float imageAlpha = 1f; // 死亡图片透明度
     [SerializeField] [Range(0f, 1f)] private float textAlpha = 1f; // 提示文字透明度
     [SerializeField] private bool separateImageTextAlpha = false; // 是否分别控制图片和文字透明度
+
+    [Header("Global Controller Integration")]
+    [SerializeField] private bool useGlobalController = true;
+    [Tooltip("如果启用，将使用GlobalDeathUIController来显示死亡UI")]
+    [SerializeField] private Sprite deathSprite; // 死亡图片（用于全局控制器）
 
     // runtime state
     private bool _isShown;
@@ -95,6 +101,17 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleDied()
     {
+        // 如果启用全局控制器且存在，则使用全局控制器
+        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        {
+            GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
+            
+            // 仍然需要处理游戏暂停和脚本禁用
+            HandleGamePause(true);
+            return;
+        }
+
+        // 否则使用本地UI
         if (hintText) hintText.text = hint;
         ShowPanel(true);
         ApplyTransparencySettings();
@@ -102,6 +119,15 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleRespawned()
     {
+        // 如果使用全局控制器，隐藏全局UI
+        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        {
+            GlobalDeathUIController.Instance.HideDeathUI();
+            HandleGamePause(false);
+            return;
+        }
+
+        // 否则使用本地UI
         ShowPanel(false);
     }
 
@@ -120,7 +146,15 @@ public class DeathUI_AutoWire : MonoBehaviour
                 panel.SetActive(show);
         }
 
-        if (show)
+        HandleGamePause(show);
+    }
+
+    /// <summary>
+    /// 处理游戏暂停相关逻辑（分离出来供全局控制器使用）
+    /// </summary>
+    private void HandleGamePause(bool pause)
+    {
+        if (pause)
         {
             // 暂停时间 & 显示鼠标
             Time.timeScale = 0f;
