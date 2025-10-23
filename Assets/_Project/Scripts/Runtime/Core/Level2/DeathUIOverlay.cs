@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using Antventure.UI;
 
 public class DeathUIOverlay : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class DeathUIOverlay : MonoBehaviour
 
     [Header("Default Time")]
     public float defaultHoldSeconds = 4f;
+
+    [Header("Global Controller Integration")]
+    [SerializeField] private bool useGlobalController = true;
+    [Tooltip("如果启用，将使用GlobalDeathUIController来显示死亡UI，否则使用本地UI")]
 
     Coroutine _co;
 
@@ -49,6 +54,18 @@ public class DeathUIOverlay : MonoBehaviour
 
     void ShowInternal(float hold, string msgOverride, Sprite spriteOverride)
     {
+        // 如果启用全局控制器且存在，则使用全局控制器
+        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        {
+            string finalMessage = string.IsNullOrEmpty(msgOverride) ? defaultMessage : msgOverride;
+            Sprite finalSprite = spriteOverride ? spriteOverride : defaultSprite;
+            float finalDuration = hold > 0 ? hold : defaultHoldSeconds;
+            
+            GlobalDeathUIController.Instance.ShowDeathUI(finalMessage, finalSprite, finalDuration);
+            return;
+        }
+
+        // 否则使用本地UI
         if (_co != null) StopCoroutine(_co);
         _co = StartCoroutine(Run(hold, msgOverride, spriteOverride));
     }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Antventure.UI;
 
 public class DeathUI_AutoWire : MonoBehaviour
 {
@@ -13,6 +14,17 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     [Header("Cursor (optional)")]
     [SerializeField] private bool unlockCursorOnDeath = true;
+    
+    [Header("Background Transparency")]
+    [SerializeField] [Range(0f, 1f)] private float backgroundAlpha = 0.8f; // 背景透明度，0=完全透明，1=完全不透明
+    [SerializeField] [Range(0f, 1f)] private float imageAlpha = 1f; // 死亡图片透明度
+    [SerializeField] [Range(0f, 1f)] private float textAlpha = 1f; // 提示文字透明度
+    [SerializeField] private bool separateImageTextAlpha = false; // 是否分别控制图片和文字透明度
+
+    [Header("Global Controller Integration")]
+    [SerializeField] private bool useGlobalController = true;
+    [Tooltip("如果启用，将使用GlobalDeathUIController来显示死亡UI")]
+    [SerializeField] private Sprite deathSprite; // 死亡图片（用于全局控制器）
 
     // runtime state
     private bool _isShown;
@@ -89,12 +101,33 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleDied()
     {
+        // 如果启用全局控制器且存在，则使用全局控制器
+        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        {
+            GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
+            
+            // 仍然需要处理游戏暂停和脚本禁用
+            HandleGamePause(true);
+            return;
+        }
+
+        // 否则使用本地UI
         if (hintText) hintText.text = hint;
         ShowPanel(true);
+        ApplyTransparencySettings();
     }
 
     private void HandleRespawned()
     {
+        // 如果使用全局控制器，隐藏全局UI
+        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        {
+            GlobalDeathUIController.Instance.HideDeathUI();
+            HandleGamePause(false);
+            return;
+        }
+
+        // 否则使用本地UI
         ShowPanel(false);
     }
 
@@ -113,7 +146,15 @@ public class DeathUI_AutoWire : MonoBehaviour
                 panel.SetActive(show);
         }
 
-        if (show)
+        HandleGamePause(show);
+    }
+
+    /// <summary>
+    /// 处理游戏暂停相关逻辑（分离出来供全局控制器使用）
+    /// </summary>
+    private void HandleGamePause(bool pause)
+    {
+        if (pause)
         {
             // 暂停时间 & 显示鼠标
             Time.timeScale = 0f;
@@ -153,9 +194,61 @@ public class DeathUI_AutoWire : MonoBehaviour
         // 使用 CanvasGroup 在同一对象上做优雅显隐（不破坏激活链）
         var cg = GetComponent<CanvasGroup>();
         if (!cg) cg = gameObject.AddComponent<CanvasGroup>();
-        cg.alpha = visible ? 1f : 0f;
+        cg.alpha = visible ? backgroundAlpha : 0f; // 使用可调节的背景透明度
         cg.interactable = visible;
         cg.blocksRaycasts = visible;
+    }
+    
+    /// <summary>
+    /// 应用透明度设置到各个UI元素
+    /// </summary>
+    private void ApplyTransparencySettings()
+    {
+        if (!separateImageTextAlpha) return;
+        
+        // 对图片组件应用透明度
+        Image[] images = GetComponentsInChildren<Image>(true);
+        foreach (Image img in images)
+        {
+            if (img != null)
+            {
+                Color color = img.color;
+                color.a = imageAlpha;
+                img.color = color;
+            }
+        }
+        
+        // 对文字组件应用透明度
+        if (hintText != null)
+        {
+            Color textColor = hintText.color;
+            textColor.a = textAlpha;
+            hintText.color = textColor;
+        }
+        
+        // 对所有Text组件应用透明度
+        Text[] texts = GetComponentsInChildren<Text>(true);
+        foreach (Text text in texts)
+        {
+            if (text != null)
+            {
+                Color color = text.color;
+                color.a = textAlpha;
+                text.color = color;
+            }
+        }
+        
+        // 对所有TMP_Text组件应用透明度
+        TMP_Text[] tmpTexts = GetComponentsInChildren<TMP_Text>(true);
+        foreach (TMP_Text tmpText in tmpTexts)
+        {
+            if (tmpText != null)
+            {
+                Color color = tmpText.color;
+                color.a = textAlpha;
+                tmpText.color = color;
+            }
+        }
     }
 
     private void BuildDisableLists(GameObject playerGO, GameObject cameraGO)

@@ -64,7 +64,6 @@ public class PlayerController : MonoBehaviour
         inputController = GetComponent<PlayerInputController>();
         if (inputController == null)
         {
-            Debug.LogError("PlayerInputController not found! Adding one...");
             inputController = gameObject.AddComponent<PlayerInputController>();
         }
 

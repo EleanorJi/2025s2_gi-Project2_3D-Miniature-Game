@@ -38,7 +38,7 @@ public class EndLevel1 : MonoBehaviour
             
             if (playerInputController == null)
             {
-                Debug.LogError("在cannot find PlayerInputController ");
+                Debug.LogWarning("[EndLevel1] Cannot find PlayerInputController component");
             }
             
             if (cameraFollow == null)

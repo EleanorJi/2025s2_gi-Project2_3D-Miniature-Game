@@ -4337,8 +4337,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  message: "Sticky feet, not suction cups: Ant foot pads ooze tiny amounts of fluid
-    for grip\u2014even on glass. Too much dust? Slip city."
+  message: 'Sticky feet, not suction cups: Ant foot pads ooze tiny amounts of fluid
+    for grip - even on glass. Too much dust? Slip city.'
   infoId: 1.3Smooth
   autoIdFromHierarchy: 1
 --- !u!65 &328200071
@@ -6438,8 +6438,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  message: "Small but mighty: Shrink size, boost strength\u2014ants can haul 10\u201350\xD7
-    their body weight."
+  message: 'Small but mighty: Shrink size, boost strength - ants can haul 10-50x
+    their body weight.'
   infoId: 1.1Carry
   autoIdFromHierarchy: 1
 --- !u!65 &472560463
@@ -8194,8 +8194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  message: "Crowd brains > single brain: Keep walking the best path and it emerges
-    as the shortest. That\u2019s swarm smarts in action."
+  message: 'Crowd brains > single brain: Keep walking the best path and it emerges
+    as the shortest. That''s swarm smarts in action.'
   infoId: 1.2Road
   autoIdFromHierarchy: 1
 --- !u!65 &637873320
@@ -10884,7 +10884,7 @@ RectTransform:
   m_GameObject: {fileID: 865430957}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.29748493, y: 0.29748493, z: 0.29748493}
+  m_LocalScale: {x: 0.29748487, y: 0.29748487, z: 0.29748487}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 889126344}
@@ -10907,12 +10907,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba89f89d228884939a13c34c24611b6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 865430960}
+  panel: {fileID: 0}
   messageText: {fileID: 889126345}
   pictureImage: {fileID: 865430961}
   defaultMessage: You dead!!!
   defaultSprite: {fileID: 0}
   defaultHoldSeconds: 4
+  useGlobalController: 1
 --- !u!225 &865430960
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -10938,7 +10939,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0.5058824}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -10946,7 +10947,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -11184,15 +11185,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
+  m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190268
-  m_fontColor: {r: 0.735849, g: 0, b: 0, a: 1}
+    rgba: 4278190335
+  m_fontColor: {r: 1, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -11209,8 +11210,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 96
+  m_fontSizeBase: 96
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -20442,7 +20443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -20450,12 +20451,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 90
+    m_Font: {fileID: 12800000, guid: 255c0db33b9cd4248836db2f3a02a159, type: 3}
+    m_FontSize: 120
     m_FontStyle: 0
     m_BestFit: 0
-    m_MinSize: 9
-    m_MaxSize: 90
+    m_MinSize: 0
+    m_MaxSize: 120
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -23340,15 +23341,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
+  m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4286371071
-  m_fontColor: {r: 1, g: 0.83263576, b: 0.48584908, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -23365,8 +23366,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
-  m_fontSizeBase: 90
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

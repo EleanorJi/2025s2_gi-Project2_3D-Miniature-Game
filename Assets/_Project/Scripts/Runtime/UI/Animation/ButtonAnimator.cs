@@ -217,6 +217,8 @@ namespace Antventure.UI.Animation
         /// </summary>
         private void PlayHoverAnimation()
         {
+            if (!gameObject.activeInHierarchy) return;
+            
             if (currentAnimation != null)
             {
                 StopCoroutine(currentAnimation);
@@ -230,6 +232,8 @@ namespace Antventure.UI.Animation
         /// </summary>
         private void PlayPressAnimation()
         {
+            if (!gameObject.activeInHierarchy) return;
+            
             if (currentAnimation != null)
             {
                 StopCoroutine(currentAnimation);
@@ -243,6 +247,8 @@ namespace Antventure.UI.Animation
         /// </summary>
         private void PlayNormalAnimation()
         {
+            if (!gameObject.activeInHierarchy) return;
+            
             if (currentAnimation != null)
             {
                 StopCoroutine(currentAnimation);
@@ -256,6 +262,8 @@ namespace Antventure.UI.Animation
         /// </summary>
         private void PlayClickAnimation()
         {
+            if (!gameObject.activeInHierarchy) return;
+            
             if (enableBounceOnClick)
             {
                 StartCoroutine(BounceAnimation());
@@ -267,6 +275,8 @@ namespace Antventure.UI.Animation
         /// </summary>
         private void PlayGlowEffect()
         {
+            if (!gameObject.activeInHierarchy) return;
+            
             if (enableGlowEffect && glowImage != null)
             {
                 StartCoroutine(GlowAnimation());

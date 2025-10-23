@@ -25106,7 +25106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTag: Player
-  message: "Follow the smelly road: Ants lay pheromone \u201Chighways.\u201D Stronger
+  message: "Follow the smelly road: Ants lay pheromone "highways." Stronger
     smell = busier route. The scent fades, so bad routes vanish on their own."
   infoId: 2.1Smell
   autoIdFromHierarchy: 1
