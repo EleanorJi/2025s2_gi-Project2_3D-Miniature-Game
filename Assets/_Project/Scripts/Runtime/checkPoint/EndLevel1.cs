@@ -131,7 +131,7 @@ public class EndLevel1 : MonoBehaviour
     {
         // Record start time
         float sequenceStartTime = Time.time;
-        
+
         // If there is a camera transition setting, execute the camera movement
         if (cameraEndPosition != null && cameraLookAtTarget != null)
         {
@@ -147,9 +147,12 @@ public class EndLevel1 : MonoBehaviour
         float elapsedTime = Time.time - sequenceStartTime;
         float remainingTime = totalSequenceTime - elapsedTime;
 
-        if (endAnimationObject != null)
+        if (endAnimator != null && endAnimationObject != null)
         {
-            Debug.Log("Hiding the first animation object after it finishes playing.");
+            // 方法1：等待动画状态播放完成
+            yield return StartCoroutine(WaitForAnimationToFinish(endAnimator));
+
+            Debug.Log("First animation finished playing. Hiding the first animation object.");
             endAnimationObject.SetActive(false);
         }
 
@@ -157,7 +160,7 @@ public class EndLevel1 : MonoBehaviour
         {
             Debug.Log("Triggering the second animation's IsEnd parameter...");
             nextAnimator.SetBool("IsEnd", true);
-            yield return new WaitForSeconds(3f); // 可选：等待第二个动画播放 2 秒
+            yield return new WaitForSeconds(2f); // 可选：等待第二个动画播放 2 秒
         }
 
         // 在加载下一关前执行黑色淡出效果
@@ -165,6 +168,25 @@ public class EndLevel1 : MonoBehaviour
 
         Debug.Log("Sequence completed. Loading next level.");
         LoadNextLevel();
+    }
+
+    // 新增方法：等待动画播放完成
+    IEnumerator WaitForAnimationToFinish(Animator animator)
+    {
+        // 等待一帧确保动画状态已更新
+        yield return null;
+
+        // 获取当前播放的动画状态信息
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        // 等待动画播放完成
+        while (stateInfo.normalizedTime < 1.0f)
+        {
+            yield return null;
+            stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        }
+
+        Debug.Log("Animation finished playing.");
     }
 
     IEnumerator CameraTransition()
