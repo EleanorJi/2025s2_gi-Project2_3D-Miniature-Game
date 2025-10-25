@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     // Animation control
     private Animator antAnimator;
     private bool isMoving = false;
+    private ParachuteCarrier parachuteCarrier;
 
     [Header("Ground detection parameters")]
     public int groundContactCount = 0;
@@ -65,6 +66,13 @@ public class PlayerController : MonoBehaviour
         if (inputController == null)
         {
             inputController = gameObject.AddComponent<PlayerInputController>();
+        }
+
+        parachuteCarrier = GetComponent<ParachuteCarrier>();
+        if (parachuteCarrier == null)
+        {
+            // 如果没有找到也没关系，只是可选的功能
+            Debug.Log("[PlayerController] No ParachuteCarrier component found - this is optional");
         }
 
         // Hide the cursor - use UnifiedCursorManager if available
@@ -127,6 +135,9 @@ public class PlayerController : MonoBehaviour
         HandleJump();
         HandlePickup();
 
+        // Update animation parameters
+        UpdateAnimationParameters();
+
         // Debugging: Pressing the R key results in death.
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -146,6 +157,20 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
     }
 
+    // 更新动画参数的方法
+    void UpdateAnimationParameters()
+    {
+        if (antAnimator != null)
+        {
+            bool isCarryingSomething = IsCarryingItem || 
+                                     (parachuteCarrier != null && parachuteCarrier.HasLeaf());
+            
+            antAnimator.SetBool("IsMoving", isMoving);
+            antAnimator.SetBool("PickUp", isCarryingSomething);
+        }
+    }
+
+
     void UpdateMovementState()
     {
         // Update the movement status for animation
@@ -156,12 +181,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             isMoving = Mathf.Abs(horizontalInput) > startThreshold || Mathf.Abs(verticalInput) > startThreshold;
-        }
-
-        // Control animation
-        if (antAnimator != null)
-        {
-            antAnimator.SetBool("IsMoving", isMoving);
         }
     }
 
@@ -219,6 +238,9 @@ public class PlayerController : MonoBehaviour
                 Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
                 if (itemRb) itemRb.isKinematic = true;
 
+                // 立即更新动画参数
+                UpdateAnimationParameters();
+
                 // 添加拿起物品的音效
                 GlobalSfx.PlayLeafPickupSfx(transform.position);
 
@@ -236,11 +258,7 @@ public class PlayerController : MonoBehaviour
         // reset movement
         isMoving = false;
 
-        // update animation
-        if (antAnimator != null)
-        {
-            antAnimator.SetBool("IsMoving", false);
-        }
+        UpdateAnimationParameters();
     }
 
     //Stop physical movement
@@ -273,6 +291,9 @@ public class PlayerController : MonoBehaviour
                 // Give the object a small forward push to make it fall more naturally.
                 itemRb.linearVelocity = Vector3.zero;
             }
+
+            // 立即更新动画参数
+            UpdateAnimationParameters();
             // 添加放下物品的音效
             GlobalSfx.PlayLeafPickupSfx(transform.position);
 
@@ -376,6 +397,11 @@ public class PlayerController : MonoBehaviour
         CheckpointManager.Instance.DebugActivatedCheckpoints();
 
         Debug.Log($"Respawned at last checkpoint: {respawnPosition}");
+    }
+
+    public void RefreshAnimationState()
+    {
+        UpdateAnimationParameters();
     }
 
 }
