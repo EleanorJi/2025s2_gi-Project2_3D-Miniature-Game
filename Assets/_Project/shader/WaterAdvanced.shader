@@ -1,12 +1,14 @@
-Shader "Custom/WaterAdvanced" {
+Shader "Custom/KitchenSinkFoam" {
     Properties {
-        _MainColor ("Water Color", Color) = (0.2, 0.6, 0.8, 0.6)
-        _WaveSpeed ("Wave Speed", Float) = 1.5
-        _WaveFrequency ("Wave Frequency", Float) = 2.0
-        _WaveHeight ("Wave Height", Float) = 0.15
-        _WaveSharpness ("Wave Sharpness", Range(0.1, 2.0)) = 0.8
-        _NoiseScale ("Noise Scale", Float) = 3.0
-        _NoiseStrength ("Noise Strength", Float) = 0.2
+        _WaterColor ("Water Color", Color) = (0.1, 0.4, 0.6, 0.8)
+        _FoamColor ("Foam Color", Color) = (0.9, 0.95, 1.0, 0.9)
+        _FoamThickness ("Foam Thickness", Range(0, 0.3)) = 0.1
+        _FoamDensity ("Foam Density", Range(0, 2)) = 1.0
+        _FoamSpeed ("Foam Speed", Float) = 0.5
+        _RippleSpeed ("Ripple Speed", Float) = 1.0
+        _RippleFrequency ("Ripple Frequency", Float) = 10.0
+        _NoiseScale ("Noise Scale", Float) = 5.0
+        _EdgeFoam ("Edge Foam", Range(0, 1)) = 0.5
     }
     
     SubShader {
@@ -17,7 +19,6 @@ Shader "Custom/WaterAdvanced" {
         
         Blend SrcAlpha OneMinusSrcAlpha
         ZWrite Off
-        LOD 200
         
         Pass {
             CGPROGRAM
@@ -27,91 +28,102 @@ Shader "Custom/WaterAdvanced" {
 
             struct appdata {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL;
                 float2 uv : TEXCOORD0;
             };
 
             struct v2f {
                 float2 uv : TEXCOORD0;
-                float3 worldNormal : TEXCOORD1;
-                float3 viewDir : TEXCOORD2;
+                float3 worldPos : TEXCOORD1;
                 float4 vertex : SV_POSITION;
             };
 
-            float4 _MainColor;
-            float _WaveSpeed;
-            float _WaveFrequency;
-            float _WaveHeight;
-            float _WaveSharpness;
+            float4 _WaterColor;
+            float4 _FoamColor;
+            float _FoamThickness;
+            float _FoamDensity;
+            float _FoamSpeed;
+            float _RippleSpeed;
+            float _RippleFrequency;
             float _NoiseScale;
-            float _NoiseStrength;
+            float _EdgeFoam;
 
-            // A simple noise function for generating more natural waves
+            // 噪声函数
             float noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
             }
 
-            // Smooth noise function
             float smoothNoise(float2 uv) {
                 float2 i = floor(uv);
                 float2 f = frac(uv);
+                f = f * f * (3.0 - 2.0 * f);
                 
-                // Bilinear interpolation
                 float a = noise(i);
                 float b = noise(i + float2(1.0, 0.0));
                 float c = noise(i + float2(0.0, 1.0));
                 float d = noise(i + float2(1.0, 1.0));
                 
-                float2 u = f * f * (3.0 - 2.0 * f);
+                return lerp(lerp(a, b, f.x), lerp(c, d, f.x), f.y);
+            }
+
+            float fbm(float2 uv) {
+                float value = 0.0;
+                float amplitude = 0.5;
                 
-                return lerp(a, b, u.x) + 
-                      (c - a) * u.y * (1.0 - u.x) + 
-                      (d - b) * u.x * u.y;
+                for(int i = 0; i < 4; i++) {
+                    value += amplitude * smoothNoise(uv);
+                    amplitude *= 0.5;
+                    uv *= 2.0;
+                }
+                return value;
             }
 
             v2f vert (appdata v) {
                 v2f o;
-                
-                // Obtain world coordinates
-                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
-                
-                // wave calculation: Use the x and z coordinates of the world as input, and output the influence on the y coordinate.
-                float wave1 = sin(worldPos.x * _WaveFrequency + _Time.y * _WaveSpeed) * _WaveHeight;
-                float wave2 = cos(worldPos.z * _WaveFrequency * 0.7 + _Time.y * _WaveSpeed * 1.3) * _WaveHeight * 0.8;
-                
-                // Noise disturbance
-                float2 noiseUV = worldPos.xz * _NoiseScale;
-                float noiseValue = smoothNoise(noiseUV + _Time.y * _WaveSpeed * 0.5) * _NoiseStrength;
-                
-                // Combined wave effect
-                float combinedWave = (wave1 + wave2) * 0.5 + noiseValue;
-                
-                // Add the calculated wave value to the y-component of the world coordinates
-                worldPos.y += combinedWave * _WaveSharpness;
-                
-                // Convert the modified world coordinates back to the clipping space
-                o.vertex = mul(UNITY_MATRIX_VP, float4(worldPos, 1.0));
+                o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
-                o.worldNormal = UnityObjectToWorldNormal(v.normal);
-                o.viewDir = normalize(WorldSpaceViewDir(v.vertex));
-                
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                // Simple Fresnel effect based on perspective and normal
-                float3 normal = normalize(i.worldNormal);
-                float3 viewDir = normalize(i.viewDir);
-                float fresnel = pow(1.0 - saturate(dot(normal, viewDir)), 2.0);
+                float2 uv = i.uv;
                 
-                // Base color combined with Fresnel effect
-                fixed4 col = _MainColor;
-                col.a = _MainColor.a * (0.7 + fresnel * 0.3);
+                // 创建泡沫噪声图案
+                float2 foamUV1 = uv * _NoiseScale + _Time.x * _FoamSpeed;
+                float2 foamUV2 = uv * _NoiseScale * 1.7 + _Time.x * _FoamSpeed * 1.3;
                 
-                // Add some UV-based ripple details
-                float ripple = sin(i.uv.x * 15 + _Time.y * 2) * 0.02 + 
-                              sin(i.uv.y * 12 + _Time.y * 1.7) * 0.02;
-                col.rgb += ripple;
+                float foamNoise1 = fbm(foamUV1);
+                float foamNoise2 = fbm(foamUV2);
+                float combinedFoam = (foamNoise1 + foamNoise2) * 0.5;
+                
+                // 边缘泡沫 - 在Quad边缘产生泡沫
+                float edgeFoam = 1.0 - smoothstep(0.0, 0.2, min(min(uv.x, uv.y), min(1.0 - uv.x, 1.0 - uv.y)));
+                edgeFoam *= _EdgeFoam;
+                
+                // 涟漪效果
+                float2 rippleUV = uv * _RippleFrequency;
+                float ripple = sin(rippleUV.x + _Time.y * _RippleSpeed) * 
+                              sin(rippleUV.y + _Time.y * _RippleSpeed * 1.3) * 0.1;
+                
+                // 泡沫遮罩
+                float foamMask = combinedFoam * _FoamDensity + edgeFoam + ripple;
+                foamMask = saturate(foamMask);
+                
+                // 泡沫厚度控制
+                float foamArea = step(1.0 - _FoamThickness, foamMask);
+                
+                // 颜色混合
+                fixed4 col = _WaterColor;
+                
+                // 泡沫颜色（在泡沫区域使用泡沫颜色）
+                col = lerp(col, _FoamColor, foamArea);
+                
+                // 半透明泡沫效果
+                float foamAlpha = foamMask * _FoamColor.a;
+                col.a = max(_WaterColor.a, foamAlpha);
+                
+                // 添加一些泡沫细节变化
+                col.rgb += (combinedFoam - 0.5) * 0.1 * foamArea;
                 
                 return col;
             }
