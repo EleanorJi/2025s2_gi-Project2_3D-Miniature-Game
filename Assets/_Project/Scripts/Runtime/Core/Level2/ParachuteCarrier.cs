@@ -31,10 +31,12 @@ public class ParachuteCarrier : MonoBehaviour
     PlayerController pc;
     bool wasGroundedLastFrame;
     bool waitingForFirstMoveAfterLand;
+    private PlayerController playerController;
 
     void Awake()
     {
         pc = GetComponent<PlayerController>();
+        playerController = GetComponent<PlayerController>();
         if (pc)
         {
             if (!carryPoint) carryPoint = pc.carryPoint;
@@ -50,7 +52,10 @@ public class ParachuteCarrier : MonoBehaviour
         if (Input.GetKeyDown(pickupKey))
         {
             if (!carriedLeaf && nearbyLeaf)
+            {
                 AttachLeaf(nearbyLeaf.transform);
+                RefreshPlayerAnimation();
+            }
         }
 
         // Landed -> wait for the first movement to drop the leaf
@@ -120,6 +125,8 @@ public class ParachuteCarrier : MonoBehaviour
 
         //SFX: play once on successful attach (same sound as pickup/drop)
         GlobalSfx.PlayLeafPickupSfx(transform.position);
+        // 通知PlayerController更新动画状态
+        RefreshPlayerAnimation();
     }
 
     // —— Re-pin pose every frame, so other scripts/physics won't mess it up ——
@@ -174,5 +181,25 @@ public class ParachuteCarrier : MonoBehaviour
 
         //SFX: play the same sound on drop
         GlobalSfx.PlayLeafPickupSfx(transform.position);
+        // 通知PlayerController更新动画状态
+        RefreshPlayerAnimation();
+    }
+
+     // 更新玩家动画状态
+    private void RefreshPlayerAnimation()
+    {
+        if (playerController != null)
+        {
+            playerController.RefreshAnimationState();
+        }
+        else
+        {
+            // 备用方案：直接获取Animator（如果PlayerController不存在）
+            Animator animator = GetComponentInChildren<Animator>();
+            if (animator != null)
+            {
+                animator.SetBool("PickUp", HasLeaf());
+            }
+        }
     }
 }

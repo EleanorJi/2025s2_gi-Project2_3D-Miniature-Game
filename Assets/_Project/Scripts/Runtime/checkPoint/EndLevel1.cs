@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EndLevel1 : MonoBehaviour
 {
@@ -14,13 +15,21 @@ public class EndLevel1 : MonoBehaviour
 
     [Header("Animation control")]
     public GameObject endAnimationObject;  // Drag the End object with Animator attached here
+    public GameObject nextAnimationObject;  
 
     [Header("Level settings")]
     public string nextLevelName = "Level2"; // The name of the scene for the next level
     public float totalSequenceTime = 4f;   // The total time of the entire ending sequence (camera movement + animation playback)
+    
+    [Header("Fade Out Settings")]
+    public Image blackFadePanel;           // 黑色淡出面板
+    public float fadeOutDuration = 2f;     // 淡出持续时间
+    public float fadeOutDelay = 1f;        // 开始淡出前的延迟时间
+
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
     private Animator endAnimator;          // The Animator component of the End object
+    private Animator nextAnimator;
     private bool hasTriggered = false; // Prevent repeated triggering
 
     void Start()
@@ -64,6 +73,23 @@ public class EndLevel1 : MonoBehaviour
         {
             Debug.LogError("need set End Animation Object");
         }
+        if (nextAnimationObject != null)
+        {
+            nextAnimator = nextAnimationObject.GetComponent<Animator>();
+            if (nextAnimator == null)
+            {
+                Debug.LogError("The Animator component cannot be found on the next animation object.");
+            }
+        }
+
+        // 初始化黑色面板（确保开始时是隐藏的）
+        if (blackFadePanel != null)
+        {
+            Color color = blackFadePanel.color;
+            color.a = 0f;
+            blackFadePanel.color = color;
+            blackFadePanel.gameObject.SetActive(false);
+        }
     }
 
     void OnTriggerEnter(Collider other)
@@ -105,7 +131,7 @@ public class EndLevel1 : MonoBehaviour
     {
         // Record start time
         float sequenceStartTime = Time.time;
-        
+
         // If there is a camera transition setting, execute the camera movement
         if (cameraEndPosition != null && cameraLookAtTarget != null)
         {
@@ -121,19 +147,46 @@ public class EndLevel1 : MonoBehaviour
         float elapsedTime = Time.time - sequenceStartTime;
         float remainingTime = totalSequenceTime - elapsedTime;
 
-        // If there is still time left, wait until the animation finishes playing.
-        if (remainingTime > 0)
+        if (endAnimator != null && endAnimationObject != null)
         {
-            Debug.Log("Waiting for the animation to finish playing. Remaining time:" + remainingTime.ToString("F2") + "seconds");
-            yield return new WaitForSeconds(remainingTime);
+            // 方法1：等待动画状态播放完成
+            yield return StartCoroutine(WaitForAnimationToFinish(endAnimator));
+
+            Debug.Log("First animation finished playing. Hiding the first animation object.");
+            endAnimationObject.SetActive(false);
         }
-        else
+
+        if (nextAnimator != null)
         {
-            Debug.LogWarning("The total time setting might be too short. Load the next level immediately.");
+            Debug.Log("Triggering the second animation's IsEnd parameter...");
+            nextAnimator.SetBool("IsEnd", true);
+            yield return new WaitForSeconds(2f); // 可选：等待第二个动画播放 2 秒
         }
+
+        // 在加载下一关前执行黑色淡出效果
+        yield return StartCoroutine(FadeOutBlackScreen());
 
         Debug.Log("Sequence completed. Loading next level.");
         LoadNextLevel();
+    }
+
+    // 新增方法：等待动画播放完成
+    IEnumerator WaitForAnimationToFinish(Animator animator)
+    {
+        // 等待一帧确保动画状态已更新
+        yield return null;
+
+        // 获取当前播放的动画状态信息
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+        // 等待动画播放完成
+        while (stateInfo.normalizedTime < 1.0f)
+        {
+            yield return null;
+            stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        }
+
+        Debug.Log("Animation finished playing.");
     }
 
     IEnumerator CameraTransition()
@@ -167,11 +220,57 @@ public class EndLevel1 : MonoBehaviour
         Debug.Log("Camera transition completed");
     }
 
+    IEnumerator FadeOutBlackScreen()
+    {
+        if (blackFadePanel == null)
+        {
+            Debug.LogWarning("BlackFadePanel is not assigned!");
+            yield break;
+        }
+
+        // 延迟一段时间再开始淡出
+        if (fadeOutDelay > 0)
+        {
+            yield return new WaitForSeconds(fadeOutDelay);
+        }
+
+        // 激活黑色面板
+        blackFadePanel.gameObject.SetActive(true);
+
+        float timer = 0f;
+        Color color = blackFadePanel.color;
+        float startAlpha = color.a; // 应该是0
+
+        while (timer < fadeOutDuration)
+        {
+            timer += Time.deltaTime;
+            float t = Mathf.SmoothStep(0f, 1f, timer / fadeOutDuration);
+            
+            // 从透明渐变到不透明（黑色）
+            color.a = Mathf.Lerp(startAlpha, 1f, t);
+            blackFadePanel.color = color;
+            
+            yield return null;
+        }
+
+        // 确保最终完全不透明
+        color.a = 1f;
+        blackFadePanel.color = color;
+
+        Debug.Log("Fade out completed");
+    }
+
     void LoadNextLevel()
     {
         Debug.Log("Load the next level: 使用场景顺序跳转");
         
         // Load by using the scene order
         SceneOrderManager.Instance.LoadNextScene();
+    }
+
+    // 可选：添加一个公共方法用于在其他地方触发淡出
+    public void TriggerFadeOut()
+    {
+        StartCoroutine(FadeOutBlackScreen());
     }
 }
