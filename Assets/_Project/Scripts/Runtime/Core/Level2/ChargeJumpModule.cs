@@ -186,29 +186,23 @@ public class ChargeJumpModule : MonoBehaviour
     {
         GetComponent<RockTracker>()?.MarkJump();
 
-        // [FIX] 轻微抬离地面，避免本帧接触解算把水平量抬成竖直
-        rb.position += Vector3.up * 0.02f;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
 
-        // [FIX] 高度固定：由竖直“速度”决定；距离只随水平“速度”变化
         float horiz = baseHorizontal + finalCharge * horizontalPerCharge;
         float vert  = verticalImpulse;
 
-        Vector3 planar = planarDir.normalized * horiz;
-
-        // [FIX] 直接设置目标速度，保证高度不受蓄力影响
-        rb.linearVelocity = new Vector3(planar.x, vert, planar.z);
+        Vector3 impulse = planarDir.normalized * horiz + Vector3.up * vert;
+        rb.AddForce(impulse, ForceMode.Impulse);
     }
 
     void ApplyAirControl(Vector3 planarDir)
     {
         if (planarDir.sqrMagnitude < 0.0001f) return;
-
-        // [FIX] 仅调整水平分量，不改动 y，避免被意外抬高
-        Vector3 v  = rb.linearVelocity;                     // [FIX] velocity
+        Vector3 v = rb.linearVelocity;
         Vector3 pv = new Vector3(v.x, 0f, v.z);
         Vector3 wish = planarDir * maxAirSpeed;
-        Vector3 add  = (wish - pv) * airControlMultiplier * Time.deltaTime * 10f;
-        rb.linearVelocity = new Vector3(pv.x + add.x, v.y, pv.z + add.z);   // [FIX] velocity
+        Vector3 add = (wish - pv) * airControlMultiplier * Time.deltaTime * 10f;
+        rb.linearVelocity = new Vector3(pv.x + add.x, v.y, pv.z + add.z);
     }
 
     void SetHint(bool show)
