@@ -9,6 +9,9 @@ public class StoveDangerZone : MonoBehaviour
     [Header("Dangerous Settings")]
     public bool isDangerous = true;
     
+    [Header("Checkpoint Reference")]
+    [SerializeField] private Checkpoint checkpoint; // Reference to checkpoint
+    
     [Header("Status tracking")]
     private bool wasDangerousLastCheck = true; // The default assumption is that it is initially dangerous.
 
@@ -74,10 +77,28 @@ public class StoveDangerZone : MonoBehaviour
     {
         Debug.Log("The stove is now safe - it has transitioned from a dangerous state to a safe state.");
         
-        // Display UI prompt
-        if (UIManager.Instance != null)
+        // Show alternative text on checkpoint permanently (replaces original hint)
+        if (checkpoint != null)
         {
-            UIManager.Instance.ShowStoveSafeHint();
+            Debug.Log("StoveDangerZone: Calling ShowAlternativeTextPermanently on assigned checkpoint");
+            checkpoint.ShowAlternativeTextPermanently("Stove is now safe!");
+        }
+        else
+        {
+            // Fallback: try to find checkpoint if not assigned
+            var foundcheckpoint = GameObject.Find("Checkpoint2")?.GetComponent<Checkpoint>();
+            if (foundcheckpoint != null)
+            {
+                foundcheckpoint.ShowAlternativeTextPermanently("Stove is now safe!");
+            }
+            else
+            {
+                // Final fallback to original UI prompt
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowStoveSafeHint();
+                }
+            }
         }
     }
 
@@ -98,10 +119,27 @@ public class StoveDangerZone : MonoBehaviour
     {
         Debug.Log("stove save now!");
         
-        // Display UI prompt
-        if (UIManager.Instance != null)
+        // Show alternative text on checkpoint permanently (replaces original hint)
+        if (checkpoint != null)
         {
-            UIManager.Instance.ShowStoveSafeHint();
+            checkpoint.ShowAlternativeTextPermanently("Stove is now safe!");
+        }
+        else
+        {
+            // Fallback: try to find checkpoint if not assigned
+            var foundcheckpoint = GameObject.Find("Checkpoint2")?.GetComponent<Checkpoint>();
+            if (foundcheckpoint != null)
+            {
+                foundcheckpoint.ShowAlternativeTextPermanently("Stove is now safe!");
+            }
+            else
+            {
+                // Final fallback to original UI prompt
+                if (UIManager.Instance != null)
+                {
+                    UIManager.Instance.ShowStoveSafeHint();
+                }
+            }
         }
     }
 

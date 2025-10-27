@@ -128,6 +128,6 @@ public class FinishOnPressurePlate : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(homeSceneName);
+        SceneOrderManager.Instance.LoadNextScene();
     }
 }

@@ -80,7 +80,7 @@ public class BossWinUI : MonoBehaviour
         SetScriptsEnabled(_disabledCameraScripts, true);
 
         if (!string.IsNullOrEmpty(sceneToLoad))
-            SceneManager.LoadScene(sceneToLoad);
+            SceneOrderManager.Instance.LoadNextScene();
         else
             ShowPanel(false);
     }

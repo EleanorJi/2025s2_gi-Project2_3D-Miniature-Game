@@ -338,7 +338,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Press <color=red> "WASD" </color> to move Press
+  m_text: 'Press <color=red> [WASD] </color> to move Press
 
 '
   m_isRightToLeft: 0
@@ -349,8 +349,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -900,7 +900,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ohh! Sugars! Press  <color=red> "C"  </color>to pick up one of them
+  m_text: Ohh! Sugars! Press <color=red> [C] </color> to pick up one of them
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
   m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
@@ -909,8 +909,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1008,7 +1008,7 @@ RectTransform:
   m_GameObject: {fileID: 302633708}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1047529757}
@@ -1034,14 +1034,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.5529412}
+  m_Color: {r: 0.9528302, g: 0.9528302, b: 0.9528302, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1286,8 +1286,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2276,12 +2276,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e1018e4f2ac8a249a6b3b44d15efcc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActivated: 0
+  _isActivated: 0
   canReactivate: 0
-  hintText: It seems there is a delicious cookie over there that will last our family
-    a long time. I must go and get it today.
+  hintTextComponent: {fileID: 0}
   autoHideDelay: 5
   showHintOnActivation: 1
+  useLocalHint: 1
+  allowRepeatHint: 0
+  alwaysShowHint: 0
+  enableDynamicControl: 0
+  alternativeText: {fileID: 0}
+  hideAfterChange: 0
+  alternativeTextDuration: 5
 --- !u!65 &771971630
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3370,7 +3376,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Now place it by Press <color=red> "C"  </color> again to win.
+  m_text: Now place it by Press <color=red> [C]  </color> again to win.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
   m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
@@ -3379,8 +3385,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3661,8 +3667,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3943,8 +3949,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6152,6 +6158,7 @@ MonoBehaviour:
   pressDistance: 0.1
   pressSpeed: 2
   objectToHide: {fileID: 0}
+  checkpoint: {fileID: 0}
 --- !u!114 &1788925255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6173,7 +6180,8 @@ MonoBehaviour:
   winTitle: Congratulations!
   subTemplate: 'You''ve completed the tutorial
 
-    Entering Next Level in {0}s'
+    Entering Next Level in <color=red>{0}
+    </color>s'
   homeSceneName: Level1-2
   autoReturnDelay: 5
 --- !u!1 &1840654378
@@ -6439,8 +6447,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278196376
-  m_fontColor: {r: 0.5943396, g: 0.09322975, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -6457,8 +6465,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 27
+  m_fontSizeBase: 27
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6631,7 +6639,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press <color=red> "SPACE"  </color> to jump
+  m_text: Press <color=red> [SPACE] </color> to jump
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
   m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
@@ -6640,8 +6648,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

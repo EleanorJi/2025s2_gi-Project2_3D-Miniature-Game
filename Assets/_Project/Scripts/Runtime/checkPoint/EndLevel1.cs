@@ -262,10 +262,10 @@ public class EndLevel1 : MonoBehaviour
 
     void LoadNextLevel()
     {
-        Debug.Log("Load the next level:" + nextLevelName);
+        Debug.Log("Load the next level: 使用场景顺序跳转");
         
-        // Load by using the scene name
-        SceneManager.LoadScene(nextLevelName);
+        // Load by using the scene order
+        SceneOrderManager.Instance.LoadNextScene();
     }
 
     // 可选：添加一个公共方法用于在其他地方触发淡出
