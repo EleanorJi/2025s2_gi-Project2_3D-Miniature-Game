@@ -1157,8 +1157,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Ready for adventure?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
-  m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4f284866a64fceb4ba2fb3d36b270134, type: 2}
+  m_sharedMaterial: {fileID: 2964970814373541248, guid: 4f284866a64fceb4ba2fb3d36b270134, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2275,15 +2275,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: Antventure
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
-  m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 4f284866a64fceb4ba2fb3d36b270134, type: 2}
+  m_sharedMaterial: {fileID: 2964970814373541248, guid: 4f284866a64fceb4ba2fb3d36b270134, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4279900698
-  m_fontColor: {r: 0.1, g: 0.1, b: 0.1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
