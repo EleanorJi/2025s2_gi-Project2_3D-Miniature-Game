@@ -6,6 +6,10 @@ public class FireController : MonoBehaviour
     public float shrinkDuration = 2.0f;
     public AnimationCurve shrinkCurve = AnimationCurve.EaseInOut(0, 1, 1, 0);
 
+    [Header("Fire Reset Settings")]
+    public float resetDuration = 2.0f;
+    public AnimationCurve resetCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
     [Header("Child Fire Settings")]
     public bool shrinkFromBottomCenter = true;
 
@@ -15,10 +19,18 @@ public class FireController : MonoBehaviour
     private Bounds[] childInitialBounds;
 
     private bool shouldShrink = false;
+    private bool shouldReset = false;
     private float shrinkTimer = 0f;
+    private float resetTimer = 0f;
+
+    // 存储当前状态，用于恢复动画
+    private Vector3[] currentScales;
+    private Vector3[] currentPositions;
 
     public bool IsShrinking { get; private set; } = false;
+    public bool IsResetting { get; private set; } = false;
     public bool IsFullyShrunk { get; private set; } = false;
+    public bool IsFullyReset { get; private set; } = false;
 
     void Start()
     {
@@ -32,14 +44,17 @@ public class FireController : MonoBehaviour
         childInitialPositions = new Vector3[childCount];
         childInitialScales = new Vector3[childCount];
         childInitialBounds = new Bounds[childCount];
+        currentScales = new Vector3[childCount];
+        currentPositions = new Vector3[childCount];
 
         for (int i = 0; i < childCount; i++)
         {
             fireChildren[i] = transform.GetChild(i);
             childInitialPositions[i] = fireChildren[i].localPosition;
             childInitialScales[i] = fireChildren[i].localScale;
-            
-            // Store initial bounds for potential future use
+            currentScales[i] = childInitialScales[i];
+            currentPositions[i] = childInitialPositions[i];
+
             Renderer renderer = fireChildren[i].GetComponent<Renderer>();
             if (renderer != null)
             {
@@ -55,24 +70,26 @@ public class FireController : MonoBehaviour
             shrinkTimer += Time.deltaTime;
             float progress = Mathf.Clamp01(shrinkTimer / shrinkDuration);
             float scaleFactor = shrinkCurve.Evaluate(progress);
-            
+
             for (int i = 0; i < fireChildren.Length; i++)
             {
                 if (fireChildren[i] != null)
                 {
                     if (shrinkFromBottomCenter)
                     {
-                        // Shrink from the center at the bottom.
                         ApplyBottomCenterShrink(fireChildren[i], i, scaleFactor);
                     }
                     else
                     {
-                        // Normal reduction
                         fireChildren[i].localScale = childInitialScales[i] * scaleFactor;
                     }
+                    
+                    // 更新当前状态
+                    currentScales[i] = fireChildren[i].localScale;
+                    currentPositions[i] = fireChildren[i].localPosition;
                 }
             }
-            
+
             if (progress >= 1.0f)
             {
                 IsShrinking = false;
@@ -80,50 +97,121 @@ public class FireController : MonoBehaviour
                 SetChildrenActive(false);
             }
         }
+
+        if (shouldReset && !IsFullyReset)
+        {
+            resetTimer += Time.deltaTime;
+            float progress = Mathf.Clamp01(resetTimer / resetDuration);
+            
+            for (int i = 0; i < fireChildren.Length; i++)
+            {
+                if (fireChildren[i] != null)
+                {
+                    if (shrinkFromBottomCenter)
+                    {
+                        // 从当前状态插值到初始状态
+                        fireChildren[i].localScale = Vector3.Lerp(currentScales[i], childInitialScales[i], progress);
+                        fireChildren[i].localPosition = Vector3.Lerp(currentPositions[i], childInitialPositions[i], progress);
+                    }
+                    else
+                    {
+                        fireChildren[i].localScale = Vector3.Lerp(currentScales[i], childInitialScales[i], progress);
+                    }
+                }
+            }
+
+            if (progress >= 1.0f)
+            {
+                IsResetting = false;
+                IsFullyReset = true;
+                SetChildrenActive(true);
+                
+                // 确保最终状态完全正确
+                for (int i = 0; i < fireChildren.Length; i++)
+                {
+                    if (fireChildren[i] != null)
+                    {
+                        fireChildren[i].localScale = childInitialScales[i];
+                        fireChildren[i].localPosition = childInitialPositions[i];
+                    }
+                }
+            }
+        }
     }
 
     void ApplyBottomCenterShrink(Transform child, int index, float scaleFactor)
     {
-        // Apply scaling
         Vector3 newScale = childInitialScales[index] * scaleFactor;
         child.localScale = newScale;
 
         if (scaleFactor > 0)
         {
-            // Calculate the position offset to maintain the bottom fixed
             float heightDifference = childInitialScales[index].y - newScale.y;
             Vector3 newPosition = childInitialPositions[index];
-            newPosition.y += heightDifference * 0.5f; // Move upwards by half of the height difference
+            newPosition.y += heightDifference * 0.5f;
             child.localPosition = newPosition;
         }
     }
 
     public void StartShrink()
     {
-        InitializeChildFires(); // Reinitialize before each start
+        InitializeChildFires();
         shouldShrink = true;
+        shouldReset = false;
         IsShrinking = true;
+        IsResetting = false;
         IsFullyShrunk = false;
+        IsFullyReset = false;
+        shrinkTimer = 0f;
+        resetTimer = 0f;
+        SetChildrenActive(true);
+    }
+
+    public void StartReset()
+    {
+        // 在开始恢复前保存当前状态
+        for (int i = 0; i < fireChildren.Length; i++)
+        {
+            if (fireChildren[i] != null)
+            {
+                currentScales[i] = fireChildren[i].localScale;
+                currentPositions[i] = fireChildren[i].localPosition;
+            }
+        }
+        
+        shouldReset = true;
+        shouldShrink = false;
+        IsResetting = true;
+        IsShrinking = false;
+        IsFullyReset = false;
+        IsFullyShrunk = false;
+        resetTimer = 0f;
         shrinkTimer = 0f;
         SetChildrenActive(true);
     }
 
-    public void ResetFire()
+    public void InstantResetFire()
     {
         shouldShrink = false;
+        shouldReset = false;
         IsShrinking = false;
+        IsResetting = false;
         IsFullyShrunk = false;
+        IsFullyReset = false;
         shrinkTimer = 0f;
-        
+        resetTimer = 0f;
+
         for (int i = 0; i < fireChildren.Length; i++)
         {
             if (fireChildren[i] != null)
             {
                 fireChildren[i].localPosition = childInitialPositions[i];
                 fireChildren[i].localScale = childInitialScales[i];
+                currentScales[i] = childInitialScales[i];
+                currentPositions[i] = childInitialPositions[i];
             }
         }
-        
+
         SetChildrenActive(true);
     }
 
