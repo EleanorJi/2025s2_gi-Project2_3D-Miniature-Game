@@ -186,12 +186,6 @@ public class Checkpoint : MonoBehaviour
             localHintDisplay.ShowHint(currentDisplayText);
             Debug.Log($"Display local checkpoint prompt: {gameObject.name}, will auto-hide in {autoHideDelay} seconds");
         }
-        else if (UIManager.Instance != null && !string.IsNullOrEmpty(currentDisplayText))
-        {
-            // Fallback to UIManager
-            UIManager.Instance.ShowHintText(currentDisplayText, autoHideDelay);
-            Debug.Log($"Display UI checkpoint prompt: {gameObject.name}, will auto-hide in {autoHideDelay} seconds");
-        }
     }
 
 
@@ -206,12 +200,6 @@ public class Checkpoint : MonoBehaviour
             localHintDisplay.ShowHint(customHintText);
             Debug.Log($"Display custom local checkpoint prompt: {gameObject.name}, will auto-hide in {autoHideDelay} seconds");
         }
-        else if (UIManager.Instance != null && !string.IsNullOrEmpty(customHintText))
-        {
-            // Fallback to UIManager
-            UIManager.Instance.ShowHintText(customHintText, autoHideDelay);
-            Debug.Log($"Display custom UI checkpoint prompt: {gameObject.name}, will auto-hide in {autoHideDelay} seconds");
-        }
     }
 
     
@@ -219,13 +207,6 @@ public class Checkpoint : MonoBehaviour
     {
         // Wait for the specified time
         yield return new WaitForSeconds(autoHideDelay);
-        
-        // Hide the hint text
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.HideHintText();
-            Debug.Log($"Automatic hidden checkpoint prompt: {gameObject.name}");
-        }
         
         hideCoroutine = null;
     }
@@ -285,10 +266,6 @@ public class Checkpoint : MonoBehaviour
         if (useLocalHint && localHintDisplay != null)
         {
             localHintDisplay.HideHint();
-        }
-        else if (UIManager.Instance != null)
-        {
-            UIManager.Instance.HideHintText();
         }
     }
     
