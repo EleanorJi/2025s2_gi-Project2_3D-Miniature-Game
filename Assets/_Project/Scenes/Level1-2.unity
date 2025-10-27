@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: aa1bb3e1901ea7d49ae63e3a1f78551e, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -6693,6 +6693,9 @@ MonoBehaviour:
   enableWaterAreaIntegration: 0
   waterArea: {fileID: 0}
   autoFindContainingArea: 1
+  respawnOverride: {fileID: 0}
+  respawnManager: {fileID: 0}
+  preferFloodAreaHandle: 1
 --- !u!65 &492040231
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7701,6 +7704,9 @@ MonoBehaviour:
   enableWaterAreaIntegration: 0
   waterArea: {fileID: 0}
   autoFindContainingArea: 1
+  respawnOverride: {fileID: 0}
+  respawnManager: {fileID: 0}
+  preferFloodAreaHandle: 1
 --- !u!1 &579889841 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -52264314302490845, guid: bfd0ca5db3f108d4d8fa86abb2e778bc, type: 3}
@@ -9264,6 +9270,9 @@ MonoBehaviour:
   enableWaterAreaIntegration: 0
   waterArea: {fileID: 0}
   autoFindContainingArea: 1
+  respawnOverride: {fileID: 0}
+  respawnManager: {fileID: 0}
+  preferFloodAreaHandle: 1
 --- !u!1001 &727823848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13777,6 +13786,9 @@ MonoBehaviour:
   enableWaterAreaIntegration: 0
   waterArea: {fileID: 0}
   autoFindContainingArea: 1
+  respawnOverride: {fileID: 0}
+  respawnManager: {fileID: 0}
+  preferFloodAreaHandle: 1
 --- !u!1001 &1165038406
 PrefabInstance:
   m_ObjectHideFlags: 0
