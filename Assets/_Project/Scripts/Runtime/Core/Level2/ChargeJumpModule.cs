@@ -196,7 +196,7 @@ public class ChargeJumpModule : MonoBehaviour
         Vector3 planar = planarDir.normalized * horiz;
 
         // [FIX] 直接设置目标速度，保证高度不受蓄力影响
-        rb.velocity = new Vector3(planar.x, vert, planar.z);
+        rb.linearVelocity = new Vector3(planar.x, vert, planar.z);
     }
 
     void ApplyAirControl(Vector3 planarDir)
@@ -204,11 +204,11 @@ public class ChargeJumpModule : MonoBehaviour
         if (planarDir.sqrMagnitude < 0.0001f) return;
 
         // [FIX] 仅调整水平分量，不改动 y，避免被意外抬高
-        Vector3 v  = rb.velocity;                     // [FIX] velocity
+        Vector3 v  = rb.linearVelocity;                     // [FIX] velocity
         Vector3 pv = new Vector3(v.x, 0f, v.z);
         Vector3 wish = planarDir * maxAirSpeed;
         Vector3 add  = (wish - pv) * airControlMultiplier * Time.deltaTime * 10f;
-        rb.velocity = new Vector3(pv.x + add.x, v.y, pv.z + add.z);   // [FIX] velocity
+        rb.linearVelocity = new Vector3(pv.x + add.x, v.y, pv.z + add.z);   // [FIX] velocity
     }
 
     void SetHint(bool show)
