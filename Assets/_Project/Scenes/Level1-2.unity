@@ -3660,7 +3660,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Hmm... too light! '
+  m_text: HMM...too light
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
   m_sharedMaterial: {fileID: 2964970814373541248, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
@@ -12309,7 +12309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &930726122
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14704,6 +14704,9 @@ MonoBehaviour:
   enableWaterAreaIntegration: 0
   waterArea: {fileID: 0}
   autoFindContainingArea: 1
+  respawnOverride: {fileID: 0}
+  respawnManager: {fileID: 0}
+  preferFloodAreaHandle: 1
 --- !u!1 &1158453809
 GameObject:
   m_ObjectHideFlags: 0
@@ -15659,6 +15662,9 @@ MonoBehaviour:
   nextAnimationObject: {fileID: 1327538395}
   nextLevelName: Level2_Street
   totalSequenceTime: 4
+  blackFadePanel: {fileID: 0}
+  fadeOutDuration: 2
+  fadeOutDelay: 1
 --- !u!223 &1227477812
 Canvas:
   m_ObjectHideFlags: 0
