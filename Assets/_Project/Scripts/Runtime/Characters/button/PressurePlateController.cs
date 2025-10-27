@@ -14,6 +14,9 @@ public class PressurePlateController : MonoBehaviour
     [Header("Object Visibility Control")]
     [SerializeField] private GameObject objectToHide; // 要隐藏的物体
 
+    [Header("Checkpoint Control")]
+    [SerializeField] private Checkpoint checkpoint; // 要控制的checkpoint (Checkpoint2.5.1)
+
     public System.Action<bool> OnPlateActivated;
     public System.Action<GameObject> OnSugarPlaced;
 
@@ -66,6 +69,14 @@ public class PressurePlateController : MonoBehaviour
             SetPressedState(true);
             OnPlateActivated?.Invoke(true);
             HideObject(); // 当压力板被激活时隐藏物体
+            
+            // 当糖块放在压力板上时，停止checkpoint的渲染
+            if (checkpoint != null)
+            {
+                checkpoint.isActivated = false;
+                Debug.Log($"[PressurePlate] Checkpoint {checkpoint.name} deactivated (isActivated = false)");
+            }
+            
             // Debug.Log("Plate activated");
         }
     }
@@ -81,6 +92,14 @@ public class PressurePlateController : MonoBehaviour
             SetPressedState(false);
             OnPlateActivated?.Invoke(false);
             ShowObject(); // 当压力板复位时显示物体
+            
+            // 当糖块离开压力板时，重新激活checkpoint的渲染
+            if (checkpoint != null)
+            {
+                checkpoint.isActivated = true;
+                Debug.Log($"[PressurePlate] Checkpoint {checkpoint.name} reactivated (isActivated = true)");
+            }
+            
             // Debug.Log("Plate deactivated");
         }
     }
