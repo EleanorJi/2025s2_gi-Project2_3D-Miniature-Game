@@ -185,7 +185,7 @@ This shader, named KitchenSinkFoam, is a custom fragment shader written in Cg/HL
 
 #### 1.2 Shader File Link
 
-[WaterAdvanced.shader](Assets/_Project/shader/KitchenSinkFoam.shader)
+* [KitchenSinkFoam.shader](Assets/_Project/shader/KitchenSinkFoam.shader)
 
 
 #### 1.3 Key Features and Implementation
@@ -207,7 +207,77 @@ This shader operates in the Transparent render queue with Alpha Blending, which 
 
 ## Summary of Contributions
 
-TODO - see specification for details
+### Personal Contribution Report - Hanyu Ji
+
+#### 1. Overview of Contributions
+I was primarily responsible for all aspects related to Level 1 (Kitchen) and all animation work across the entire project, including animations for other levels. My contributions also included writing the Evaluation Report and the Water Shader Report.
+
+#### 2. Key Contributions
+
+##### 2.1 Level 1 (Kitchen) Design & Implementation
+* Designed and built the entire Kitchen level environment.
+* Implemented interactive objects and obstacles (e.g., rolling cucumber, sugar cube puzzle, milk carton maze, cake spatula bridge).
+* Scripted level mechanics and puzzle logic.
+* Relevant files
+  * Global Scripts
+    * [cameraFollow.cs](Assets/Scripts/Runtime/Camera/cameraFollow.cs)
+    * [PlayerController.cs](Assets/Scripts/Runtime/Player/PlayerController.cs)
+    * [PlayerInputController.cs](Assets/Scripts/Runtime/Player/PlayerInputController.cs)
+    * [Checkpoint.cs](Assets/Scripts/Runtime/checkPoint/Checkpoint.cs)
+    * [CheckpointManager.cs](Assets/Scripts/Runtime/checkPoint/CheckpointManager.cs)
+  * Level 1 relevant
+    * [Level1_kitchen.unity](Assets/Scenes/Level1_kitchen.unity)
+    * [CameraIntroAnimation.cs](Assets/Scripts/Runtime/Camera/CameraIntroAnimation.cs)
+    * [FollowCucumberTranslation.cs](Assets/Scripts/Runtime/Characters/rollingCucumber/FollowCucumberTranslation.cs)
+    * [rollingCucumber.cs](Assets/Scripts/Runtime/Characters/rollingCucumber/rollingCucumber.cs)
+    * [PressurePlateController.cs](Assets/Scripts/Runtime/Characters/button/PressurePlateController.cs)
+    * [StoveDangerZone.cs](Assets/Scripts/Runtime/Characters/Stove/StoveDangerZone.cs)
+    * [FireManager.cs](Assets/Scripts/Runtime/Characters/FireManager/FireManager.cs)
+    * [FireController.cs](Assets/Scripts/Runtime/Characters/Fire/FireController.cs)
+    * [AutoNod.cs](Assets/Scripts/Runtime/pigeon/AutoNod.cs)
+    * [EndLevel1.cs](Assets/Scripts/Runtime/checkPoint/EndLevel1.cs)
+
+##### 2.2 Animation Work
+* Created and implemented all character and enemy animations.
+* Developed animation controllers and state machines.
+* Animated the protagonist ant, pigeon boss, and helper ants.
+* Relevant files
+  * Global
+    * [AntAnimatorController.controller](Assets/Art/Animations/Player/AntAnimatorController.controller)
+    * [Idle.anim](Assets/Art/Animations/Player/Idle.anim)
+    * [walk.anim](Assets/Art/Animations/Player/walk.anim)
+    * [pickUp.anim](Assets/Art/Animations/Player/pickUp.anim)
+    * [pickUpWalk.anim](Assets/Art/Animations/Player/pickUpWalk.anim)
+  * Level 1
+    * [CameraIntroAnimation.cs](Assets/Scripts/Runtime/Camera/CameraIntroAnimation.cs)
+    * [AutoNod.cs](Assets/Scripts/Runtime/pigeon/AutoNod.cs)
+    * [EndLevel1.cs](Assets/Scripts/Runtime/checkPoint/EndLevel1.cs)
+    * [endPigeon.controller](Assets/Art/Animations/pigeon/Level1/endPigeon.controller)
+    * [pigeon.controller](Assets/Art/Animations/pigeon/Level1/pigeon.controller)
+    * [End.anim](Assets/Art/Animations/pigeon/Level1/End.anim)
+    * [Idle1.anim](Assets/Art/Animations/pigeon/Level1/IdleFly.anim)
+    * [Idle.anim](Assets/Art/Animations/pigeon/Level1/Idle.anim)
+    * [endFly.anim](Assets/Art/Animations/pigeon/Level1/endFly.anim)
+    * [nodding.anim](Assets/Art/Animations/pigeon/Level1/nodding.anim)
+  * Level 2
+    * [CameraIntroLevel2.cs](Assets/Scripts/Runtime/Camera/CameraIntroLevel2.cs)
+    * [CheckpointUp.cs](Assets/Scripts/Runtime/checkPoint/CheckpointUp.cs)
+    * [level2Intro.anim](Assets/Art/Animations/Player/level2Intro.anim)
+    * [upLeve2.controller](Assets/Art/Animations/HelpAnt/upLeve2.controller)
+    * [upLevel2.anim](Assets/Art/Animations/HelpAnt/upLevel2.anim)
+    * [upFinal.anim](Assets/Art/Animations/HelpAnt/upFinal.anim)
+  * Level 3
+    * [CommonPigeon.controller](Assets/Art/Animations/pigeon/Level3/CommonPigeon.controller)
+    * [IdleLevel3.anim](Assets/Art/Animations/pigeon/Level3/IdleLevel3.anim)
+
+##### 2.3 Shader Development
+* Wrote and implemented the water shader used in Level 1 (sink area).
+* Relevant files
+  * [KitchenSinkFoam.shader](Assets/_Project/shader/KitchenSinkFoam.shader)
+##### 2.4 Reporting
+* Authored the Evaluation Report for the project.
+* Wrote the Water Shader Technical Report.
+
 
 ## References and External Resources
 
