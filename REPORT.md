@@ -177,7 +177,33 @@ The iterative process of testing, analyzing, and refining based on user feedback
 
 ## Shaders and Special Effects
 
-TODO - see specification for details
+### 1. Custom Water Shader for Kitchen Sink
+
+#### 1.1 Shader Overview
+
+This shader, named KitchenSinkFoam, is a custom fragment shader written in Cg/HLSL. It simulates the water surface in the kitchen sink of our Level 1, creating a dynamic and translucent liquid with animated foam and ripples. The implementation was developed with guidance from Roystan's "Toon Water Shader" tutorial [1], adapting its core principles for our specific needs.
+
+#### 1.2 Shader File Link
+
+[WaterAdvanced.shader](Assets/_Project/shader/KitchenSinkFoam.shader)
+
+
+#### 1.3 Key Features and Implementation
+* **Procedural Foam Generation:** Implemented using a Fractional Brownian Motion (FBM) function with multiple octaves of noise to create organic, moving foam patterns.
+* **Edge Foam:** Generates foam concentrated at the edges of the mesh quad using UV-based distance calculations, enhancing the perception of water containment.
+* **Animated Ripples:** A sine-wave-based ripple effect that animates over time, adding high-frequency detail to the water surface.
+* **Customizable Parameters:** All visual aspects, such as _WaterColor, _FoamColor, _FoamThickness, and animation speeds, are exposed as properties in the Unity Inspector for easy artistic control.
+
+#### 1.4 Integration with Unity and Technical Context
+This shader operates in the Transparent render queue with Alpha Blending, which is crucial for achieving the desired translucent effect. It is a custom vertex/fragment shader, not a Surface Shader, giving us full low-level control over the output color and transparency for each pixel. The shader parameters are set entirely via a Material instance, making it easy to create different water variants without script intervention. The shader's use of _Time.x and _Time.y to animate the UV coordinates is a standard and efficient technique within Unity's shading pipeline for creating continuous motion.
+
+#### 1.5 Visual Demonstration
+<p align="center">
+  <img src="images/report/waterShader.gif" alt="Water Shader Level 1" width="600">
+</p>
+
+
+
 
 ## Summary of Contributions
 
