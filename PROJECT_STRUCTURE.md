@@ -143,7 +143,6 @@ Assets/
 - Rendering
   - Ensure the intended URP assets are selected in `Project Settings → Graphics` and `Quality`. Keep renderer features consistent across renderers if multiple are used.
   - Tune `DefaultVolumeProfile.asset` for global post-processing; use local Volumes for per-scene overrides.
-  - Manage URP renderer features via `New Universal Render Pipeline Asset_Renderer.asset`.
 
 ## Notes
 
