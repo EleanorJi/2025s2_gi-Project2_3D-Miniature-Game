@@ -61,8 +61,6 @@ Assets/
 ├── TextMesh Pro/                          # TMP package assets (fonts, shaders, examples)
 ├── StartScene.unity                       # Entry/start scene
 ├── DefaultVolumeProfile.asset             # Global Volume profile (URP)
-├── New Toon Render Pipeline Asset.asset   # Custom URP render pipeline asset (Toon)
-├── New Universal Render Pipeline Asset_Renderer.asset  # URP renderer asset
 └── UniversalRenderPipelineGlobalSettings.asset         # URP global settings
 ```
 
@@ -123,12 +121,6 @@ Assets/
 
 - DefaultVolumeProfile.asset
   - Global Volume profile for URP post-processing. Tweak effects here (Bloom, Vignette, etc.) or create per-scene volumes for overrides.
-
-- New Toon Render Pipeline Asset.asset
-  - Custom URP Render Pipeline Asset using a toon/cel-shaded configuration. Assign via `Project Settings → Graphics` to apply globally.
-
-- New Universal Render Pipeline Asset_Renderer.asset
-  - URP Renderer Asset used by the pipeline. Configure renderer features (e.g., SSAO, Render Objects, 2D Renderer) here.
 
 - UniversalRenderPipelineGlobalSettings.asset
   - URP global settings asset that controls defaults such as layer names for rendering and other pipeline-level options.
