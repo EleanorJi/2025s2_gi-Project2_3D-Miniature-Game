@@ -1,176 +1,118 @@
-# Antventure Project Structure
+# Project Structure (Assets)
 
-## Complete Folder Architecture
+This document reflects the current structure of the `Assets` folder in this Unity project, along with brief descriptions of the contents and guidance for adding new content.
+
+## Folder Tree
 
 ```
 Assets/
-├── _Project/                           # Main project folder
-│   ├── Scripts/                        # Script files
-│   │   ├── Editor/                     # Editor-related scripts
-│   │   │   ├── Tools/                  # Editor tools
-│   │   │   ├── Inspectors/             # Custom inspectors
-│   │   │   └── Windows/                # Editor windows
-│   │   └── Runtime/                    # Runtime scripts
-│   │       ├── Characters/             # Character-related scripts
-│   │       │   ├── Player/             # Player controller
-│   │       │   ├── Ants/               # Ant AI scripts
-│   │       │   ├── NPCs/               # NPC scripts
-│   │       │   └── Enemies/            # Enemy scripts
-│   │       ├── Core/                   # Core systems
-│   │       │   └── GameManager.cs     # Game manager
-│   │       ├── Systems/                # Game systems
-│   │       │   ├── Audio/              # Audio system
-│   │       │   ├── Input/              # Input system
-│   │       │   ├── Gameplay/           # Gameplay systems
-│   │       │   └── Saving/             # Save system
-│   │       ├── Camera/                 # Camera system
-│   │       │   └── cameraFollow.cs     # Camera follow
-│   │       ├── Interactables/          # Interactive objects
-│   │       │   ├── Collectibles/       # Collectible items
-│   │       │   ├── Mechanisms/         # Mechanisms and devices
-│   │       │   └── Hazards/            # Hazardous objects
-│   │       ├── UI/                     # User interface
-│   │       │   ├── Menus/              # Menu interfaces
-│   │       │   ├── HUD/                # Game interface
-│   │       │   └── Common/             # Common UI components
-│   │       └── Utilities/              # Utility classes
-│   │           ├── Extensions/         # Extension methods
-│   │           ├── Helpers/            # Helper tools
-│   │           └── Constants/          # Constant definitions
-│   │
-│   ├── Art/                            # Art assets
-│   │   ├── Animations/                 # Animation files
-│   │   ├── Materials/                  # Material files
-│   │   ├── Models/                     # 3D models
-│   │   ├── Textures/                   # Texture files
-│   │   ├── Environment/                # Environment art
-│   │   ├── Characters/                 # Character art
-│   │   ├── UI/                         # UI art assets
-│   │   └── Effects/                    # Effects art
-│   │
-│   ├── Audio/                          # Audio assets
-│   │   ├── Music/                      # Background music
-│   │   ├── SFX/                        # Sound effect files
-│   │   ├── Voice/                      # Voice files
-│   │   └── Mixers/                     # Audio mixers
-│   │
-│   ├── Prefabs/                        # Prefabs
-│   │   ├── Characters/                 # Character prefabs
-│   │   ├── UI/                         # UI prefabs
-│   │   ├── Environment/                # Environment prefabs
-│   │   └── Effects/                    # Effect prefabs
-│   │
-│   ├── Scenes/                         # Scene files
-│   │   ├── Level1_kitchen/             # Kitchen level assets
-│   │   ├── Level1.unity                # Kitchen level scene
-│   │   ├── Level1-2.unity              # Kitchen level variant
-│   │   └── StartScene.unity            # Start scene
-│   │
-│   ├── ScriptableObjects/              # Scriptable objects
-│   ├── Settings/                       # Project settings
-│   └── Gizmos/                         # Gizmos icons
-│
-├── script/                             # Original scripts (to be migrated)
-│   ├── cameraFollow.cs                 # Original camera script
-│   └── PlayerController.cs             # Original player controller
-│
-├── materials/                          # Original materials folder
-├── Level1_kitchen/                     # Original level assets
-└── images/                             # Project image assets
+├── Art/                                   # Art assets (materials, textures, models, prefabs, VFX)
+│   ├── Animations/                        # Animation clips & controllers
+│   │   ├── HelpAnt/
+│   │   ├── pigeon/                        # Level1, Level3
+│   │   └── Player/
+│   ├── Audio/                             # Audio library
+│   │   ├── Level2/
+│   │   ├── Mixers/
+│   │   ├── Music/
+│   │   ├── SFX/
+│   │   └── Voice/
+│   ├── Characters/                        # Character UI sprites (HP icons, etc.)
+│   ├── Effects/                           # VFX prefabs (e.g., BoomSmoke)
+│   ├── Environment/
+│   ├── Materials/                         # Materials and physic materials
+│   │   └── skybox/
+│   ├── Models/                            # Level kits and models
+│   │   ├── Level1_kitchen/
+│   │   ├── Level2_Street/
+│   │   ├── Level3_dock/
+│   │   └── tut-environment/
+│   ├── Prefabs/                           # Reusable prefabs (e.g., AntMinion, UI icons)
+│   ├── Shader/                            # Custom shaders (e.g., CloudFresnel)
+│   ├── Sprite/                            # 2D sprites
+│   │   └── DeathImage/
+│   ├── Textures/                          # Generic textures
+│   │   └── drySoil/
+│   └── UI/
+│       ├── Cursor/
+│       └── HomePageResource/
+├── Resources/                             # Assets loaded via Resources API at runtime
+│   └── FontManager.asset
+├── Scenes/                                # Scene files for gameplay and menus
+│   ├── Level0_Tutorial.unity
+│   ├── Level1_kitchen.unity
+│   ├── Level2_Street.unity
+│   └── Level3_boss.unity
+├── Scripts/                               # Gameplay and utility C# scripts
+│   ├── Editor/                            # Editor tooling (inspectors, windows, tools)
+│   └── Runtime/                           # Runtime code organized by domain/feature
+│       ├── Attack/
+│       ├── Camera/
+│       ├── Characters/                    # Enemies, minions, interactions
+│       ├── checkPoint/
+│       ├── Core/
+│       ├── Interactables/                 # Collectibles, Hazards, Mechanisms
+│       ├── Level2/
+│       ├── pigeon/
+│       ├── Player/
+│       ├── Systems/                       # Audio, Gameplay, Input, Saving
+│       ├── UI/
+│       └── Utilities/                     # Constants, Extensions, Helpers
+├── TextMesh Pro/                          # TMP package assets (fonts, shaders, examples)
+├── StartScene.unity                       # Entry/start scene
+├── DefaultVolumeProfile.asset             # Global Volume profile (URP)
+├── New Toon Render Pipeline Asset.asset   # Custom URP render pipeline asset (Toon)
+├── New Universal Render Pipeline Asset_Renderer.asset  # URP renderer asset
+└── UniversalRenderPipelineGlobalSettings.asset         # URP global settings
 ```
 
-## Folder Purpose Description
+## Descriptions
 
-### Scripts
-- **Editor/**: Unity editor extension scripts, only run in editor mode
-- **Runtime/**: Game runtime scripts, will be packaged into the final game
+- Art/
+  - Primary location for visual assets included with the project. Contains numerous subfolders for materials, textures, sprites, prefabs, VFX, and other art resources used across scenes.
 
-#### Characters
-- **Player/**: Player ant control scripts
-- **Ants/**: AI assistant ant scripts
-- **NPCs/**: Non-player character scripts
-- **Enemies/**: Enemy and Boss scripts
+- Resources/
+  - Holds assets that are loaded at runtime via `Resources.Load`. Use sparingly and prefer Addressables for large projects. Ensure paths are stable to avoid runtime load errors.
 
-#### Systems
-- **Audio/**: Audio management and sound effect playback systems
-- **Input/**: Input handling and key mapping systems
-- **Gameplay/**: Summoning systems and game mechanics
-- **Saving/**: Save loading and progress saving
+- Scenes/
+  - Contains Unity scene files (`.unity`). Use subfolders for level-specific content if the number of scenes grows. The project also includes a top-level `StartScene.unity` in `Assets/` which acts as an entry point.
 
-#### Interactables
-- **Collectibles/**: French fry crumbs, hidden items, etc.
-- **Mechanisms/**: Switches, mechanisms, portals, etc.
-- **Hazards/**: Traps, dangerous areas, etc.
+- Scripts/
+  - C# source code for gameplay logic, UI, utilities, and systems. Organize by feature or domain (e.g., `Gameplay/`, `Systems/`, `UI/`). Keep filenames and class names in sync.
 
-### Art
-Art assets categorized by function and type, facilitating artist collaboration
+- TextMesh Pro/
+  - TextMesh Pro package resources (fonts, shaders, examples). Avoid modifying package-provided assets unless duplicating them into your own folders.
 
-### 🔊 Audio
-- **Music/**: Background music, supporting different levels
-- **SFX/**: Sound effect files, categorized by type
-- **Voice/**: Voice dialogue (if needed)
-- **Mixers/**: Unity audio mixers
+- StartScene.unity
+  - Startup scene. Configure in `File → Build Settings` as the first scene to load. Use it to bootstrap managers and transition to gameplay scenes.
 
-### 🔧 Prefabs
-Reusable game object templates
+- DefaultVolumeProfile.asset
+  - Global Volume profile for URP post-processing. Tweak effects here (Bloom, Vignette, etc.) or create per-scene volumes for overrides.
 
-### 🗺️ Scenes
-Game levels and main scene files
+- New Toon Render Pipeline Asset.asset
+  - Custom URP Render Pipeline Asset using a toon/cel-shaded configuration. Assign via `Project Settings → Graphics` to apply globally.
 
-## Usage Recommendations
+- New Universal Render Pipeline Asset_Renderer.asset
+  - URP Renderer Asset used by the pipeline. Configure renderer features (e.g., SSAO, Render Objects, 2D Renderer) here.
 
-### 1. Naming Conventions
-- **File names**: PascalCase (e.g., `PlayerController.cs`)
-- **Folder names**: PascalCase (e.g., `Characters/`)
-- **Prefabs**: Descriptive names (e.g., `Ant_Worker_Prefab`)
+- UniversalRenderPipelineGlobalSettings.asset
+  - URP global settings asset that controls defaults such as layer names for rendering and other pipeline-level options.
 
-### 2. Script Organization
-- Each script contains only one main class
-- Scripts with related functionality are placed in the same folder
-- Use namespaces to avoid conflicts
+## Conventions
 
-### 3. Asset Management
-- Art assets categorized by function
-- Prefabs use consistent naming
-- Regularly clean up unused assets
+- Naming
+  - Use PascalCase for scripts (e.g., `PlayerController.cs`) and descriptive names for assets and prefabs (e.g., `Ant_Worker.prefab`).
 
-### 4. Version Control
-- Ignore Unity-generated folders like `Library/`, `Temp/`, etc.
-- Only commit source files, not build artifacts
-- Use `.gitignore` file to exclude unnecessary files
+- Organization
+  - Group scripts and assets by feature. Avoid large, catch-all folders. Mirror folder names between `Scripts/` and `Art/` when features are tightly coupled.
 
-## Migration Plan
+- Version Control
+  - Do not commit generated folders like `Library/`, `Temp/`, `Obj/`, or `Build/`. Keep `.meta` files under version control. `.DS_Store` can be ignored or deleted.
 
-### Phase 1: Script Organization
-1. Migrate scripts from `script/` folder to new structure
-2. Update script references and namespaces
-3. Delete old script folders
+- Rendering
+  - Ensure the intended URP assets are selected in `Project Settings → Graphics` and `Quality`. Keep renderer features consistent across renderers if multiple are used.
 
-### Phase 2: Asset Organization
-1. Organize material files in `materials/`
-2. Optimize model assets in `Level1_kitchen/`
-3. Create standardized prefabs
+## Notes
 
-### Phase 3: Scene Optimization
-1. Clean up useless objects in existing scenes
-2. Apply new prefab system
-3. Set correct tags and hierarchies
-
-## Quick Navigation
-
-### Common File Locations
-- **Game Manager**: `_Project/Scripts/Runtime/Core/GameManager.cs`
-- **Player Controller**: `_Project/Scripts/Runtime/Characters/Player/PlayerController.cs`
-- **Camera System**: `_Project/Scripts/Runtime/Camera/cameraFollow.cs`
-- **Main Scene**: `_Project/Scenes/Level1.unity`
-
-### When Adding New Features
-1. Determine feature type (character/system/UI, etc.)
-2. Create scripts in corresponding folder
-3. Use appropriate namespaces
-4. Create corresponding prefabs (if needed)
-
----
-
-This structure provides a clear and scalable organization for the Antventure project, facilitating team collaboration and project maintenance. 
-
+- If Addressables are adopted later, prefer placing runtime-loadable assets under Addressables groups instead of `Resources/`.
+- Consider moving `StartScene.unity` into `Assets/Scenes/` for consistency if desired; update build settings accordingly.
