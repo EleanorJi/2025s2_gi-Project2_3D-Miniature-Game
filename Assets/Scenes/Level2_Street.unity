@@ -8261,11 +8261,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e1018e4f2ac8a249a6b3b44d15efcc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActivated: 0
+  _isActivated: 0
   canReactivate: 0
-  hintText: "\u8BF7\u8F93\u5165\u63D0\u793A\u6587\u5B57"
+  hintTextComponent: {fileID: 0}
   autoHideDelay: 5
   showHintOnActivation: 0
+  useLocalHint: 1
+  allowRepeatHint: 0
+  alwaysShowHint: 0
+  enableDynamicControl: 0
+  alternativeText: {fileID: 0}
+  hideAfterChange: 0
+  alternativeTextDuration: 5
 --- !u!65 &54632516
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -32143,14 +32150,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e1018e4f2ac8a249a6b3b44d15efcc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActivated: 0
+  _isActivated: 0
   canReactivate: 0
-  hintText: 'The pigeon is ahead. Keep moving FORWARD to find it.
-
-    I think I
-    smell COOKIES...'
+  hintTextComponent: {fileID: 0}
   autoHideDelay: 8
   showHintOnActivation: 1
+  useLocalHint: 1
+  allowRepeatHint: 0
+  alwaysShowHint: 0
+  enableDynamicControl: 0
+  alternativeText: {fileID: 0}
+  hideAfterChange: 0
+  alternativeTextDuration: 5
 --- !u!1 &326233827
 GameObject:
   m_ObjectHideFlags: 0
@@ -57200,7 +57211,7 @@ Transform:
   m_GameObject: {fileID: 705897494}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7060806, z: 0, w: 0.70813143}
-  m_LocalPosition: {x: 81.959, y: 2.296, z: -340.971}
+  m_LocalPosition: {x: 86.051, y: 1.425, z: -340.988}
   m_LocalScale: {x: 0.024617039, y: 0.027527219, z: 0.027527211}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -153370,14 +153381,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e1018e4f2ac8a249a6b3b44d15efcc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActivated: 0
+  _isActivated: 0
   canReactivate: 0
-  hintText: 'Finally made it up here! COOKIES on bugs!!
-
-    Press LEFT MOUSE BUTTON
-    to release venom!!!!!'
+  hintTextComponent: {fileID: 0}
   autoHideDelay: 5
   showHintOnActivation: 1
+  useLocalHint: 1
+  allowRepeatHint: 0
+  alwaysShowHint: 0
+  enableDynamicControl: 0
+  alternativeText: {fileID: 0}
+  hideAfterChange: 0
+  alternativeTextDuration: 5
 --- !u!65 &2110696525
 BoxCollider:
   m_ObjectHideFlags: 0

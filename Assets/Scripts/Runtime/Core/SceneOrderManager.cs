@@ -27,7 +27,7 @@ public class SceneOrderManager : MonoBehaviour
     {
         "StartScene",
         "Level0_Tutorial",
-        "Level1-2", 
+        "Level1_kitchen", 
         "Level2_Street",
         "Level3_boss"
     };
