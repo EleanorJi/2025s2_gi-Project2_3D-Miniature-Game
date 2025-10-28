@@ -4219,8 +4219,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4515523052731344b365f9b3ccad6f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstLevelSceneName: Level1-2
-  secondLevelSceneName: Level1-2
+  firstLevelSceneName: Level1_kitchen
+  secondLevelSceneName: Level2_street
   tutorialSceneName: Level0_Tutorial
   uiAudioSource: {fileID: 1989147889}
   clickSound: {fileID: 8300000, guid: 5ccd2a1d15d98a94daab8de31b9606e0, type: 3}
