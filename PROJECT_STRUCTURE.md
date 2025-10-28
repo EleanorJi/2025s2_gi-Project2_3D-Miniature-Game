@@ -69,19 +69,54 @@ Assets/
 ## Descriptions
 
 - Art/
-  - Primary location for visual assets included with the project. Contains numerous subfolders for materials, textures, sprites, prefabs, VFX, and other art resources used across scenes.
+  - Primary library of visual assets used across all scenes.
+  - Notable subfolders:
+    - Animations/: Player, helper ant, and pigeon animation clips and controllers.
+    - Audio/: Level music/SFX organization plus mixers.
+    - Materials/: URP materials, skybox, and physics materials.
+    - Models/: Level kits and props grouped by level (kitchen, street, dock, tutorial env).
+    - Prefabs/: Reusable VFX/UI/gameplay prefabs (e.g., AntMinion, CookieIcon, TelegraphRing).
+    - Shader/: Custom shaders (e.g., CloudFresnel, water/sink foam effects).
+    - Sprite/: 2D sprites including DeathImage set.
+    - Textures/: Shared texture sets (e.g., drySoil, sand).
+    - UI/: Cursor textures and home page assets.
 
 - Resources/
-  - Holds assets that are loaded at runtime via `Resources.Load`. Use sparingly and prefer Addressables for large projects. Ensure paths are stable to avoid runtime load errors.
+  - Holds assets loaded at runtime via `Resources.Load` (e.g., `FontManager.asset`).
+  - Usage notes:
+    - Keep `Resources/` small and intentional; consider Addressables for scalable content.
+    - Paths used in `Resources.Load` are case-sensitive and must match folder structure.
 
 - Scenes/
-  - Contains Unity scene files (`.unity`). Use subfolders for level-specific content if the number of scenes grows. The project also includes a top-level `StartScene.unity` in `Assets/` which acts as an entry point.
+  - Contains gameplay and boss scenes. Current scenes:
+    - Level0_Tutorial.unity: Tutorial/intro level.
+    - Level1_kitchen.unity: Kitchen map.
+    - Level2_Street.unity: Street map.
+    - Level3_boss.unity: Boss encounter.
+  - Top-level `StartScene.unity` serves as entry/bootstrap scene.
 
 - Scripts/
-  - C# source code for gameplay logic, UI, utilities, and systems. Organize by feature or domain (e.g., `Gameplay/`, `Systems/`, `UI/`). Keep filenames and class names in sync.
+  - C# source code organized by domain:
+    - Editor/: Custom inspectors, tools, and editor windows.
+    - Runtime/:
+      - Attack/: Projectiles and telegraphing.
+      - Camera/: Camera follow and intro animations per level.
+      - Characters/: Enemy and minion logic (boss pigeon, health, particles).
+      - checkPoint/: Checkpoints, level finish triggers, and tutorial buttons.
+      - Core/: Core scene ordering/bootstrap logic.
+      - Interactables/: Collectibles, hazards, and mechanisms.
+      - Level2/: Level-specific logic for Level 2.
+      - pigeon/: Shared pigeon behavior scripts.
+      - Player/: Player controller, combat, health, HUD bindings.
+      - Systems/: Audio, Gameplay, Input, Saving sub-systems.
+      - UI/: UI managers, menus, HUD, cursor controllers, font manager.
+      - Utilities/: Constants, Extensions, Helpers used across systems.
 
 - TextMesh Pro/
-  - TextMesh Pro package resources (fonts, shaders, examples). Avoid modifying package-provided assets unless duplicating them into your own folders.
+  - TMP built-in resources (fonts, shaders, examples & extras).
+  - Best practices:
+    - Avoid modifying assets under TMP package folders; duplicate into project folders if customization is needed.
+    - Centralize font/material settings in TMP Settings and project-level font managers.
 
 - StartScene.unity
   - Startup scene. Configure in `File → Build Settings` as the first scene to load. Use it to bootstrap managers and transition to gameplay scenes.
@@ -101,18 +136,25 @@ Assets/
 ## Conventions
 
 - Naming
-  - Use PascalCase for scripts (e.g., `PlayerController.cs`) and descriptive names for assets and prefabs (e.g., `Ant_Worker.prefab`).
+  - Use PascalCase for scripts (e.g., `PlayerController.cs`) and descriptive names for assets/prefabs (e.g., `Ant_Worker.prefab`).
+  - Keep class names and filenames in sync to avoid Unity reference issues.
 
 - Organization
-  - Group scripts and assets by feature. Avoid large, catch-all folders. Mirror folder names between `Scripts/` and `Art/` when features are tightly coupled.
+  - Group scripts and assets by feature/level. Mirror folder names between `Scripts/` and `Art/` where possible.
+  - Place level-specific logic in a level folder (e.g., `Scripts/Runtime/Level2/`).
+  - Keep prefabs next to their visual assets when they are tightly coupled.
 
 - Version Control
-  - Do not commit generated folders like `Library/`, `Temp/`, `Obj/`, or `Build/`. Keep `.meta` files under version control. `.DS_Store` can be ignored or deleted.
+  - Do not commit generated folders like `Library/`, `Temp/`, `Obj/`, or `Build/`. Keep `.meta` files under version control.
+  - Exclude OS metadata files from version control.
 
 - Rendering
   - Ensure the intended URP assets are selected in `Project Settings → Graphics` and `Quality`. Keep renderer features consistent across renderers if multiple are used.
+  - Tune `DefaultVolumeProfile.asset` for global post-processing; use local Volumes for per-scene overrides.
+  - Manage URP renderer features via `New Universal Render Pipeline Asset_Renderer.asset`.
 
 ## Notes
 
 - If Addressables are adopted later, prefer placing runtime-loadable assets under Addressables groups instead of `Resources/`.
 - Consider moving `StartScene.unity` into `Assets/Scenes/` for consistency if desired; update build settings accordingly.
+- When adding new levels, create `Scenes/LevelX_*` scenes and mirror asset/script structure under `Art/Models` and `Scripts/Runtime/LevelX/` for clarity.
