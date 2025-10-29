@@ -2,6 +2,7 @@ using UnityEngine;
 using Antventure.UI;
 
 using Antventure.UI.Menus;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -362,6 +363,14 @@ public class PlayerController : MonoBehaviour
             nearbyItem = other.gameObject;
             Debug.Log("Nearby item: " + nearbyItem.name);
         }
+
+        if (other.CompareTag("feather"))
+        {
+            // 改变玩家材质颜色，闪红0.1秒
+            var rend = this.GetComponentInChildren<Renderer>();
+            if (rend != null)
+                StartCoroutine(FlashRed(rend, 0.1f));
+        }
     }
 
     void OnTriggerExit(Collider other)
@@ -402,6 +411,20 @@ public class PlayerController : MonoBehaviour
     public void RefreshAnimationState()
     {
         UpdateAnimationParameters();
+    }
+
+    IEnumerator FlashRed(Renderer renderer, float duration)
+    {
+        if (renderer == null) 
+            yield break;
+
+       
+        renderer.material.color = Color.red;
+
+        yield return new WaitForSeconds(duration);
+
+        // 恢复原始颜色
+        renderer.material.color = Color.white;
     }
 
 }

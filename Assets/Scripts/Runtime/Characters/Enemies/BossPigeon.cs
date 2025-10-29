@@ -132,6 +132,21 @@ public class BossPigeon : MonoBehaviour
             // fire burst
             FireOnce();
 
+            //bug修改：将FireOnce函数中的动画放在攻击函数中就可以触发攻击动画了
+            // SFX/动画
+            if (sfxSource && burstClip)
+            {
+                sfxSource.PlayOneShot(burstClip);
+               
+            }
+
+            Debug.Log("触发攻击动画: Flap");
+            if (animator)
+            {
+                animator.SetTrigger("Flap"); // 发射时的翅膀拍打
+                Debug.Log("Flap trigger 已设置");
+            }
+
             // cooldown till next tick
             if (interval > 0f) yield return new WaitForSeconds(interval);
         }
@@ -140,7 +155,9 @@ public class BossPigeon : MonoBehaviour
     private void FireOnce()
     {
         Debug.Log("调用了FireOnce");
-        if (!sandBurst) return;
+
+        if (!sandBurst) 
+            return;
         Debug.Log("过return");
 
         // ensure origin & rotation
@@ -163,14 +180,7 @@ public class BossPigeon : MonoBehaviour
             sandBurst.Emit(Mathf.Max(1, emitCount));
         }
 
-        // SFX/动画
-        if (sfxSource && burstClip) sfxSource.PlayOneShot(burstClip);
-        Debug.Log("触发攻击动画: Flap");
-        if (animator)
-        {
-            animator.SetTrigger("Flap"); // 发射时的翅膀拍打
-            Debug.Log("Flap trigger 已设置");
-        }
+       
     }
 
 #if UNITY_EDITOR

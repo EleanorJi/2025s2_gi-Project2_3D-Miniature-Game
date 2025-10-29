@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,7 +10,7 @@ public class Health : MonoBehaviour
 
     // 注意：为了兼容你现有的 UI/脚本，这里保持为 public 字段。
     // 如果以后想改成只读属性，记得同步改所有引用处。
-    [Tooltip("Current HP")] 
+    [Tooltip("Current HP")]
     public int currentHealth = 0;
 
     [Header("Events")]
@@ -49,7 +50,7 @@ public class Health : MonoBehaviour
         {
             _dead = true;
             // Debug.Log($"[Health:{name}] Died.");
-            try { OnDeath?.Invoke(); } catch {}
+            try { OnDeath?.Invoke(); } catch { }
         }
     }
 
@@ -96,7 +97,7 @@ public class Health : MonoBehaviour
 
     private void SafeInvokeChanged()
     {
-        try { OnHealthChanged?.Invoke(currentHealth, maxHealth); } catch {}
+        try { OnHealthChanged?.Invoke(currentHealth, maxHealth); } catch { }
     }
 
     // --- Debug helpers in Inspector ---
@@ -108,4 +109,38 @@ public class Health : MonoBehaviour
 
     [ContextMenu("Debug/Reset To Full")]
     private void DebugResetFull() => ResetToFull();
+
+
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.CompareTag("positionShoot"))
+    //    {
+    //        Debug.Log("123123131");
+    //        // 改变玩家材质颜色，闪红0.1秒
+    //        var rend = this.GetComponentInChildren<Renderer>();
+    //        if (rend != null)
+    //            StartCoroutine(FlashRed(rend, 0.1f));
+    //    }
+    //}
+
+    IEnumerator FlashRed(Renderer renderer, float duration)
+    {
+        if (renderer == null)
+            yield break;
+
+
+        renderer.material.color = Color.red;
+
+        yield return new WaitForSeconds(duration);
+
+        // 恢复原始颜色
+        renderer.material.color = Color.white;
+    }
+
+    public void ChangeColor()
+    {
+        var rend = this.GetComponentInChildren<Renderer>();
+        StartCoroutine(FlashRed(rend, 0.1f));
+    }
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,7 +8,7 @@ public class PlayerHealth : MonoBehaviour
 {
     [Header("Health")]
     public int maxHealth = 100;
-    [SerializeField] private int _currentHealth;   // show in Inspector for debugging
+    [SerializeField] public int _currentHealth;   // show in Inspector for debugging
     public int CurrentHealth => _currentHealth;
 
     [Header("Respawn")]
@@ -71,6 +72,8 @@ public class PlayerHealth : MonoBehaviour
         if (respawnPoint) transform.position = respawnPoint.position;
 
         Debug.Log("[PlayerHealth] Respawned.");
+
+       
         OnRespawned.Invoke();
     }
 

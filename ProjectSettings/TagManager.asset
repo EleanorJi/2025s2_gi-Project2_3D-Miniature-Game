@@ -11,6 +11,10 @@ TagManager:
   - Water
   - Rock
   - Boss
+  - Insect
+  - Cookie
+  - feather
+  - positionShoot
   layers:
   - Default
   - TransparentFX
