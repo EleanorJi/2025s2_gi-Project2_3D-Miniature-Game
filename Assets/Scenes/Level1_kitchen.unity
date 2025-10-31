@@ -14775,7 +14775,7 @@ MonoBehaviour:
   defaultDeathMessage: You died...
   defaultDeathSprite: {fileID: 0}
   defaultDisplayDuration: 4
-  customFont: {fileID: 11400000, guid: f6569649833f1b74c8eca1adc50e12ff, type: 2}
+  customFont: {fileID: 11400000, guid: 4f284866a64fceb4ba2fb3d36b270134, type: 2}
   fontSize: 48
   textColor: {r: 0.9685534, g: 0.11764706, b: 0.16751695, a: 1}
   textAlignment: 514

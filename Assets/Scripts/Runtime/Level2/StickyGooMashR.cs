@@ -118,7 +118,7 @@ public class StickyGooMashR : MonoBehaviour
         if (zeroVelocityWhileStuck) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
 
         // UI
-        if (tipText) tipText.text = $"MASH {mashKey} TO ESCAPE";
+        if (tipText) tipText.text = $"MASH <color=red>[{mashKey}]</color> TO ESCAPE";
         if (ringFill) ringFill.fillAmount = 0f;
         if (timerFill) timerFill.fillAmount = 1f;
         ShowUI(true);

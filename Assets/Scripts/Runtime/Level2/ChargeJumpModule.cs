@@ -117,7 +117,7 @@ public class ChargeJumpModule : MonoBehaviour
         bool allowChargeNow = (!requireOnRock) || OnRock();
 
         if (hintGroup) hintGroup.alpha = chargeEnabled ? 1f : 0f;
-        if (hintText)  hintText.text  = "Hold <b>V</b> to charge, release to jump farther.\nStill W to keep forward.";
+        if (hintText)  hintText.text  = "Hold <color=red>[V]</color> to charge, release to jump farther.\nStill <color=red>[W]</color> to keep forward";
         if (chargeBar) chargeBar.fillAmount = Mathf.Clamp01(charge / maxCharge);
 
         if (!chargeEnabled) { StopCharge(); return; }

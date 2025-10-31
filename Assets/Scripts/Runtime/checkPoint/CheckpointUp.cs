@@ -2,9 +2,12 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.Audio;
+using System;
 
 public class CheckpointUp : MonoBehaviour
 {
+    // Static event for climbing success
+    public static event Action OnClimbingSuccess;
     [Header("Player Objects")]
     public GameObject playerObject;           
     public GameObject antsAnimationObject;    
@@ -180,6 +183,10 @@ public class CheckpointUp : MonoBehaviour
 
         if (playerInputController) playerInputController.DisableInput();
         if (playerController)      playerController.enabled = false;
+
+        // Broadcast climbing success event immediately when climbing starts
+        OnClimbingSuccess?.Invoke();
+        Debug.Log("CheckpointUp: Climbing success event broadcasted (at start)");
 
         // hand over camera follow control (we want to control it ourselves)
         if (cameraFollow) cameraFollow.SetCameraControl(false);

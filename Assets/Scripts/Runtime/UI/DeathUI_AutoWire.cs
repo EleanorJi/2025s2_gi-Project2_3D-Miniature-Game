@@ -101,8 +101,12 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleDied()
     {
-        // 如果启用全局控制器且存在，则使用全局控制器
-        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        // 检查当前场景是否为第三关boss场景，如果是则强制使用本地UI
+        string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        bool isLevel3Boss = currentSceneName == "Level3_boss";
+        
+        // 如果启用全局控制器且存在，并且不是第三关，则使用全局控制器
+        if (useGlobalController && GlobalDeathUIController.Instance != null && !isLevel3Boss)
         {
             GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
             
@@ -111,7 +115,7 @@ public class DeathUI_AutoWire : MonoBehaviour
             return;
         }
 
-        // 否则使用本地UI
+        // 否则使用本地UI（包括第三关强制使用本地UI的情况）
         if (hintText) hintText.text = hint;
         ShowPanel(true);
         ApplyTransparencySettings();
@@ -119,15 +123,19 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleRespawned()
     {
-        // 如果使用全局控制器，隐藏全局UI
-        if (useGlobalController && GlobalDeathUIController.Instance != null)
+        // 检查当前场景是否为第三关boss场景，如果是则强制使用本地UI
+        string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        bool isLevel3Boss = currentSceneName == "Level3_boss";
+        
+        // 如果使用全局控制器且不是第三关，隐藏全局UI
+        if (useGlobalController && GlobalDeathUIController.Instance != null && !isLevel3Boss)
         {
             GlobalDeathUIController.Instance.HideDeathUI();
             HandleGamePause(false);
             return;
         }
 
-        // 否则使用本地UI
+        // 否则使用本地UI（包括第三关强制使用本地UI的情况）
         ShowPanel(false);
     }
 

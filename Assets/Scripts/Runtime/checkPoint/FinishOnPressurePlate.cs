@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using Antventure.UI;
 
 [RequireComponent(typeof(Collider))]
 public class FinishOnPressurePlate : MonoBehaviour
@@ -93,11 +94,20 @@ public class FinishOnPressurePlate : MonoBehaviour
         if (titleText) titleText.text = winTitle;
         if (subText)   subText.text   = string.Format(subTemplate, Mathf.CeilToInt(autoReturnDelay));
 
-        // 暂停游戏，但用“未缩放时间”做倒计时
+        // 暂停游戏，但用"未缩放时间"做倒计时
         Time.timeScale = 0f;
 
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        // 使用统一的鼠标管理系统来显示鼠标，而不是直接设置
+        if (UnifiedCursorManager.Instance != null)
+        {
+            UnifiedCursorManager.Instance.ShowPauseMenuCursor();
+        }
+        else
+        {
+            // 兜底方案：如果没有UnifiedCursorManager，使用原来的方式
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
 
         if (autoRoutine != null) StopCoroutine(autoRoutine);
         autoRoutine = StartCoroutine(AutoReturnRoutine());
@@ -118,6 +128,12 @@ public class FinishOnPressurePlate : MonoBehaviour
     public void ReturnHome()
     {
         Time.timeScale = 1f;
+
+        // 在切换场景前，恢复鼠标管理系统的正常状态
+        if (UnifiedCursorManager.Instance != null)
+        {
+            UnifiedCursorManager.Instance.HidePauseMenuCursor();
+        }
 
         if (!Application.CanStreamedLevelBeLoaded(homeSceneName))
         {
