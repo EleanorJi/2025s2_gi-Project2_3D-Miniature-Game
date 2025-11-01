@@ -38,14 +38,18 @@ public class InsectDeath : MonoBehaviour
     public Transform carryPoint;      // Optional: back anchor
     public GameObject cookieOnBack;   // The actual child object in the scene
     public float dropImpulse = 1.2f;
-    public float dropTorque  = 0.8f;
+    public float dropTorque = 0.8f;
 
     [Header("Instant-kill the player on touch")]
     public bool killPlayerOnTouch = true;
 
     // —— Internal state —— //
-    private bool dropped  = false;    // Prevent double drop
+    private bool dropped = false;    // Prevent double drop
     private bool exploded = false;    // Prevent double explosion
+
+    
+
+    public GameObject[] gameObjects;
 
     private void Awake()
     {
@@ -55,19 +59,33 @@ public class InsectDeath : MonoBehaviour
             Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
             explosionChild.SetActive(false);    // Don’t let it play at scene start
         }
+
+
     }
 
     /// <summary> Standard death: explode once at the insect’s current position. </summary>
     public void Kill()
     {
         Debug.Log("[InsectDeath] Kill()");
+
         KillAt(transform.position, Vector3.up);
     }
 
     /// <summary> Death with hit info (but we don’t alter FX by that normal/pos anymore). </summary>
     public void KillAt(Vector3 hitPos, Vector3 hitNormal)
     {
-        PlayExplosion(hitPos, hitNormal);
+        gameObjects[0].SetActive(false);
+        gameObjects[1].SetActive(true);
+
+        DissolveSphere[] dissolves = GetComponentsInChildren<DissolveSphere>();
+        foreach (DissolveSphere diss in dissolves)
+        {
+            diss.enabled = true;
+            diss.StartDissolve();
+        }
+        
+        this.GetComponent<CapsuleCollider>().isTrigger = true;
+        //PlayExplosion(hitPos, hitNormal);
 
         // Drop the same cookie (only once)
         if (!dropped && carryCookie && cookieOnBack)
@@ -85,14 +103,16 @@ public class InsectDeath : MonoBehaviour
             if (rb)
             {
                 rb.isKinematic = false;
-                rb.useGravity  = true;
+                rb.useGravity = true;
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 rb.AddForce(Vector3.up * dropImpulse, ForceMode.Impulse);
                 rb.AddTorque(Random.onUnitSphere * dropTorque, ForceMode.Impulse);
+
             }
         }
-
-        Destroy(gameObject); // Finally destroy the insect itself
+        this.GetComponent<Rigidbody>().isKinematic = true;
+       
+        Destroy(gameObject,0.6f);
     }
 
     private void PlayExplosion(Vector3 pos, Vector3 normal)

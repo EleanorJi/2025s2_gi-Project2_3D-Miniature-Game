@@ -15,6 +15,9 @@ TagManager:
   - Cookie
   - feather
   - positionShoot
+  - leafCheck
+  - Traffic
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -26,7 +29,7 @@ TagManager:
   - Rock
   - ButtonTrigger
   - Ground
-  - 
+  - Cookie
   - 
   - 
   - 

@@ -13,7 +13,7 @@ public class NoCookieUI : MonoBehaviour
     public TMP_FontAsset textFont;           // 可选
 
     [Header("Style")]
-    [Range(0f,1f)] public float panelAlpha = 0.60f;
+    [Range(0f, 1f)] public float panelAlpha = 0.60f;
     public Vector2 panelSize = new Vector2(520, 168);
     public float cornerPadding = 16f;
 
@@ -26,10 +26,15 @@ public class NoCookieUI : MonoBehaviour
     [Header("Text")]
     [TextArea] public string defaultMessage = "You need at least 1 cookie to summon a minion.";
 
+    public CanvasGroup fadePanel;
+    public float fadeDuration = 1f;
+   
     void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+
+        StartCoroutine(CoFadeToBlackAndLoadNext());
     }
 
     public static void ShowCenter(string message = null)
@@ -81,7 +86,7 @@ public class NoCookieUI : MonoBehaviour
         titleRT.anchorMin = titleRT.anchorMax = new Vector2(0.5f, 1f);
         titleRT.pivot = new Vector2(0.5f, 1f);
         titleRT.anchoredPosition = new Vector2(0f, -cornerPadding - 2f);
-        titleRT.sizeDelta = new Vector2(panelSize.x - 2*cornerPadding, 36f);
+        titleRT.sizeDelta = new Vector2(panelSize.x - 2 * cornerPadding, 36f);
         var titleTMP = titleGO.GetComponent<TextMeshProUGUI>();
         if (textFont) titleTMP.font = textFont;
         titleTMP.text = "Not enough cookies";
@@ -134,4 +139,25 @@ public class NoCookieUI : MonoBehaviour
         }
         Destroy(root);
     }
+
+
+    private IEnumerator CoFadeToBlackAndLoadNext()
+    {
+
+        
+
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / fadeDuration);
+            fadePanel.alpha = Mathf.Lerp(1f, 0f, t); // 从1淡出到0
+            yield return null;
+        }
+
+        fadePanel.alpha = 0f; // 确保最终值准确
+
+    }
+
 }

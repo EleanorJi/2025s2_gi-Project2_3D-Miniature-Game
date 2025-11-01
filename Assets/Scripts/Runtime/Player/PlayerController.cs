@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
     private PlayerInputController inputController;
 
-
+    public trafficlights trafficlights;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -163,9 +163,9 @@ public class PlayerController : MonoBehaviour
     {
         if (antAnimator != null)
         {
-            bool isCarryingSomething = IsCarryingItem || 
+            bool isCarryingSomething = IsCarryingItem ||
                                      (parachuteCarrier != null && parachuteCarrier.HasLeaf());
-            
+
             antAnimator.SetBool("IsMoving", isMoving);
             antAnimator.SetBool("PickUp", isCarryingSomething);
         }
@@ -371,6 +371,12 @@ public class PlayerController : MonoBehaviour
             if (rend != null)
                 StartCoroutine(FlashRed(rend, 0.1f));
         }
+
+        if (other.CompareTag("Traffic"))
+        {
+            Debug.Log("??????????????");
+            trafficlights.enabled = true;
+        }
     }
 
     void OnTriggerExit(Collider other)
@@ -415,10 +421,10 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator FlashRed(Renderer renderer, float duration)
     {
-        if (renderer == null) 
+        if (renderer == null)
             yield break;
 
-       
+
         renderer.material.color = Color.red;
 
         yield return new WaitForSeconds(duration);
