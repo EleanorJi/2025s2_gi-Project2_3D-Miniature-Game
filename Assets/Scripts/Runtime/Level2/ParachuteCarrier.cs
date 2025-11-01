@@ -33,6 +33,9 @@ public class ParachuteCarrier : MonoBehaviour
     bool waitingForFirstMoveAfterLand;
     private PlayerController playerController;
 
+
+    //bug修复：落到蜂蜜处仍然能捡起叶子
+    bool CanTouchleaf = true;
     void Awake()
     {
         pc = GetComponent<PlayerController>();
@@ -40,10 +43,10 @@ public class ParachuteCarrier : MonoBehaviour
         if (pc)
         {
             if (!carryPoint) carryPoint = pc.carryPoint;
-            if (!dropPoint)  dropPoint  = pc.dropPoint;
+            if (!dropPoint) dropPoint = pc.dropPoint;
         }
         if (!carryPoint) Debug.LogWarning("[ParachuteCarrier] 缺少 carryPoint");
-        if (!dropPoint)  Debug.LogWarning("[ParachuteCarrier] 缺少 dropPoint");
+        if (!dropPoint) Debug.LogWarning("[ParachuteCarrier] 缺少 dropPoint");
     }
 
     void Update()
@@ -51,12 +54,14 @@ public class ParachuteCarrier : MonoBehaviour
         // Press C to pick up
         if (Input.GetKeyDown(pickupKey))
         {
-            if (!carriedLeaf && nearbyLeaf)
+            if (!carriedLeaf && nearbyLeaf && CanTouchleaf == true)
             {
+                wall.GetComponent<ParachuteGate>().killIfNoLeaf = false;
                 AttachLeaf(nearbyLeaf.transform);
                 RefreshPlayerAnimation();
             }
         }
+
 
         // Landed -> wait for the first movement to drop the leaf
         bool groundedNow = pc ? (pc.groundContactCount > 0) : false;
@@ -86,6 +91,8 @@ public class ParachuteCarrier : MonoBehaviour
     public bool hasLeaf() => HasLeaf();
     public void MarkUsedParachute() => DropLeaf();
 
+    public GameObject wall;
+
     // —— Snap onto carryPoint (keep original WORLD size, and force a specific pose) ——
     void AttachLeaf(Transform leaf)
     {
@@ -100,7 +107,7 @@ public class ParachuteCarrier : MonoBehaviour
         {
             carriedLeafRb.isKinematic = true;
             carriedLeafRb.useGravity = false;
-            carriedLeafRb.linearVelocity  = Vector3.zero;
+            carriedLeafRb.linearVelocity = Vector3.zero;
             carriedLeafRb.angularVelocity = Vector3.zero;
         }
         carriedLeafCols = leaf.GetComponentsInChildren<Collider>(includeInactive: true);
@@ -185,7 +192,7 @@ public class ParachuteCarrier : MonoBehaviour
         RefreshPlayerAnimation();
     }
 
-     // 更新玩家动画状态
+    // 更新玩家动画状态
     private void RefreshPlayerAnimation()
     {
         if (playerController != null)
@@ -200,6 +207,14 @@ public class ParachuteCarrier : MonoBehaviour
             {
                 animator.SetBool("PickUp", HasLeaf());
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("leafCheck"))
+        {
+            CanTouchleaf = false;
         }
     }
 }

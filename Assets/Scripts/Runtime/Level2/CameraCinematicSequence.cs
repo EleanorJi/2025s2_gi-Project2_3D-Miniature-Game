@@ -17,14 +17,14 @@ public class CameraCinematicSequence : MonoBehaviour
 
     public Transform point1_1;
     public Transform point1_2;
-    public float p1To11Time  = 0.8f;
+    public float p1To11Time = 0.8f;
     public float p11To12Time = 0.8f;
-    public float p12To1Time  = 0.8f;
+    public float p12To1Time = 0.8f;
 
     public Transform point2;
     public Transform point3;                  // only use rotation
-    public float p1To2Time   = 3f;
-    public float p2To1Time   = 3f;
+    public float p1To2Time = 3f;
+    public float p2To1Time = 3f;
     public float rot1To3Time = 2f;
     public float rot3To1Time = 2f;
     public float waitAfterStage1 = 2f;
@@ -34,7 +34,7 @@ public class CameraCinematicSequence : MonoBehaviour
     public Transform stage2End;               // 4
     public float stage2Duration = 5f;
     public float arcHeight = 3f;
-    public bool  lockRotationInStage2 = true;
+    public bool lockRotationInStage2 = true;
 
     [Tooltip("How many seconds before landing to hide the 'fake ant+leaf' in front of camera, only do camera movement")]
     public float hideLeafBeforeLanding = 0.2f;
@@ -49,7 +49,7 @@ public class CameraCinematicSequence : MonoBehaviour
     // ------------------ Flying Phase: Fake Leaf/Ant in Front of Camera ------------------
     [Header("Fake 'Ant+Leaf' in Front of Camera (Flying Phase)")]
     public GameObject leafCarryVisualPrefab;
-    public Vector3 leafLocalPos   = new Vector3(0f, -0.15f, 0.7f);
+    public Vector3 leafLocalPos = new Vector3(0f, -0.15f, 0.7f);
     public Vector3 leafLocalEuler = new Vector3(0f, 90f, 0f);  // you already tuned this
     public Vector3 leafLocalScale = Vector3.one;
     public bool forceLeafLayerToCamera = true;
@@ -73,7 +73,7 @@ public class CameraCinematicSequence : MonoBehaviour
 
     [Header("SFX: Traffic Light (One-shot)")]
     public AudioClip trafficLightSfx;
-    [Range(0f,1f)] public float trafficLightVolume = 1f;
+    [Range(0f, 1f)] public float trafficLightVolume = 1f;
     public float trafficLightDelay = 0.5f;
     public bool trafficLightUseFade = true;
     public float trafficLightFadeIn = 0.25f;
@@ -82,15 +82,15 @@ public class CameraCinematicSequence : MonoBehaviour
     [Header("SFX: Wind (During Stage 2)")]
     public AudioSource windSource;
     public AudioClip windLoop;
-    [Range(0f,1f)] public float windVolume = 0.8f;
+    [Range(0f, 1f)] public float windVolume = 0.8f;
     public bool windLooping = true;       // loop during stage 2, fade out when stage 2 ends
-    public float windFadeIn  = 0.4f;
+    public float windFadeIn = 0.4f;
     public float windFadeOut = 0.4f;
 
     [Header("SFX: Pigeon (Stage 3)")]
     public AudioSource pigeonSource;      // optional; will use sfxSource if empty
     public AudioClip pigeonSfx;
-    [Range(0f,1f)] public float pigeonVolume = 1f;
+    [Range(0f, 1f)] public float pigeonVolume = 1f;
     public bool pigeonLoop = true;        // loop during stage 3 wait period
     public float pigeonFadeIn = 0.15f;
     public float pigeonFadeOut = 0.15f;
@@ -106,20 +106,20 @@ public class CameraCinematicSequence : MonoBehaviour
     [Header("Player Respawn/Landing (Triggered When Reaching 6)")]
     public Transform respawnPoint;
     public Transform playerRoot;
-    public bool enablePlayerGravity   = true; // pure free-fall: just turn on gravity
+    public bool enablePlayerGravity = true; // pure free-fall: just turn on gravity
     public bool wakeUpPlayerRigidBody = true;
 
     // ------------------ Camera Lock ------------------
     [Header("Camera: Lock View Angle (Prevent 'Narrowing')")]
     public bool hardLockFOV = true;
-    public float lockedFOV  = 60f;
+    public float lockedFOV = 60f;
     public bool restoreFOVOnFinish = false;
 
     [Header("General")]
     public bool zeroVelOnStart = true;
     public bool reenableFollowAfter = false;
-    public bool reenableInputAfter  = false;
-    public AnimationCurve ease = AnimationCurve.EaseInOut(0,0,1,1);
+    public bool reenableInputAfter = false;
+    public AnimationCurve ease = AnimationCurve.EaseInOut(0, 0, 1, 1);
     public bool showLeafGizmo = true;
 
     [Header("Debug")]
@@ -140,20 +140,28 @@ public class CameraCinematicSequence : MonoBehaviour
     Quaternion _cachedStage2Rotation;
     float _windOrigVol = 0f;
     Camera _cam;
-    float  _origFOV = 60f;
-    float  _lockedFOVRuntime = 60f;
+    float _origFOV = 60f;
+    float _lockedFOVRuntime = 60f;
+
+
+    public CanvasGroup fadePanel;     
+    public float fadeDuration = 1f;  
+    public bool useFadeBeforeLoad = true; 
+
+
+
 
     void Reset() { cameraFollow = GetComponent<CameraFollow>(); }
     void Awake()
     {
         if (!cameraFollow) cameraFollow = GetComponent<CameraFollow>();
-        if (!playerInput)  playerInput  = FindFirstObjectByType<PlayerInputController>(FindObjectsInactive.Exclude);
+        if (!playerInput) playerInput = FindFirstObjectByType<PlayerInputController>(FindObjectsInactive.Exclude);
         _cam = GetComponent<Camera>();
         if (_cam) _origFOV = _cam.fieldOfView;
         if (windSource) windSource.dopplerLevel = 0f;
     }
 
-    void OnEnable()  { if (hardLockFOV) StartCoroutine(CoHardLockCameraParams()); }
+    void OnEnable() { if (hardLockFOV) StartCoroutine(CoHardLockCameraParams()); }
     void OnDisable() { StopAllCoroutines(); }
 
     public void Play()
@@ -184,7 +192,7 @@ public class CameraCinematicSequence : MonoBehaviour
 
         if (zeroVelOnStart)
         {
-            var rb  = GetComponent<Rigidbody>();   if (rb)  { rb.linearVelocity  = Vector3.zero; rb.angularVelocity = Vector3.zero; }
+            var rb = GetComponent<Rigidbody>(); if (rb) { rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero; }
             var rb2 = GetComponent<Rigidbody2D>(); if (rb2) { rb2.linearVelocity = Vector2.zero; rb2.angularVelocity = 0f; }
         }
 
@@ -196,7 +204,7 @@ public class CameraCinematicSequence : MonoBehaviour
             StartCoroutine(CoPlayNonLoopSfxWithFades(
                 src, trafficLightSfx, trafficLightVolume,
                 trafficLightDelay,
-                trafficLightUseFade ? trafficLightFadeIn  : 0f,
+                trafficLightUseFade ? trafficLightFadeIn : 0f,
                 trafficLightUseFade ? trafficLightFadeOut : 0f
             ));
         }
@@ -205,7 +213,7 @@ public class CameraCinematicSequence : MonoBehaviour
         if (holdAtP1 > 0f) yield return new WaitForSeconds(holdAtP1);
 
         // Look around: 1→1.1→1.2→1 (full pose lerp)
-        if (point1_1) yield return MovePose(point1,  point1_1, p1To11Time);
+        if (point1_1) yield return MovePose(point1, point1_1, p1To11Time);
         if (point1_2) yield return MovePose(point1_1 ? point1_1 : point1, point1_2, p11To12Time);
         yield return MovePose(point1_2 ? point1_2 : point1, point1, p12To1Time);
 
@@ -222,14 +230,15 @@ public class CameraCinematicSequence : MonoBehaviour
 
         // —— Stage 2: prep for flight (attach fake leaf, fade wind in, lock rotation) —— //
         _cachedStage2Rotation = transform.rotation;
+
         _leafHidden = false;
 
         if (leafCarryVisualPrefab)
         {
             _leafInstance = Instantiate(leafCarryVisualPrefab, transform);
-            _leafInstance.transform.localPosition    = leafLocalPos;
+            _leafInstance.transform.localPosition = leafLocalPos;
             _leafInstance.transform.localEulerAngles = leafLocalEuler; // already tuned by you
-            _leafInstance.transform.localScale       = leafLocalScale;
+            _leafInstance.transform.localScale = leafLocalScale;
             if (makeLeafPureVisual) MakePureVisual(_leafInstance, true, true);
             if (_cam && forceLeafLayerToCamera) SetLayerRecursively(_leafInstance, _cam.gameObject.layer);
             if (_cam && _leafInstance.transform.localPosition.z <= _cam.nearClipPlane + 0.02f)
@@ -248,7 +257,7 @@ public class CameraCinematicSequence : MonoBehaviour
 
         // —— Stage 2: 1→4 along a parabola (rotation locked). Hide fake leaf ~0.2s before landing —— //
         Vector3 startPos = point1.position;
-        Vector3 endPos   = stage2End.position;
+        Vector3 endPos = stage2End.position;
         Quaternion fixedRot = _cachedStage2Rotation;
 
         float t = 0f;
@@ -267,6 +276,7 @@ public class CameraCinematicSequence : MonoBehaviour
             if (!_leafHidden && et >= hideAtEt)
             {
                 if (_leafInstance) SetVisualVisible(_leafInstance, false);
+
                 _leafHidden = true;
             }
             yield return null;
@@ -275,10 +285,47 @@ public class CameraCinematicSequence : MonoBehaviour
         // Wrap-up: clean flying fake leaf + fade wind out
         if (_leafInstance)
         {
-            if (!_leafHidden) SetVisualVisible(_leafInstance, false);
-            if (leafCarryVisualPrefab && !keepLeafVisualAtLanding) Destroy(_leafInstance);
-            else { _leafInstance.transform.SetParent(null, true); _leafInstance.transform.position = stage2End.position; }
+
+            //if (!_leafHidden)
+            //    SetVisualVisible(_leafInstance, false);
+
+            //if (leafCarryVisualPrefab && !keepLeafVisualAtLanding)
+            //    Destroy(_leafInstance);
+            //else
+            //{
+            //    _leafInstance.transform.SetParent(null, true); _leafInstance.transform.position = stage2End.position;
+            //}
+
+            // 结尾确保叶子保持可见，不再在结束时销毁
+            SetVisualVisible(_leafInstance, true);
+
+            // 不再销毁叶子，直接解除父子关系
+            _leafInstance.transform.SetParent(null, true);
+            _leafInstance.transform.position = stage2End.position;
         }
+
+        // 在结束阶段重新生成叶子
+        if (leafCarryVisualPrefab)
+        {
+            Vector3 spawnWorldPos = new Vector3(71f, 1.29f, -339.618073f);
+
+            GameObject newLeaf = Instantiate(leafCarryVisualPrefab, spawnWorldPos, Quaternion.identity);
+            // 重置大小为 1,1,1
+            newLeaf.transform.localScale = Vector3.one;
+
+            newLeaf.transform.rotation = Quaternion.identity;
+
+            if (makeLeafPureVisual)
+            {
+                MakePureVisual(newLeaf, true, true);
+            }
+
+            if (forceLeafLayerToCamera && _cam)
+                SetLayerRecursively(newLeaf, _cam.gameObject.layer);
+            _leafInstance = newLeaf;
+        }
+
+
         if (windLoop && windSource)
         {
             yield return StartCoroutine(CoStopWithFade(windSource, windFadeOut, _windOrigVol));
@@ -301,8 +348,11 @@ public class CameraCinematicSequence : MonoBehaviour
         }
 
         // —— Reached "6": real player respawn with free fall + spawn landing leaf —— //
-        SpawnRealPlayerAtRespawn();     // pure free fall (vel=0, only gravity on)
-        SpawnLandingLeafVisual();       // leaf falls together (can follow the player)
+
+
+        //SpawnRealPlayerAtRespawn();     // pure free fall (vel=0, only gravity on)
+
+        // SpawnLandingLeafVisual();       // leaf falls together (can follow the player)
 
         // Stage 3: pigeon loop, wait, then fade out
         if (pigeonSfx)
@@ -323,17 +373,50 @@ public class CameraCinematicSequence : MonoBehaviour
         // NEW: after pigeon fades out → hold at 6 for N seconds → load next level
         if (loadNextAtFinish && !string.IsNullOrEmpty(nextLevelName))
         {
-            if (holdAtPoint6BeforeLoad > 0f)
-                yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
+            //if (holdAtPoint6BeforeLoad > 0f)
+            //    yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
 
-            if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: 使用场景顺序跳转");
-            SceneOrderManager.Instance.LoadNextScene();
-            yield break; // scene switched, end coroutine
+            //if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: 使用场景顺序跳转");
+            //SceneOrderManager.Instance.LoadNextScene();
+            //yield break; // scene switched, end coroutine
+
+            if (useFadeBeforeLoad)
+                yield return StartCoroutine(CoFadeToBlackAndLoadNext());
+            else
+            {
+                if (holdAtPoint6BeforeLoad > 0f) yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
+                if (debugLogs) Debug.Log("[Cinematic] Loading next scene: 使用场景顺序跳转");
+                SceneOrderManager.Instance.LoadNextScene();
+            }
+            yield break;
+
         }
 
         if (restoreFOVOnFinish && _cam) _cam.fieldOfView = _origFOV;
         IsPlaying = false;
     }
+
+    private IEnumerator CoFadeToBlackAndLoadNext()
+    {
+ 
+        if (fadePanel != null)
+        {
+            float start = fadePanel.alpha;
+            float elapsed = 0f;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / fadeDuration);
+                fadePanel.alpha = Mathf.Lerp(start, 1f, t);
+                yield return null;
+            }
+            fadePanel.alpha = 1f;
+        }
+
+
+        SceneOrderManager.Instance.LoadNextScene();
+    }
+
 
     // ------------------ Lock FOV ------------------
     IEnumerator CoHardLockCameraParams()
@@ -353,9 +436,9 @@ public class CameraCinematicSequence : MonoBehaviour
     IEnumerator MovePose(Transform fromPose, Transform toPose, float time)
     {
         float timer = 0f;
-        Vector3    p0 = fromPose.position;
+        Vector3 p0 = fromPose.position;
         Quaternion r0 = fromPose.rotation;
-        Vector3    p1 = toPose.position;
+        Vector3 p1 = toPose.position;
         Quaternion r1 = toPose.rotation;
 
         while (timer < time)
@@ -451,27 +534,27 @@ public class CameraCinematicSequence : MonoBehaviour
     }
 
     // ------------------ Utilities ------------------
-    void SafeSetFollow(bool on){ if (!cameraFollow) return; try { cameraFollow.SetCameraControl(on); } catch { cameraFollow.enabled = on; } }
-    void SafeSetInput (bool on){ if (!playerInput)  return; try { if (on) playerInput.EnableInput(); else playerInput.DisableInput(); } catch { playerInput.enabled = on; } }
+    void SafeSetFollow(bool on) { if (!cameraFollow) return; try { cameraFollow.SetCameraControl(on); } catch { cameraFollow.enabled = on; } }
+    void SafeSetInput(bool on) { if (!playerInput) return; try { if (on) playerInput.EnableInput(); else playerInput.DisableInput(); } catch { playerInput.enabled = on; } }
 
     void MakePureVisual(GameObject root, bool removeColliders, bool setRigidbodiesKinematic)
     {
         if (!root) return;
         var rbs = root.GetComponentsInChildren<Rigidbody>(true);
-        foreach (var rb in rbs){ try { if (setRigidbodiesKinematic){ rb.isKinematic = true; rb.useGravity = false; } else Destroy(rb);} catch {} }
+        foreach (var rb in rbs) { try { if (setRigidbodiesKinematic) { rb.isKinematic = true; rb.useGravity = false; } else Destroy(rb); } catch { } }
         var cols = root.GetComponentsInChildren<Collider>(true);
-        foreach (var c in cols){ try { if (removeColliders) Destroy(c); else c.enabled = false; } catch {} }
+        foreach (var c in cols) { try { if (removeColliders) Destroy(c); else c.enabled = false; } catch { } }
         var anims = root.GetComponentsInChildren<Animator>(true);
-        foreach (var a in anims){ try { a.enabled = false; } catch {} }
+        foreach (var a in anims) { try { a.enabled = false; } catch { } }
         var animsLegacy = root.GetComponentsInChildren<Animation>(true);
-        foreach (var a in animsLegacy){ try { a.enabled = false; } catch {} }
+        foreach (var a in animsLegacy) { try { a.enabled = false; } catch { } }
         var skins = root.GetComponentsInChildren<SkinnedMeshRenderer>(true);
-        foreach (var s in skins){ try { s.updateWhenOffscreen = true; s.enabled = true; } catch {} }
+        foreach (var s in skins) { try { s.updateWhenOffscreen = true; s.enabled = true; } catch { } }
         var rends = root.GetComponentsInChildren<Renderer>(true);
-        foreach (var r in rends){ try { r.enabled = true; } catch {} }
+        foreach (var r in rends) { try { r.enabled = true; } catch { } }
     }
-    void SetLayerRecursively(GameObject go, int layer){ go.layer = layer; foreach (Transform c in go.transform) SetLayerRecursively(c.gameObject, layer); }
-    void SetVisualVisible(GameObject root, bool visible){ if (!root) return; foreach (var r in root.GetComponentsInChildren<Renderer>(true)){ if (r) r.enabled = visible; } }
+    void SetLayerRecursively(GameObject go, int layer) { go.layer = layer; foreach (Transform c in go.transform) SetLayerRecursively(c.gameObject, layer); }
+    void SetVisualVisible(GameObject root, bool visible) { if (!root) return; foreach (var r in root.GetComponentsInChildren<Renderer>(true)) { if (r) r.enabled = visible; } }
 
     // ------------------ Real player respawn (triggered at 6) ------------------
     void SpawnRealPlayerAtRespawn()
@@ -479,18 +562,18 @@ public class CameraCinematicSequence : MonoBehaviour
         if (!playerRoot || !respawnPoint) { if (debugLogs) Debug.LogWarning("[Cinematic] Missing playerRoot/respawnPoint."); return; }
         if (!playerRoot.gameObject.activeSelf) playerRoot.gameObject.SetActive(true);
 
-        var anim = playerRoot.GetComponent<Animator>(); bool prevRM = false; if (anim){ prevRM = anim.applyRootMotion; anim.applyRootMotion = false; }
-        var cc   = playerRoot.GetComponent<CharacterController>(); bool ccWas = false; if (cc){ ccWas = cc.enabled; cc.enabled = false; }
-        var agent= playerRoot.GetComponent<NavMeshAgent>(); bool agentWas = false; if (agent){ agentWas = agent.enabled; agent.enabled = true; }
+        var anim = playerRoot.GetComponent<Animator>(); bool prevRM = false; if (anim) { prevRM = anim.applyRootMotion; anim.applyRootMotion = false; }
+        var cc = playerRoot.GetComponent<CharacterController>(); bool ccWas = false; if (cc) { ccWas = cc.enabled; cc.enabled = false; }
+        var agent = playerRoot.GetComponent<NavMeshAgent>(); bool agentWas = false; if (agent) { agentWas = agent.enabled; agent.enabled = true; }
 
-        var rb = playerRoot.GetComponent<Rigidbody>(); if (rb){ rb.isKinematic = false; rb.useGravity = enablePlayerGravity; }
+        var rb = playerRoot.GetComponent<Rigidbody>(); if (rb) { rb.isKinematic = false; rb.useGravity = enablePlayerGravity; }
 
         bool warped = false;
-        if (agent){ warped = agent.Warp(respawnPoint.position); playerRoot.rotation = respawnPoint.rotation; }
+        if (agent) { warped = agent.Warp(respawnPoint.position); playerRoot.rotation = respawnPoint.rotation; }
         if (!warped)
         {
             playerRoot.SetPositionAndRotation(respawnPoint.position, respawnPoint.rotation);
-            if (rb){ rb.position = respawnPoint.position; rb.rotation = respawnPoint.rotation; }
+            if (rb) { rb.position = respawnPoint.position; rb.rotation = respawnPoint.rotation; }
         }
         Physics.SyncTransforms();
 
@@ -502,9 +585,9 @@ public class CameraCinematicSequence : MonoBehaviour
             if (wakeUpPlayerRigidBody) rb.WakeUp();
         }
 
-        if (cc)    cc.enabled = ccWas;
+        if (cc) cc.enabled = ccWas;
         if (agent) agent.enabled = agentWas;
-        if (anim)  anim.applyRootMotion = prevRM;
+        if (anim) anim.applyRootMotion = prevRM;
 
         if (debugLogs) Debug.Log("[Cinematic] Player respawned at 6 (free fall).");
     }
@@ -517,8 +600,8 @@ public class CameraCinematicSequence : MonoBehaviour
         // 1) Initial pose
         Vector3 pos; Quaternion rot;
         if (landingLeafSpawnPoint) { pos = landingLeafSpawnPoint.position; rot = landingLeafSpawnPoint.rotation; }
-        else if (playerRoot)      { pos = playerRoot.position + landingLeafLocalOffset; rot = playerRoot.rotation; }
-        else                      { pos = transform.position + transform.forward * 0.6f; rot = transform.rotation; }
+        else if (playerRoot) { pos = playerRoot.position + landingLeafLocalOffset; rot = playerRoot.rotation; }
+        else { pos = transform.position + transform.forward * 0.6f; rot = transform.rotation; }
 
         _landingLeaf = Instantiate(landingLeafVisualPrefab, pos, rot);
         // If needed, make it pure visual too: MakePureVisual(_landingLeaf, true, true);
@@ -566,7 +649,7 @@ public class CameraCinematicSequence : MonoBehaviour
     {
         if (showLeafGizmo && leafCarryVisualPrefab)
         {
-            Gizmos.color = new Color(0f,1f,0.7f,0.35f);
+            Gizmos.color = new Color(0f, 1f, 0.7f, 0.35f);
             var m = transform.localToWorldMatrix;
             var wpos = m.MultiplyPoint(leafLocalPos);
             Gizmos.DrawSphere(wpos, 0.05f);

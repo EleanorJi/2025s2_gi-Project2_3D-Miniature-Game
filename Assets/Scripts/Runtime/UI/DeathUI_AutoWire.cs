@@ -10,15 +10,15 @@ public class DeathUI_AutoWire : MonoBehaviour
     [SerializeField] private PlayerHealth playerHealth; // 可为空：自动找
     [SerializeField] private GameObject panel;          // 指向你的 final_death 图片所在的 GameObject（或其父容器）
     [SerializeField] private TMP_Text hintText;         // 可为空
-    [TextArea] [SerializeField] private string hint = "Left click to respawn";
+    [TextArea][SerializeField] private string hint = "Left click to respawn";
 
     [Header("Cursor (optional)")]
     [SerializeField] private bool unlockCursorOnDeath = true;
-    
+
     [Header("Background Transparency")]
-    [SerializeField] [Range(0f, 1f)] private float backgroundAlpha = 0.8f; // 背景透明度，0=完全透明，1=完全不透明
-    [SerializeField] [Range(0f, 1f)] private float imageAlpha = 1f; // 死亡图片透明度
-    [SerializeField] [Range(0f, 1f)] private float textAlpha = 1f; // 提示文字透明度
+    [SerializeField][Range(0f, 1f)] private float backgroundAlpha = 0.8f; // 背景透明度，0=完全透明，1=完全不透明
+    [SerializeField][Range(0f, 1f)] private float imageAlpha = 1f; // 死亡图片透明度
+    [SerializeField][Range(0f, 1f)] private float textAlpha = 1f; // 提示文字透明度
     [SerializeField] private bool separateImageTextAlpha = false; // 是否分别控制图片和文字透明度
 
     [Header("Global Controller Integration")]
@@ -41,8 +41,12 @@ public class DeathUI_AutoWire : MonoBehaviour
 #endif
     }
 
+    public int cookie;
+
     private void Awake()
     {
+
+        cookie = CookiesInventory.Instance.cookies;
         // auto-wire PlayerHealth by tag or by type
         if (!playerHealth)
         {
@@ -93,6 +97,10 @@ public class DeathUI_AutoWire : MonoBehaviour
         // 死亡界面显示中，左键=复活
         if (_isShown && Input.GetMouseButtonDown(0) && playerHealth != null)
         {
+            //bug修改:把上个场景中获取的饼干数量给到临时变量，在死后把临时变量重新分配到已保存的值，然后刷新一下ui
+            CookiesInventory.Instance.cookies = cookie;
+            cookie = CookiesInventory.Instance ? CookiesInventory.Instance.cookies : 0;
+            Level3CookieUI.Instance.Refresh(cookie);
             playerHealth.Respawn();
         }
     }
@@ -109,7 +117,7 @@ public class DeathUI_AutoWire : MonoBehaviour
         if (useGlobalController && GlobalDeathUIController.Instance != null && !isLevel3Boss)
         {
             GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
-            
+
             // 仍然需要处理游戏暂停和脚本禁用
             HandleGamePause(true);
             return;
@@ -206,14 +214,14 @@ public class DeathUI_AutoWire : MonoBehaviour
         cg.interactable = visible;
         cg.blocksRaycasts = visible;
     }
-    
+
     /// <summary>
     /// 应用透明度设置到各个UI元素
     /// </summary>
     private void ApplyTransparencySettings()
     {
         if (!separateImageTextAlpha) return;
-        
+
         // 对图片组件应用透明度
         Image[] images = GetComponentsInChildren<Image>(true);
         foreach (Image img in images)
@@ -225,7 +233,7 @@ public class DeathUI_AutoWire : MonoBehaviour
                 img.color = color;
             }
         }
-        
+
         // 对文字组件应用透明度
         if (hintText != null)
         {
@@ -233,7 +241,7 @@ public class DeathUI_AutoWire : MonoBehaviour
             textColor.a = textAlpha;
             hintText.color = textColor;
         }
-        
+
         // 对所有Text组件应用透明度
         Text[] texts = GetComponentsInChildren<Text>(true);
         foreach (Text text in texts)
@@ -245,7 +253,7 @@ public class DeathUI_AutoWire : MonoBehaviour
                 text.color = color;
             }
         }
-        
+
         // 对所有TMP_Text组件应用透明度
         TMP_Text[] tmpTexts = GetComponentsInChildren<TMP_Text>(true);
         foreach (TMP_Text tmpText in tmpTexts)
