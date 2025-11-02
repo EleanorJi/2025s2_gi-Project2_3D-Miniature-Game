@@ -12728,7 +12728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165c9a5772e0d465bb56586164896c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionFxPrefab: {fileID: 0}
+  explosionFxPrefab: {fileID: 3929688888836329575}
   explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 0.5
   useAudioSource: 1

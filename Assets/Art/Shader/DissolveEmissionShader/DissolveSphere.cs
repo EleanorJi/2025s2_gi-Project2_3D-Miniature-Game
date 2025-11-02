@@ -40,31 +40,62 @@ public class DissolveSphere : MonoBehaviour
             mat.SetFloat("_DissolveAmount", 0);
             mat.SetFloat("_AnimationPrompt", 0);
         }
-        
-        // 查找粒子系统
-        FindParticleSystem();
     }
 
     void FindParticleSystem()
     {
-        // 在子物体中查找粒子系统
-        foreach (Transform child in transform.GetComponentsInChildren<Transform>(true))
+        if (emberParticles != null) return; // 已找到，不重复查找
+        
+        // 方法1: 在当前物体的兄弟节点和父物体中查找
+        Transform root = transform.parent;
+        if (root != null)
+        {
+            foreach (Transform child in root.GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name.Equals(particleSystemName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    emberParticles = child.GetComponent<ParticleSystem>();
+                    if (emberParticles != null)
+                    {
+                        Debug.Log($"[DissolveSphere] 找到粒子系统: {child.name} (路径: {GetFullPath(child)})");
+                        return;
+                    }
+                }
+            }
+        }
+        
+        // 方法2: 在整个死亡模型中查找（向上找到根，再向下搜索）
+        Transform searchRoot = transform;
+        while (searchRoot.parent != null && searchRoot.parent.name != "ladybug" && searchRoot.parent.name != "ladybugblack")
+        {
+            searchRoot = searchRoot.parent;
+        }
+        
+        foreach (Transform child in searchRoot.GetComponentsInChildren<Transform>(true))
         {
             if (child.name.Equals(particleSystemName, System.StringComparison.OrdinalIgnoreCase))
             {
                 emberParticles = child.GetComponent<ParticleSystem>();
                 if (emberParticles != null)
                 {
-                    Debug.Log($"[DissolveSphere] 找到粒子系统: {child.name}");
+                    Debug.Log($"[DissolveSphere] 找到粒子系统: {child.name} (路径: {GetFullPath(child)})");
+                    return;
                 }
-                break;
             }
         }
         
-        if (emberParticles == null)
+        Debug.LogWarning($"[DissolveSphere] 在 {gameObject.name} 中未找到名为 '{particleSystemName}' 的粒子系统");
+    }
+    
+    string GetFullPath(Transform t)
+    {
+        string path = t.name;
+        while (t.parent != null)
         {
-            Debug.LogWarning($"[DissolveSphere] 未找到名为 '{particleSystemName}' 的粒子系统");
+            t = t.parent;
+            path = t.name + "/" + path;
         }
+        return path;
     }
 
     /// <summary>
@@ -75,6 +106,9 @@ public class DissolveSphere : MonoBehaviour
         isActive = true;
         animStartTime = Time.time;
         particleTriggered = false;
+        
+        // 在启动动画时查找粒子系统（确保此时死亡模型已激活）
+        FindParticleSystem();
         
         // speed参数可以用来整体调速（可选）
         // 这里我们使用固定的时间段，但您可以根据需要调整

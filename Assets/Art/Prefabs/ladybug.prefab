@@ -575,6 +575,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &956720324778910360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2093,6 +2097,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &2485424679375965366
 GameObject:
   m_ObjectHideFlags: 0
@@ -3625,6 +3633,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &4364000932223773690
 GameObject:
   m_ObjectHideFlags: 0
@@ -4170,6 +4182,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &4852343451511198818
 GameObject:
   m_ObjectHideFlags: 0
@@ -4744,6 +4760,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &5496504172078825828
 GameObject:
   m_ObjectHideFlags: 0
@@ -5457,7 +5477,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165c9a5772e0d465bb56586164896c64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosionFxPrefab: {fileID: 0}
+  explosionFxPrefab: {fileID: 6619434599456347086}
   explosionSfx: {fileID: 8300000, guid: ff0a5b57c90cb499e9206ec31fee569b, type: 3}
   sfxVolume: 0.5
   useAudioSource: 1
@@ -5639,6 +5659,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &6139719789427205351
 GameObject:
   m_ObjectHideFlags: 0
@@ -6085,6 +6109,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &6619434599456347086
 GameObject:
   m_ObjectHideFlags: 0
@@ -11600,6 +11628,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &7804616655900972971
 GameObject:
   m_ObjectHideFlags: 0
@@ -11758,6 +11790,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &7820331569686355461
 GameObject:
   m_ObjectHideFlags: 0
@@ -12011,6 +12047,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &8094681154016493367
 GameObject:
   m_ObjectHideFlags: 0
@@ -12584,6 +12624,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &9167269888613477497
 GameObject:
   m_ObjectHideFlags: 0

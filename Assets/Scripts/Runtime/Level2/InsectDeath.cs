@@ -53,14 +53,14 @@ public class InsectDeath : MonoBehaviour
 
     private void Awake()
     {
-        ResolveExplosionChild();                // Auto-find the disabled particle child
+        // 注释掉自动查找粒子系统，避免与DissolveSphere的Ember_Particles冲突
+        // ResolveExplosionChild();                // Auto-find the disabled particle child
+        
         if (explosionChild && explosionChild.activeSelf)
         {
             Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
-            explosionChild.SetActive(false);    // Don’t let it play at scene start
+            explosionChild.SetActive(false);    // Don't let it play at scene start
         }
-
-
     }
 
     /// <summary> Standard death: explode once at the insect’s current position. </summary>
