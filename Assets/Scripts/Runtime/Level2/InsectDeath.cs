@@ -54,7 +54,8 @@ public class InsectDeath : MonoBehaviour
 
     private void Awake()
     {
-        ResolveExplosionChild();                // Auto-find the disabled particle child
+        // 注释掉自动查找粒子系统，避免与DissolveSphere的Ember_Particles冲突
+        // ResolveExplosionChild();                // Auto-find the disabled particle child
         if (explosionChild && explosionChild.activeSelf)
         {
             Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
@@ -117,7 +118,8 @@ SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
         }
         this.GetComponent<Rigidbody>().isKinematic = true;
        
-        Destroy(gameObject,0.6f);
+        // 延长销毁时间以完整播放死亡动画（坍塌+消散约3秒）
+        Destroy(gameObject, 3.5f);
     }
 
     private void PlayExplosion(Vector3 pos, Vector3 normal)
