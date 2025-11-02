@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class SpwanBugs : MonoBehaviour
 {
+    public static SpwanBugs Instance; // 单例实例
+
     public GameObject bugPrefab;                 // 主虫子预制体
     public GameObject secondBugPrefab;           // 第二种虫子预制体
-    public float secondBugChance = 0.5f;         // 出现第二种虫子的概率（0..1）
+    public float bugPrefabChance = 0.5f;         // 出现第一种虫子的概率（0..1）
 
     public Transform[] spawnPoints;
 
@@ -19,10 +21,31 @@ public class SpwanBugs : MonoBehaviour
     public float cookieDisplayChance = 0.5f;
 
     public bool startOnAwake = true;
+    
+    public bool[] reverseDirection;              // 控制每个生成点的方向是否反转
 
+    public int maxPrimaryBugs = 5;               // 最大第一种虫子数量
+    private int currentPrimaryBugs = 0;          // 当前场上的第一种虫子数量
 
     // 在类中添加
     private List<List<GameObject>> spawnedBugsPerPoint = new List<List<GameObject>>();
+
+    void Awake()
+    {
+        // 单例模式初始化
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
+        // 初始化maxPrimaryBugs为5
+        maxPrimaryBugs = 5;
+    }
 
     void Start()
     {
@@ -44,11 +67,11 @@ public class SpwanBugs : MonoBehaviour
             return;
         }
 
-        //int count = Mathf.Min(6, spawnPoints.Length);
-        //for (int i = 0; i < count; i++)
-        //{
-        //    StartCoroutine(SpawnAtPoint(i));
-        //}
+        // 初始化方向数组
+        if (reverseDirection.Length != spawnPoints.Length)
+        {
+            Array.Resize(ref reverseDirection, spawnPoints.Length);
+        }
 
         // 初始化列表
         spawnedBugsPerPoint.Clear();
@@ -63,75 +86,6 @@ public class SpwanBugs : MonoBehaviour
             StartCoroutine(SpawnAtPoint(i));
         }
     }
-
-    //IEnumerator SpawnAtPoint(int index)
-    //{
-    //    Transform spPoint = spawnPoints[index];
-    //    while (true)
-    //    {
-    //        if (spPoint == null)
-    //        {
-    //            yield break;
-    //        }
-
-
-    //        GameObject chosenPrefab = bugPrefab;
-
-    //        if (secondBugPrefab != null && UnityEngine.Random.value < secondBugChance)
-    //        {
-    //            chosenPrefab = secondBugPrefab;
-    //        }
-
-    //        if (chosenPrefab == null)
-    //        {
-    //            yield break;
-    //        }
-
-    //        Vector3 pos = spPoint.position;
-    //        Quaternion rot = spPoint.rotation;
-    //        GameObject bug = Instantiate(chosenPrefab, pos, rot);
-
-
-    //        float speed = UnityEngine.Random.Range(minSpeed, maxSpeed);
-
-
-    //        Vector3 moveDir = spPoint.forward;
-    //        if (moveDir.sqrMagnitude < 0.0001f) moveDir = Vector3.forward;
-
-
-
-    //        bug.transform.rotation = Quaternion.LookRotation(moveDir, Vector3.up);
-
-    //        // 计算目标旋转：朝向移动方向
-    //        Quaternion lookRot = Quaternion.LookRotation(moveDir, Vector3.up);
-    //        // 如果当前是第二种预制体，额外在 Z 轴旋转 90 度
-    //        if (chosenPrefab == secondBugPrefab)
-    //        {
-    //            lookRot *= Quaternion.Euler(0f, 0f, -90f);
-    //        }
-
-    //        // 应用最终旋转
-    //        bug.transform.rotation = lookRot;
-
-    //        Rigidbody rb = bug.GetComponent<Rigidbody>();
-    //        if (rb != null)
-    //        {
-    //            rb.linearVelocity = moveDir * speed;
-    //        }
-
-    //        SetCookieOnBug(bug);
-
-
-    //        while (bug != null && bug.activeInHierarchy)
-    //        {
-    //            yield return null;
-    //        }
-
-    //        // 下一只虫子会在死亡后刷新，循环继续
-    //        yield return null;
-    //    }
-    //}
-
 
     IEnumerator SpawnAtPoint(int index)
     {
@@ -152,11 +106,11 @@ public class SpwanBugs : MonoBehaviour
             // 连续生成三只虫子，每只之间有0.5秒间隔
             for (int i = 0; i < 3; i++)
             {
-                GameObject chosenPrefab = bugPrefab;
+                GameObject chosenPrefab = secondBugPrefab;
 
-                if (secondBugPrefab != null && UnityEngine.Random.value < secondBugChance)
+                if (bugPrefab != null && UnityEngine.Random.value < bugPrefabChance && currentPrimaryBugs < maxPrimaryBugs)
                 {
-                    chosenPrefab = secondBugPrefab;
+                    chosenPrefab = bugPrefab;
                 }
 
                 if (chosenPrefab == null)
@@ -168,13 +122,24 @@ public class SpwanBugs : MonoBehaviour
                 Quaternion rot = spPoint.rotation;
                 GameObject bug = Instantiate(chosenPrefab, pos, rot);
 
+                // 根据虫子类型增加相应的计数
+                if (chosenPrefab == bugPrefab)
+                {
+                    currentPrimaryBugs++;
+                }
                
                 currentBatch.Add(bug);
 
               
                 float speed = sharedSpeed;
 
+                // 确定移动方向（根据是否反转）
                 Vector3 moveDir = spPoint.forward;
+                if (reverseDirection[index])
+                {
+                    moveDir = -moveDir; // 反转方向
+                }
+                
                 if (moveDir.sqrMagnitude < 0.0001f) moveDir = Vector3.forward;
 
                 bug.transform.rotation = Quaternion.LookRotation(moveDir, Vector3.up);
@@ -192,6 +157,15 @@ public class SpwanBugs : MonoBehaviour
                 {
                     rb.linearVelocity = moveDir * speed;
                 }
+
+                // 添加销毁事件监听
+                BugDestroyListener listener = bug.AddComponent<BugDestroyListener>();
+                listener.onDestroyed = () => {
+                    if (chosenPrefab == bugPrefab)
+                    {
+                        currentPrimaryBugs = Math.Max(0, currentPrimaryBugs - 1);
+                    }
+                };
 
                 SetCookieOnBug(bug);
 
@@ -254,7 +228,27 @@ public class SpwanBugs : MonoBehaviour
                 break;
             }
         }
-
     }
 
+    // 新增方法：减少maxPrimaryBugs计数
+    public void DecreaseMaxPrimaryBugs()
+    {
+
+        maxPrimaryBugs = Math.Max(0, maxPrimaryBugs - 1);
+        Debug.Log($"Max primary bugs decreased. New value: {maxPrimaryBugs}");
+    }
+}
+
+// 辅助组件，用于监听虫子销毁事件
+public class BugDestroyListener : MonoBehaviour
+{
+    public System.Action onDestroyed;
+    
+    void OnDestroy()
+    {
+        if (onDestroyed != null)
+        {
+            onDestroyed();
+        }
+    }
 }

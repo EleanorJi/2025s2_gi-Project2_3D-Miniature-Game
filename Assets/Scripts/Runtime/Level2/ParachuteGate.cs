@@ -15,7 +15,7 @@ public class ParachuteGate : MonoBehaviour
 {
     [Header("Filter")]
     public string requiredTag = "Player";
-
+    public PlayerPoisonShooter poisonShooter;
     [Header("Destination (required)")]
     public Transform nextStartPoint;
 
@@ -61,6 +61,7 @@ public class ParachuteGate : MonoBehaviour
             {
                 var targetPos = nextStartPoint.position + snapOffset;
                 other.transform.position = targetPos;
+                poisonShooter.enabled = false;
                 if (snapRotation) other.transform.rotation = nextStartPoint.rotation;
             }
             else

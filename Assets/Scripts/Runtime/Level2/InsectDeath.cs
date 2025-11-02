@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class InsectDeath : MonoBehaviour
 {
+   
     [Header("Optional FX / SFX")]
     [Tooltip("(Fallback) If you’re not using a child object, instantiate this explosion prefab")]
     public GameObject explosionFxPrefab;
@@ -53,21 +54,25 @@ public class InsectDeath : MonoBehaviour
 
     private void Awake()
     {
-        // 注释掉自动查找粒子系统，避免与DissolveSphere的Ember_Particles冲突
-        // ResolveExplosionChild();                // Auto-find the disabled particle child
-        
+        ResolveExplosionChild();                // Auto-find the disabled particle child
         if (explosionChild && explosionChild.activeSelf)
         {
             Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
-            explosionChild.SetActive(false);    // Don't let it play at scene start
+            explosionChild.SetActive(false);    // Don’t let it play at scene start
         }
+
+
     }
 
     /// <summary> Standard death: explode once at the insect’s current position. </summary>
     public void Kill()
     {
         Debug.Log("[InsectDeath] Kill()");
-
+        if (carryCookie)
+        {
+SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
+        }
+        
         KillAt(transform.position, Vector3.up);
     }
 
@@ -112,8 +117,7 @@ public class InsectDeath : MonoBehaviour
         }
         this.GetComponent<Rigidbody>().isKinematic = true;
        
-        // 延长销毁时间以完整播放死亡动画（坍塌+消散约3秒）
-        Destroy(gameObject, 3.5f);
+        Destroy(gameObject,0.6f);
     }
 
     private void PlayExplosion(Vector3 pos, Vector3 normal)
@@ -249,7 +253,7 @@ public class InsectDeath : MonoBehaviour
         {
             if (!a) continue;
             explosionChild = a.gameObject;
-            Debug.Log($"[InsectDeath] find AutoDestroyParticle child object: {explosionChild.name}");
+          //  Debug.Log($"[InsectDeath] find AutoDestroyParticle child object: {explosionChild.name}");
             return;
         }
 
@@ -262,7 +266,7 @@ public class InsectDeath : MonoBehaviour
             while (root.parent != null && root.parent.GetComponentInChildren<ParticleSystem>(true) != null && root.parent != transform)
                 root = root.parent;
             explosionChild = root.gameObject;
-            Debug.Log($"[InsectDeath] find particle system child object: {explosionChild.name}");
+          //  Debug.Log($"[InsectDeath] find particle system child object: {explosionChild.name}");
         }
     }
 
