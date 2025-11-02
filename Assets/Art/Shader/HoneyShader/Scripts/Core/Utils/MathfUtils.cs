@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NaughtyWaterBuoyancy
+namespace HoneyShaderSystem
 {
     public static class MathfUtils
     {

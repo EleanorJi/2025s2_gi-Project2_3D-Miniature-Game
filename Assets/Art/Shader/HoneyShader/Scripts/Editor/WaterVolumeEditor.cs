@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace NaughtyWaterBuoyancy.Editor
+namespace HoneyShaderSystem.Editor
 {
     [CustomEditor(typeof(WaterVolume))]
     public class WaterVolumeEditor : UnityEditor.Editor
@@ -15,11 +15,11 @@ namespace NaughtyWaterBuoyancy.Editor
         private SerializedProperty quadSegmentSize;
         //private SerializedProperty debugTrans;
 
-        [MenuItem("NaughtyWaterBouyancy/Create Water Mesh")]
+        [MenuItem("HoneyShader/Create Water Mesh")]
         private static void CreateMesh()
         {
             Mesh mesh = WaterMeshGenerator.GenerateMesh(5, 5, 1f);
-            AssetDatabase.CreateAsset(mesh, "Assets/NaughtyWaterBuoyancy/Models/Water Mesh.asset");
+            AssetDatabase.CreateAsset(mesh, "Assets/Art/Shader/HoneyShader/Models/Water Mesh.asset");
         }
 
         protected virtual void OnEnable()

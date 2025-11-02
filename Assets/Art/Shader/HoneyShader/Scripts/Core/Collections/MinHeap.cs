@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NaughtyWaterBuoyancy
+namespace HoneyShaderSystem
 {
     public class MinHeap<T>
     {

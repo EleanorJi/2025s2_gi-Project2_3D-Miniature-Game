@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace NaughtyWaterBuoyancy
+namespace HoneyShaderSystem
 {
     [RequireComponent(typeof(BoxCollider))]
     [RequireComponent(typeof(MeshFilter))]

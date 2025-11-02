@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NaughtyWaterBuoyancy.Editor
+namespace HoneyShaderSystem.Editor
 {
     public class WaterMeshGenerator
     {
