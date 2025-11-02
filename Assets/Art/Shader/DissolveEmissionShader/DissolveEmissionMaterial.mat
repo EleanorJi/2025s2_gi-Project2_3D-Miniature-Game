@@ -79,7 +79,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DissolveAmount: 0
-    - _DissolveEmission: 1
+    - _DissolveEmission: 0
     - _DissolveWidth: 0.0115
     - _DstBlend: 0
     - _Edges: 0.1

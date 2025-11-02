@@ -112,7 +112,8 @@ public class InsectDeath : MonoBehaviour
         }
         this.GetComponent<Rigidbody>().isKinematic = true;
        
-        Destroy(gameObject,0.6f);
+        // 延长销毁时间以完整播放死亡动画（坍塌+消散约3秒）
+        Destroy(gameObject, 3.5f);
     }
 
     private void PlayExplosion(Vector3 pos, Vector3 normal)
