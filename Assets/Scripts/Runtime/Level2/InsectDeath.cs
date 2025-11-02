@@ -89,13 +89,6 @@ public class InsectDeath : MonoBehaviour
         gameObjects[0].SetActive(false);
         gameObjects[1].SetActive(true);
 
-        // 立即禁用所有碰撞器，防止再次被击中
-        Collider[] colliders = GetComponentsInChildren<Collider>();
-        foreach (Collider col in colliders)
-        {
-            col.enabled = false;
-        }
-
         // 启动死亡动画
         DissolveSphere[] dissolves = GetComponentsInChildren<DissolveSphere>();
         foreach (DissolveSphere diss in dissolves)
@@ -106,7 +99,7 @@ public class InsectDeath : MonoBehaviour
         
         //PlayExplosion(hitPos, hitNormal);
 
-        // Drop the same cookie (only once)
+        // Drop the same cookie (only once) - 先掉落饼干，再禁用碰撞器
         if (!dropped && carryCookie && cookieOnBack)
         {
             dropped = true;
@@ -116,6 +109,7 @@ public class InsectDeath : MonoBehaviour
                 cookieOnBack.transform.position = carryPoint.position;
                 cookieOnBack.transform.rotation = carryPoint.rotation;
             }
+            // 将饼干从虫子分离出来
             cookieOnBack.transform.SetParent(null);
 
             var rb = cookieOnBack.GetComponent<Rigidbody>();
@@ -126,8 +120,14 @@ public class InsectDeath : MonoBehaviour
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 rb.AddForce(Vector3.up * dropImpulse, ForceMode.Impulse);
                 rb.AddTorque(Random.onUnitSphere * dropTorque, ForceMode.Impulse);
-
             }
+        }
+
+        // 饼干已经分离，现在禁用虫子身上的所有碰撞器，防止再次被击中
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider col in colliders)
+        {
+            col.enabled = false;
         }
         
         // 设置刚体为运动学模式，停止物理模拟
