@@ -47,6 +47,7 @@ public class InsectDeath : MonoBehaviour
     // —— Internal state —— //
     private bool dropped = false;    // Prevent double drop
     private bool exploded = false;    // Prevent double explosion
+    private bool isDead = false;      // Prevent multiple death triggers
 
     
 
@@ -65,24 +66,37 @@ public class InsectDeath : MonoBehaviour
 
     }
 
-    /// <summary> Standard death: explode once at the insect’s current position. </summary>
+    /// <summary> Standard death: explode once at the insect's current position. </summary>
     public void Kill()
     {
+        // 防止重复死亡
+        if (isDead) return;
+        isDead = true;
+        
         Debug.Log("[InsectDeath] Kill()");
         if (carryCookie)
         {
-SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
+            SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
         }
         
         KillAt(transform.position, Vector3.up);
     }
 
-    /// <summary> Death with hit info (but we don’t alter FX by that normal/pos anymore). </summary>
+    /// <summary> Death with hit info (but we don't alter FX by that normal/pos anymore). </summary>
     public void KillAt(Vector3 hitPos, Vector3 hitNormal)
     {
+        // 隐藏原模型，显示死亡模型
         gameObjects[0].SetActive(false);
         gameObjects[1].SetActive(true);
 
+        // 立即禁用所有碰撞器，防止再次被击中
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider col in colliders)
+        {
+            col.enabled = false;
+        }
+
+        // 启动死亡动画
         DissolveSphere[] dissolves = GetComponentsInChildren<DissolveSphere>();
         foreach (DissolveSphere diss in dissolves)
         {
@@ -90,7 +104,6 @@ SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
             diss.StartDissolve();
         }
         
-        this.GetComponent<CapsuleCollider>().isTrigger = true;
         //PlayExplosion(hitPos, hitNormal);
 
         // Drop the same cookie (only once)
@@ -116,7 +129,13 @@ SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
 
             }
         }
-        this.GetComponent<Rigidbody>().isKinematic = true;
+        
+        // 设置刚体为运动学模式，停止物理模拟
+        Rigidbody bugRb = GetComponent<Rigidbody>();
+        if (bugRb != null)
+        {
+            bugRb.isKinematic = true;
+        }
        
         // 延长销毁时间以完整播放死亡动画（坍塌+消散约3秒）
         Destroy(gameObject, 3.5f);
@@ -224,6 +243,8 @@ SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
 
     private void OnCollisionEnter(Collision c)
     {
+        // 已经死亡，不再杀死玩家
+        if (isDead) return;
         if (!killPlayerOnTouch) return;
         if (c.collider.CompareTag("Player"))
         {
