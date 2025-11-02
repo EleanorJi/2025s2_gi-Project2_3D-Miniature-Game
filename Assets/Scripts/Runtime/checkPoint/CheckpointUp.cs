@@ -12,7 +12,7 @@ public class CheckpointUp : MonoBehaviour
     public GameObject playerObject;           
     public GameObject antsAnimationObject;    
     public string antsAnimationTrigger = "Activate";
-
+    public PlayerPoisonShooter poisonShooter;
     [Header("Player Position Settings")]
     public Transform playerFinalPosition;     
 
@@ -262,7 +262,7 @@ public class CheckpointUp : MonoBehaviour
 
         // note: don't Stop SFX here anymore (let it finish naturally)
         if (flood) flood.OnClimbSucceeded(resetCrumbs: false);
-
+        poisonShooter.enabled = true;
         isAnimating = false;
         playerInRange = false;
         HideHintImmediate();

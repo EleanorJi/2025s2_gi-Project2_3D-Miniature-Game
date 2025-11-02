@@ -66,6 +66,10 @@ public class PlayerPoisonShooter : MonoBehaviour
             ApplySpatial();
         }
     }
+    private void Start()
+    {
+        this.enabled = false;
+    }
 
     void ApplySpatial()
     {
@@ -85,9 +89,6 @@ public class PlayerPoisonShooter : MonoBehaviour
 
     void Update()
     {
-        // 确保粒子系统已初始化
-        if (!poisonPS) return;
-        
         // Start spraying (Left Mouse Button)
         if (Input.GetMouseButtonDown(0)) StartSpray();
         // Stop on release (Left Mouse Button)
