@@ -53,9 +53,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ReflDistort: 1.1
-    - _RefrDistort: 0.27
-    - _WaveScale: 0.0698
+    - _ReflDistort: 0.4
+    - _RefrDistort: 0.2
+    - _WaveScale: 0.0637
     m_Colors:
     - WaveSpeed: {r: 1, g: 1, b: 1, a: 0.8}
     - _BumpMap_ST: {r: 1, g: 1, b: 0, a: 0}
@@ -65,7 +65,7 @@ Material:
     - _ReflectionTex_ST: {r: 1, g: 1, b: 0, a: 0}
     - _ReflectiveColorCube_ST: {r: 1, g: 1, b: 0, a: 0}
     - _ReflectiveColor_ST: {r: 1, g: 1, b: 0, a: 0}
-    - _RefrColor: {r: 1, g: 0.9076944, b: 0.48584908, a: 1}
+    - _RefrColor: {r: 1, g: 0.8570774, b: 0.21226418, a: 1}
     - _RefractionTex_ST: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
