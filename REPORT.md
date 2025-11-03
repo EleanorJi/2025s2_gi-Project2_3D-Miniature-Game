@@ -472,4 +472,48 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
 
 ## References and External Resources
 
-TODO - see specification for details
+### Audio Resources
+1. **Epidemic Sound** - Background music and sound effects  
+   [https://www.epidemicsound.com](https://www.epidemicsound.com)  
+   Licensed royalty-free music and sound effects for game audio. Individual tracks were selected and customized using GarageBand (macOS) to match gameplay pacing and atmosphere.
+
+2. **GarageBand (macOS)** - Audio editing and composition  
+   Apple's digital audio workstation used for audio editing, mixing, and creating custom sound compositions from licensed source material.
+
+### Shader Development Resources
+3. **Roystan's Toon Water Shader Tutorial** (Referenced in Section 1.3)  
+   Ross, R. "Toon Water Shader" Tutorial  
+   [https://roystan.net/articles/toon-water.html](https://roystan.net/articles/toon-water.html)  
+   Referenced for Level 1 Kitchen sink water shader implementation principles.
+
+### 3D Models and Visual Assets
+4. **Unity Asset Store** - 3D models and textures  
+   [https://assetstore.unity.com](https://assetstore.unity.com)  
+   Selected environmental models, prop assets, and texture libraries used throughout the game levels.
+
+5. **Sketchfab** - Additional 3D models  
+   [https://sketchfab.com](https://sketchfab.com)  
+   Community-sourced 3D models for environmental details and background objects.
+
+### Development Tools and Documentation
+6. **Unity Documentation** - Engine reference  
+   [https://docs.unity3d.com](https://docs.unity3d.com)  
+   Official Unity engine documentation for scripting, shader programming, and engine features.
+
+7. **Microsoft C# Documentation**  
+   [https://learn.microsoft.com/en-us/dotnet/csharp/](https://learn.microsoft.com/en-us/dotnet/csharp/)  
+   C# language reference for gameplay scripting and system implementation.
+
+### Shader Programming References
+8. **Unity Shader Reference**  
+   [https://docs.unity3d.com/Manual/SL-Reference.html](https://docs.unity3d.com/Manual/SL-Reference.html)  
+   Unity ShaderLab and HLSL programming documentation for custom shader development.
+
+### Project Management and Collaboration
+9. **GitHub** - Version control  
+   [https://github.com](https://github.com)  
+   Git repository hosting and version control for collaborative development.
+
+10. **Monday.com** - Project management  
+    [https://monday.com](https://monday.com)  
+    Task tracking, timeline management, and team collaboration platform.

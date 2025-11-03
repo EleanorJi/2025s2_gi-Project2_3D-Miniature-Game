@@ -350,7 +350,7 @@ The game is set in a fully 3D environment, but with level design that encourages
       <img src="images/sugar.png" alt="sugar square" width="400">
     </p>
 
-    - Garden Resources (Gardens, Soil, Insect NPCs, Water Pipes, Leaves, Matches)
+    - Garden Resources (Gardens, Soil, Insect NPCs including Red Ladybugs and Black Beetles, Water Pipes, Leaves for Parachute, Matches, Brick Obstacles)
     - Road Resources (Vehicles, Traffic Signs, Trash Cans, Trees, Buildings)
     - Beach Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
     <p align="center">
@@ -363,17 +363,15 @@ The game is set in a fully 3D environment, but with level design that encourages
     </p> 
     
     - Collectibles (Food Scraps)
-    - Special Effects (Explosion Particles (rendered by shader), Venom Particles, pool shader)
+    - Special Effects (Dissolve Shader with Particle System, Venom Particles, Water Reflection/Refraction Shader)
     <p align="center">
-      <img src="images/Explosion.png" alt="Explosion" width="400">
-    </p>
-    
-    <p align="center">
-      <img src="images/ExplosionParticles.png" alt="Explosion Particles by Blender" width="400">
+      <img src="images/InsectDeath_Collapse.png" alt="Insect Death Phase 1: Collapse" width="250">
+      <img src="images/InsectDeath_Dissolve.png" alt="Insect Death Phase 2: Dissolve" width="250">
+      <img src="images/InsectDeath_Dissipate.png" alt="Insect Death Phase 3: Particle Burst" width="250">
     </p>
 
     <p align="center">
-      <img src="images/VenomParticles.png" alt="Venom Particles in Level2(simple)" width="400">
+      <img src="images/VenomParticles.png" alt="Venom Particles in Level2" width="400">
     </p>
 
 -   **Create source:**
@@ -495,11 +493,43 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
 
 ## Possible Challenges
 
--   It's not easy to find a suitable model.
+-   **Asset Acquisition and Modeling:**
+    -   Finding or creating suitable 3D models that match the miniature ant perspective and stylized art direction proved challenging. Many off-the-shelf assets were too realistic or not properly scaled for the ant's viewpoint.
+    -   Creating custom insect models (ladybugs, beetles) with appropriate detail levels for both gameplay clarity and visual appeal required significant iteration.
 
--   Time limit: too many idea need to complete
+-   **Technical Implementation Complexity:**
+    -   **Shader Development:** Implementing the dissolve shader with vertex deformation for enemy death effects required combining Surface Shader framework with custom vertex manipulation, which was technically demanding.
+    -   **Dynamic Water System:** Creating real-time reflection and refraction for the water shader with acceptable performance on various hardware configurations required careful optimization.
+    -   **Insect AI Behavior:** Developing the five-lane randomized movement system for insects while maintaining performance with multiple active entities was challenging.
 
+-   **Level Design and Gameplay Balance:**
+    -   Balancing the difficulty of the flower bed section—ensuring players engage with combat mechanics while not creating excessive frustration—required extensive playtesting and iteration.
+    -   Managing the cookie collection economy (limiting spawns, controlling progression to Level 3) needed careful tuning to prevent players from bypassing intended challenges.
 
+-   **Time Constraints:**
+    -   With too many ambitious ideas and limited development time, prioritization was crucial. Some features had to be simplified or cut (e.g., WaterWaves.cs was disabled in the final build).
+    -   Balancing feature development with polish time meant continuous negotiation between adding new mechanics and refining existing ones.
+
+-   **Cross-Platform Compatibility:**
+    -   Ensuring consistent shader performance across different graphics hardware, particularly for the complex water reflection/refraction system, required platform-specific optimization.
+
+-   **Cultural Localization:**
+    -   Integrating Melbourne-specific elements (pedestrian crossing sounds) authentically while keeping the game accessible to international audiences required careful audio design and cultural research.
+
+---
+
+## Credits
+
+-   **Audio:** Epidemic Sound (licensed tracks), edited with GarageBand
+-   **3D Assets:** Unity Asset Store, Sketchfab, custom modeling (Blender/Maya)
+-   **Development:** Unity Engine, C# scripting
+-   **Tools:** GitHub (version control), Monday.com (project management)
+
+*For detailed references and technical resources, please refer to [REPORT.md](REPORT.md).*
+
+---
+
+*This game was developed as a university project for COMP30019 at the University of Melbourne.*
 
 
 
