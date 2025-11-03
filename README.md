@@ -98,9 +98,17 @@ The ultimate adversary is the tyrannical seagull—a “dragon” in the ant wor
 -   **Helper Ants (Worker, Builder, etc.)**
     -   **Role:** AI-controlled allies summoned by the protagonist ant, crucial for solving puzzles and overcoming level challenges. 
 -   **Insects (Environmental Enemies)**
-    -   **Role:** Hostile creatures encountered in the second level (Outdoor), acting as environmental hazards that the player must avoid or confront.
+    -   **Role:** Hostile creatures encountered in the second level (Outdoor) flower bed area, acting as dynamic environmental hazards that the player must avoid or confront.
     -   **Scale & Design:** While small to humans, from the ant's perspective these insects are formidable in size and threat. They are designed to appear as large, intimidating adversaries.
-    -   **Interaction:** These insects can be defeated by the protagonist's Venom Shot ability. Upon being hit, they are eliminated, clearing the path for the player.
+    -   **Behavior System:** Insects move in five organized columns across the flower bed, traveling in opposite directions with randomized speeds and spacing. This creates an unpredictable migration pattern that simulates a coordinated colony movement, replacing the original fixed back-and-forth patrol system. The dynamic behavior enhances gameplay variety and challenge.
+    -   **Types:**
+        -   **Red Ladybugs:** These insects carry cookie crumbs on their backs, making them primary targets for resource collection. Their spawn rate is dynamically controlled—linked to the number of cookies already collected in the flower bed area. Once the player has collected five cookies in this zone, no more cookie-carrying ladybugs will appear, creating strategic scarcity.
+        -   **Black Beetles:** These insects do not carry resources and serve purely as obstacles. They increase the difficulty of navigating through the flower bed and force players to use their venom ability strategically.
+    -   **Interaction & Death Effect:** These insects can be defeated by the protagonist's Venom Shot ability (left mouse button). When hit, insects undergo a dramatic multi-stage death sequence:
+        1. **Collapse Phase:** The insect's body begins to crumple inward toward its center
+        2. **Dissolution Phase:** The body progressively dissolves and becomes transparent
+        3. **Dissipation Phase:** Fire and ember particle effects burst from the body, simulating the corrosive melting effect of the venom
+        -   This sophisticated death animation combines custom vertex deformation shaders with dissolve shaders and particle systems, replacing the original simple explosion effect with a more realistic and visually compelling representation of poison's corrosive action.
 
 ---
 
@@ -147,7 +155,8 @@ The game employs a dynamic third-person perspective. Players control an ant char
     -   **Environmental Interaction:**
         -   Interact with the preset trigger point (e.g., stove switch, spider)
         -   Interacting with dynamic obstacles (e.g., moving vegetables, water pipes)
-    -   **Combat:** The player ant can perform a basic attack to defeat insects and clear a path.
+        -   **Carrying Mechanics Evolution:** In Level 1, the ant carries objects by placing them on its back. In Level 2, this evolves into a more anthropomorphic interaction—the ant grasps a leaf parachute by its stem and holds it overhead, creating a more dynamic and expressive visual presentation that enhances the game's personality and charm.
+    -   **Combat & Venom System:** The player ant can fire venom projectiles (left mouse button) to defeat insects in Level 2's flower bed area. When insects are hit by venom, they undergo a dramatic death sequence: collapsing inward, dissolving, and dissipating with particle effects, simulating the corrosive action of the poison. This combat system is essential for navigating through the organized insect migration patterns in the flower bed.
     -   **Team collaboration:** Summon a limited number of ants to assist in completing the mission.
 -   **Summoning Skill:**
     -   **Summoning Resources:** Food scraps need to be collected as the summoning energy. Each summoning consumes one scrap.
@@ -210,20 +219,33 @@ The game is set in a fully 3D environment, but with level design that encourages
         <p align="center">
           <img src="images/ClimbWall.png" alt="Summoned Climb design Level 2" width="400">
         </p>
-      -   **Venom Run Through the Flower Bed:** Use the left mouse button to fire venom and push through insect-filled flower beds, avoiding death by swarms.
+      -   **Venom Run Through the Flower Bed:** Navigate through a five-lane flower bed filled with organized insect traffic. Use the left mouse button to fire venom at approaching insects.
+        -   **Insect Behavior:** Five columns of insects move in opposite directions with randomized speeds and spacing, simulating an organized colony migration pattern rather than predictable back-and-forth movement. This dynamic system creates varied gameplay experiences and increases challenge unpredictability.
+        -   **Insect Types:**
+            -   **Red Ladybugs:** Carry cookie crumbs on their backs. These are the primary targets for cookie collection. The spawn rate of ladybugs is dynamically linked to the number of cookies already collected in this area—once five cookies are collected, no more cookie-carrying ladybugs will appear.
+            -   **Black Beetles:** Do not carry cookies and serve as additional obstacles.
+        -   **Brick Barriers:** Strategically placed brick cube obstacles prevent players from bypassing the flower bed challenge, ensuring engagement with the insect mechanics.
+        -   **Death Effect:** When hit by venom, insects undergo a dramatic multi-stage death animation: the body first collapses inward, then dissolves and dissipates, simulating the corrosive melting effect of the poison. This effect combines custom shaders with particle systems for a visually compelling result, replacing the original explosion effect with a more realistic toxin interaction.
         <p align="center">
           <img src="images/FlowerBed.png" alt="Flower Bed design Level 2" width="400">
         </p>
-      -   **Leaf Parachute:** Discover that leaves can be used as a “parachute” to increase drag, preventing fatal falls when dropping from the flower bed.
+        -   **Three-Stage Death Animation:**
+        <p align="center">
+          <img src="images/InsectDeath_Collapse.png" alt="Phase 1: Collapse - Insect crumples inward" width="250">
+          <img src="images/InsectDeath_Dissolve.png" alt="Phase 2: Dissolve - Body becomes transparent" width="250">
+          <img src="images/InsectDeath_Dissipate.png" alt="Phase 3: Dissipate - Particle burst effect" width="250">
+        </p>
+      -   **Leaf Parachute:** Discover that leaves can be used as a "parachute" to increase drag, preventing fatal falls when dropping from the flower bed. The ant anthropomorphically grasps the leaf stem and holds it above, creating a charming and visually engaging animation that enhances the game's personality. This design evolved from the simple "object on back" mechanic used in Level 1 to a more dynamic and expressive interaction.
         <p align="center">
           <img src="images/Parachute.png" alt="Ant with parachute design Level 2" width="400">
         </p>
       -   **Charged Rock Hops & “Trash Soup”:** Perform charged jumps across multiple rocks to avoid the sticky “trash soup” on the ground, which can trap the player repeatedly and lead to unavoidable death.
       -   **Global Exploration Events:** Multiple optional areas can be explored, but they may trigger unexpected environmental effects (risk–reward tradeoffs).
-      -   **Hidden Progress Condition:** Through repeated attempts, players will discover that collecting as many cookie crumbs as possible in Level 2 directly affects whether they can use the summoning skill to repel the BOSS in Level 3.
+      -   **Hidden Progress Condition:** Through repeated attempts, players will discover that collecting as many cookie crumbs as possible in Level 2 directly affects whether they can use the summoning skill to repel the BOSS in Level 3. Cookie collection in the flower bed is strategically limited—only red ladybugs carry cookies, and their spawn rate decreases as more cookies are collected, with no cookie-carrying insects appearing after five cookies are obtained in this area.
         <p align="center">
           <img src="images/cookieCrumbs.png" alt="maze design Level 2" width="400">
         </p>
+      -   **Cinematic Ending Sequence:** The level concludes with a carefully choreographed camera sequence featuring Melbourne's distinctive pedestrian crossing sounds (the iconic ticking and chirping signals). The camera follows the ant's perspective as it crosses the street to reach the beach dock on the opposite side. This sequence balances visual interest with sophisticated cinematography, providing a smooth and aesthetically pleasing transition while maintaining the miniature perspective that makes the game unique.
 
 
 -   **The third level (Boss battle at the dock):**
@@ -290,7 +312,7 @@ The game is set in a fully 3D environment, but with level design that encourages
 -   **Music used:**
     - **Kitchen**: playful orchestral with plucked strings
     - **Garden**: Soft, natural element ambient soundscape
-    - **Highway**: Sound effects and custom melodies integrated with player actions and narrative progression (synchronized with camera movement)
+    - **Highway**: Sound effects and custom melodies integrated with player actions and narrative progression (synchronized with camera movement). Features authentic **Melbourne pedestrian crossing sounds**—the iconic ticking and chirping signals that characterize the city's crosswalks—adding cultural authenticity during Level 2's cinematic ending sequence as the ant crosses the street.
     - **Dock/Boss**: dramatic orchestral with heavy percussion and tension-filled crescendos
 -   **Fitness:**
     - Adaptive music system that changes with player state (Summon Advance/BOSS Battle) to maintain immersion and tension.
