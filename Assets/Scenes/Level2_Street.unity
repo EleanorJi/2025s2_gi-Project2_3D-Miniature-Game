@@ -58346,7 +58346,7 @@ Transform:
   m_GameObject: {fileID: 983552210}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -1.2676082e-10, w: 1}
-  m_LocalPosition: {x: -0.225, y: 0.56, z: -0.025}
+  m_LocalPosition: {x: -0.078, y: 0.508, z: -0.112}
   m_LocalScale: {x: 1.4057488, y: 1.1031502, z: 0.9578472}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75837,7 +75837,7 @@ MonoBehaviour:
   enableWaterAreaIntegration: 1
   waterArea: {fileID: 1365058325}
   autoFindContainingArea: 1
-  respawnOverride: {fileID: 575812939}
+  respawnOverride: {fileID: 0}
   respawnManager: {fileID: 0}
   preferFloodAreaHandle: 1
 --- !u!1 &1290701668
