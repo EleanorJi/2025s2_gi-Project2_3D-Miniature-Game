@@ -205,6 +205,95 @@ This shader operates in the Transparent render queue with Alpha Blending, which 
 </p>
 
 
+### 2. Dynamic Water System with Reflection and Refraction for Level 2
+
+#### 2.1 Shader Overview
+
+The HoneyRefraction shader is a custom vertex/fragment shader written in Cg/HLSL that simulates realistic water and flowing honey surfaces in Level 2's outdoor environment. This system goes beyond a simple shader—it is a complete **shader-script collaborative system** that dynamically generates water mesh geometry at runtime and renders real-time reflection and refraction of the scene. The result is a convincing liquid surface with proper depth perception and environmental interaction.
+
+#### 2.2 Shader File Links
+
+* [HoneyWater.shader](Assets/Art/Shader/HoneyShader/Shaders/HoneyWater.shader) - Main shader for rendering
+* [WaterFX.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterFX.cs) - Reflection/refraction rendering controller
+* [WaterVolume.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterVolume.cs) - Dynamic mesh generation system
+
+#### 2.3 Key Features and Implementation
+
+**Shader Layer:**
+* **Dual Scrolling Normal Maps:** Two normal maps scroll at different speeds (controlled by `WaveSpeed` parameter), creating organic, non-repeating wave distortions when combined
+* **Fresnel Effect:** Calculates the blend ratio between reflection and refraction based on the dot product of view direction and surface normal, simulating realistic water viewing angles where shallow angles show more reflection
+* **Distorted Sampling:** Uses normal map bumps to offset reflection and refraction UV coordinates (`_ReflDistort` and `_RefrDistort`), creating the characteristic ripple distortion of light passing through water
+
+**Script-Driven System:**
+* **Real-time Reflection/Refraction Cameras:** `WaterFX.cs` dynamically creates reflection and refraction cameras each frame before rendering, rendering the scene to RenderTextures that are then sampled by the shader
+* **Reflection Matrix Calculation:** Computes a reflection matrix based on the water plane's position and normal, flipping the camera perspective to achieve mirror-like reflection
+* **Oblique Projection Clipping:** Uses oblique projection matrices to ensure only objects above/below the water plane are rendered, avoiding unnecessary rendering overhead
+* **Dynamic Mesh Generation:** `WaterVolume.cs` generates water surface mesh at runtime based on `rows` and `columns` parameters, supporting irregular water body shapes
+
+#### 2.4 Integration with Unity and Technical Context
+
+This system employs the **dual camera rendering** technique, a classic approach for high-quality water surfaces in Unity. In the `OnWillRenderObject()` callback, the system:
+1. Creates corresponding reflection/refraction cameras for each main camera rendering this water surface
+2. Flips the reflection camera and renders to a 256x256 RenderTexture
+3. Renders the refraction camera to capture the scene below the water surface from the current viewpoint
+4. The shader samples these two RenderTextures and blends them using Fresnel, producing the final color
+
+The `Update()` method calculates UV offsets based on `Time.timeSinceLevelLoad`, achieving continuous scrolling animation of normal maps. This time-based UV animation is a standard technique in Unity shaders for creating flowing effects.
+
+The mesh generation system allows the water body to adapt to different container shapes (such as channels and ponds), while providing collision detection and water level query functions that can interact with the game's physics system (such as buoyancy and submersion detection).
+
+#### 2.5 Visual Demonstration
+<p align="center">
+  <img src="images/report/honeyWaterShader.gif" alt="Honey Water Shader Level 2" width="600">
+</p>
+
+
+### 3. Dissolve and Collapse Shader for Enemy Death Effect
+
+#### 3.1 Shader Overview
+
+The DissolveShader is a custom Surface Shader combining **vertex deformation** and **pixel dissolution** techniques. It creates a dramatic three-stage death animation for insect enemies in Level 2: first, the mesh collapses toward its center; then it gradually dissolves and disappears; finally, particle effects are triggered at a specific dissolution threshold. The entire sequence lasts approximately 3 seconds, precisely controlled by the `DissolveSphere.cs` script's timeline system.
+
+#### 3.2 Shader File Links
+
+* [DissolveEmission.shader](Assets/Art/Shader/DissolveEmissionShader/DissolveEmission.shader) - Main shader
+* [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs) - Animation controller script
+
+#### 3.3 Key Features and Implementation
+
+**Vertex Deformation (Collapse Effect):**
+* **Custom Vertex Function:** Declares a vertex processing function via `#pragma vertex vert`, executed before the Surface Shader
+* **Z-Axis Compression:** Uses the `_AnimationPrompt` parameter (0-1 range) to remap vertex Z-coordinates to 40%-100% of their original values, creating a collapsing-toward-center visual effect
+* **Noise Perturbation:** Samples color values from the main texture as noise, applying varying degrees of deformation to different vertices to produce an uneven crumbling sensation
+* **Remap Function:** Custom value range remapping function that transforms `_AnimationPrompt` from [0,1] to the ranges needed for deformation
+
+**Pixel Dissolution (Dissolve Effect):**
+* **Noise Mask Sampling:** Uses `_DissolveMap` texture as the dissolution pattern; pixels with values below the `_DissolveAmount` threshold are discarded via `discard`
+* **Edge Glow:** Pixels within the dissolution boundary (between `_DissolveAmount` and `_DissolveAmount + _DissolveWidth`) are set to `_DissolveColor` with emission added, forming a flame-like edge effect
+* **Progressive Dissolution:** As `_DissolveAmount` increases from 0 to 1, more pixels are discarded until the entire model completely disappears
+
+**Multi-Stage Animation Control:**
+* **Phase 1 (0-1s):** Only increases `_AnimationPrompt` from 0 to 0.4, producing initial collapse
+* **Phase 2 (1-3s):** Simultaneously increases `_AnimationPrompt` to 1.0 and `_DissolveAmount` to 1.0, continuing collapse while beginning dissolution
+* **Particle Trigger:** When `_DissolveAmount` reaches 0.45, `DissolveSphere.cs` triggers the `Ember_Particles` particle system to play fire/smoke effects
+
+#### 3.4 Integration with Unity and Technical Context
+
+This shader uses Unity's **Surface Shader framework** but injects custom vertex processing through `#pragma vertex vert`. This hybrid approach allows us to leverage Surface Shader's lighting calculation convenience while implementing low-level vertex deformation.
+
+In the game logic, when `InsectDeath.cs` detects an insect hit by poison:
+1. Disables all colliders (preventing repeated hits)
+2. Switches to the death model and calls `DissolveSphere.StartDissolve()`
+3. `DissolveSphere.cs` updates shader parameters frame-by-frame in `Update()`
+4. Automatically finds and plays the particle system when dissolution reaches 0.45
+5. Destroys the entire GameObject after 3.5 seconds
+
+This design decouples visual effects (Shader), animation control (DissolveSphere.cs), game logic (InsectDeath.cs), and particle systems, facilitating adjustment and reuse. The `tex2Dlod` sampling in the vertex shader reads textures during the vertex stage; while performance-intensive, it provides each vertex with a unique noise value, avoiding the rigidity of uniform deformation.
+
+#### 3.5 Visual Demonstration
+<p align="center">
+  <img src="images/report/dissolveShader.gif" alt="Enemy Dissolve Shader" width="600">
+</p>
 
 
 ## Summary of Contributions
