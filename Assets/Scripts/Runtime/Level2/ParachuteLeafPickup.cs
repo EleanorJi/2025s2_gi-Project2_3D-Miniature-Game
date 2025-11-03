@@ -3,7 +3,6 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class ParachuteLeafPickup : MonoBehaviour
 {
-    
     public GameObject highlight;
 
     void Reset()
@@ -17,7 +16,7 @@ public class ParachuteLeafPickup : MonoBehaviour
         if (!other.CompareTag("Player")) return;
         var carrier = other.GetComponent<ParachuteCarrier>();
         if (!carrier) return;
-
+        
         carrier.SetNearbyLeaf(this);
         if (highlight) highlight.SetActive(true);
     }

@@ -11,6 +11,9 @@
 		_DissolveWidth ("DissolveWidth", Range(0,0.1)) = 0.05
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
+		
+		_YCenterOffset("Y Offset", Float) = -0.06
+		_AnimationPrompt("Animation Prompt", Range(0,1)) = 0
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -19,17 +22,11 @@
 		CGPROGRAM
 		#pragma surface surf Standard fullforwardshadows
 		#pragma target 3.0
+		#pragma vertex vert
 
 		sampler2D _MainTex;
 		sampler2D _NormalMap;
 		sampler2D _DissolveMap;
-
-		struct Input {
-			float2 uv_MainTex;
-			float2 uv_NormalMap;
-			float2 uv_DissolveMap;
-		};
-
 		half _DissolveAmount;
 		half _NormalStrenght;
 		half _Glossiness;
@@ -38,7 +35,30 @@
 		half _DissolveWidth;
 		fixed4 _Color;
 		fixed4 _DissolveColor;
+		
+		float _YCenterOffset;
+		float _AnimationPrompt;
+		
+		float Remap_float(float In, float2 InMinMax, float2 OutMinMax)
+        {
+            float Out = OutMinMax.x + (In - InMinMax.x) * (OutMinMax.y - OutMinMax.x) / (InMinMax.y - InMinMax.x);
+            return Out;
+        }
 
+		void vert (inout appdata_full v)
+        {
+            float noiseCol = tex2Dlod(_MainTex, float4(float2(v.vertex.x, v.vertex.y), 0, 0));
+            noiseCol = lerp(1, noiseCol, Remap_float(_AnimationPrompt, float2(0, 1), float2(0, 0.7)));
+            v.vertex = float4(v.vertex.xy, (v.vertex.z + _YCenterOffset) * Remap_float(_AnimationPrompt, float2(0, 1), float2(1, 0.4)) * noiseCol, v.vertex.w);
+            v.vertex.z -= _YCenterOffset;
+        }
+
+		struct Input {
+			float2 uv_MainTex;
+			float2 uv_NormalMap;
+			float2 uv_DissolveMap;
+		};
+		
 		void surf (Input IN, inout SurfaceOutputStandard o) {
 
 			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;			

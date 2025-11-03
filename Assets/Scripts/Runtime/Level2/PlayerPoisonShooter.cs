@@ -66,6 +66,10 @@ public class PlayerPoisonShooter : MonoBehaviour
             ApplySpatial();
         }
     }
+    private void Start()
+    {
+        this.enabled = false;
+    }
 
     void ApplySpatial()
     {

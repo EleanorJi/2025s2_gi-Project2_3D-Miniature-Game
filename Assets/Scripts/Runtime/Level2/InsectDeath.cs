@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class InsectDeath : MonoBehaviour
 {
+   
     [Header("Optional FX / SFX")]
     [Tooltip("(Fallback) If you’re not using a child object, instantiate this explosion prefab")]
     public GameObject explosionFxPrefab;
@@ -46,6 +47,7 @@ public class InsectDeath : MonoBehaviour
     // —— Internal state —— //
     private bool dropped = false;    // Prevent double drop
     private bool exploded = false;    // Prevent double explosion
+    private bool isDead = false;      // Prevent multiple death triggers
 
     
 
@@ -53,7 +55,8 @@ public class InsectDeath : MonoBehaviour
 
     private void Awake()
     {
-        ResolveExplosionChild();                // Auto-find the disabled particle child
+        // 注释掉自动查找粒子系统，避免与DissolveSphere的Ember_Particles冲突
+        // ResolveExplosionChild();                // Auto-find the disabled particle child
         if (explosionChild && explosionChild.activeSelf)
         {
             Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
@@ -63,20 +66,30 @@ public class InsectDeath : MonoBehaviour
 
     }
 
-    /// <summary> Standard death: explode once at the insect’s current position. </summary>
+    /// <summary> Standard death: explode once at the insect's current position. </summary>
     public void Kill()
     {
+        // 防止重复死亡
+        if (isDead) return;
+        isDead = true;
+        
         Debug.Log("[InsectDeath] Kill()");
-
+        if (carryCookie)
+        {
+            SpwanBugs.Instance.DecreaseMaxPrimaryBugs();
+        }
+        
         KillAt(transform.position, Vector3.up);
     }
 
-    /// <summary> Death with hit info (but we don’t alter FX by that normal/pos anymore). </summary>
+    /// <summary> Death with hit info (but we don't alter FX by that normal/pos anymore). </summary>
     public void KillAt(Vector3 hitPos, Vector3 hitNormal)
     {
+        // 隐藏原模型，显示死亡模型
         gameObjects[0].SetActive(false);
         gameObjects[1].SetActive(true);
 
+        // 启动死亡动画
         DissolveSphere[] dissolves = GetComponentsInChildren<DissolveSphere>();
         foreach (DissolveSphere diss in dissolves)
         {
@@ -84,10 +97,9 @@ public class InsectDeath : MonoBehaviour
             diss.StartDissolve();
         }
         
-        this.GetComponent<CapsuleCollider>().isTrigger = true;
         //PlayExplosion(hitPos, hitNormal);
 
-        // Drop the same cookie (only once)
+        // Drop the same cookie (only once) - 先掉落饼干，再禁用碰撞器
         if (!dropped && carryCookie && cookieOnBack)
         {
             dropped = true;
@@ -97,6 +109,7 @@ public class InsectDeath : MonoBehaviour
                 cookieOnBack.transform.position = carryPoint.position;
                 cookieOnBack.transform.rotation = carryPoint.rotation;
             }
+            // 将饼干从虫子分离出来
             cookieOnBack.transform.SetParent(null);
 
             var rb = cookieOnBack.GetComponent<Rigidbody>();
@@ -107,12 +120,25 @@ public class InsectDeath : MonoBehaviour
                 rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
                 rb.AddForce(Vector3.up * dropImpulse, ForceMode.Impulse);
                 rb.AddTorque(Random.onUnitSphere * dropTorque, ForceMode.Impulse);
-
             }
         }
-        this.GetComponent<Rigidbody>().isKinematic = true;
+
+        // 饼干已经分离，现在禁用虫子身上的所有碰撞器，防止再次被击中
+        Collider[] colliders = GetComponentsInChildren<Collider>();
+        foreach (Collider col in colliders)
+        {
+            col.enabled = false;
+        }
+        
+        // 设置刚体为运动学模式，停止物理模拟
+        Rigidbody bugRb = GetComponent<Rigidbody>();
+        if (bugRb != null)
+        {
+            bugRb.isKinematic = true;
+        }
        
-        Destroy(gameObject,0.6f);
+        // 延长销毁时间以完整播放死亡动画（坍塌+消散约3秒）
+        Destroy(gameObject, 3.5f);
     }
 
     private void PlayExplosion(Vector3 pos, Vector3 normal)
@@ -217,6 +243,8 @@ public class InsectDeath : MonoBehaviour
 
     private void OnCollisionEnter(Collision c)
     {
+        // 已经死亡，不再杀死玩家
+        if (isDead) return;
         if (!killPlayerOnTouch) return;
         if (c.collider.CompareTag("Player"))
         {
@@ -248,7 +276,7 @@ public class InsectDeath : MonoBehaviour
         {
             if (!a) continue;
             explosionChild = a.gameObject;
-            Debug.Log($"[InsectDeath] find AutoDestroyParticle child object: {explosionChild.name}");
+          //  Debug.Log($"[InsectDeath] find AutoDestroyParticle child object: {explosionChild.name}");
             return;
         }
 
@@ -261,7 +289,7 @@ public class InsectDeath : MonoBehaviour
             while (root.parent != null && root.parent.GetComponentInChildren<ParticleSystem>(true) != null && root.parent != transform)
                 root = root.parent;
             explosionChild = root.gameObject;
-            Debug.Log($"[InsectDeath] find particle system child object: {explosionChild.name}");
+          //  Debug.Log($"[InsectDeath] find particle system child object: {explosionChild.name}");
         }
     }
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class ParachuteDropZone : MonoBehaviour
 {
     public string requiredTag = "Player";
-
+    public PlayerPoisonShooter poisonShooter;
     void Reset()
     {
         GetComponent<Collider>().isTrigger = true;
@@ -18,6 +18,7 @@ public class ParachuteDropZone : MonoBehaviour
         var carrier = other.GetComponent<ParachuteCarrier>();
         if (carrier && carrier.HasLeaf())
         {
+            poisonShooter.enabled = false ;
             carrier.DropLeaf();
         }
     }
