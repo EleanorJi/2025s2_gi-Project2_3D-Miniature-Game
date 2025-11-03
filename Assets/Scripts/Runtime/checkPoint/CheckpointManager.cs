@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class CheckpointManager : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class CheckpointManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            // 监听场景加载，清理并重建检查点列表，避免持有已销毁引用
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -31,10 +34,20 @@ public class CheckpointManager : MonoBehaviour
     
     private void FindAllCheckpoints()
     {
-        Checkpoint[] checkpoints = FindObjectsByType<Checkpoint>(FindObjectsSortMode.InstanceID);
+        allCheckpoints.Clear();
+        var checkpoints = FindObjectsByType<Checkpoint>(FindObjectsSortMode.InstanceID);
         allCheckpoints.AddRange(checkpoints);
         
         Debug.Log($"Found {allCheckpoints.Count} checkpoints in scene");
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 场景切换后，清空已激活与最后检查点，重建当前场景的检查点列表
+        activatedCheckpoints.RemoveAll(cp => cp == null);
+        activatedCheckpoints.Clear();
+        lastActivatedCheckpoint = null;
+        FindAllCheckpoints();
     }
     
     public void SetCheckpointActivated(Checkpoint checkpoint)
@@ -55,13 +68,24 @@ public class CheckpointManager : MonoBehaviour
         // Directly return to the last activated save point location
         if (lastActivatedCheckpoint != null)
         {
-            return lastActivatedCheckpoint.transform.position;
+            // 防御：对象可能已被销毁（Unity 假空）
+            if (lastActivatedCheckpoint == null)
+            {
+                lastActivatedCheckpoint = null;
+            }
+            else
+            {
+                return lastActivatedCheckpoint.transform.position;
+            }
         }
         
         // If there is no active save point, return to the first save point or the default location.
         if (allCheckpoints.Count > 0)
         {
-            return allCheckpoints[0].transform.position;
+            // 清理已销毁的元素
+            allCheckpoints.RemoveAll(cp => cp == null);
+            if (allCheckpoints.Count > 0)
+                return allCheckpoints[0].transform.position;
         }
         
         return Vector3.zero;
@@ -113,8 +137,10 @@ public class CheckpointManager : MonoBehaviour
     {
         foreach (Checkpoint checkpoint in allCheckpoints)
         {
-            checkpoint.ResetCheckpoint();
+            if (checkpoint != null)
+                checkpoint.ResetCheckpoint();
         }
+        activatedCheckpoints.RemoveAll(cp => cp == null);
         activatedCheckpoints.Clear();
         lastActivatedCheckpoint = null;
     }
@@ -123,9 +149,15 @@ public class CheckpointManager : MonoBehaviour
     public void DebugActivatedCheckpoints()
     {
         Debug.Log($"Total activated checkpoints: {activatedCheckpoints.Count}");
-        foreach (Checkpoint checkpoint in activatedCheckpoints)
+        for (int i = 0; i < activatedCheckpoints.Count; i++)
         {
-            Debug.Log($" - {checkpoint.gameObject.name} (Last: {checkpoint == lastActivatedCheckpoint})");
+            var checkpoint = activatedCheckpoints[i];
+            if (checkpoint == null)
+                continue;
+            var go = checkpoint.gameObject; // 防御性访问
+            if (go == null)
+                continue;
+            Debug.Log($" - {go.name} (Last: {checkpoint == lastActivatedCheckpoint})");
         }
     }
 }

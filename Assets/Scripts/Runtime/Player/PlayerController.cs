@@ -386,6 +386,41 @@ public class PlayerController : MonoBehaviour
     public void Die()
     {
         Debug.Log("Player died!");
+        
+        // ★★★ 首先触发PlayerHealth的死亡事件，这会显示死亡UI ★★★
+        PlayerHealth playerHealth = GetComponent<PlayerHealth>();
+        if (playerHealth != null)
+        {
+            // 设置健康值为0来触发死亡事件
+            playerHealth.TakeDamage("PlayerController.Die()", playerHealth.CurrentHealth);
+            return; // PlayerHealth.Respawn()会被死亡UI调用，不需要在这里处理重生
+        }
+        
+        // 如果没有PlayerHealth组件，则尝试用全局/本地死亡UI做兜底显示
+        try
+        {
+            if (Antventure.UI.GlobalDeathUIController.Instance != null)
+            {
+                Antventure.UI.GlobalDeathUIController.Instance.ShowDeathUI();
+            }
+            else if (DeathUIOverlay.Instance != null)
+            {
+                DeathUIOverlay.Instance.Show();
+            }
+        }
+        catch { /* 防御性兜底，不影响后续重生 */ }
+
+        // 然后使用原来的逻辑
+        PerformDirectRespawn();
+    }
+    
+    /// <summary>
+    /// 直接重生逻辑（当没有PlayerHealth组件时使用）
+    /// </summary>
+    public void PerformDirectRespawn()
+    {
+        Debug.Log("Performing direct respawn (no PlayerHealth component)");
+        
         // dropItem before die
         DropItem();
 
@@ -406,8 +441,16 @@ public class PlayerController : MonoBehaviour
         // reset position
         transform.rotation = Quaternion.identity;
 
-        // debug
-        CheckpointManager.Instance.DebugActivatedCheckpoints();
+        // debug（防御空引用，以免场景切换后旧引用导致异常）
+        try
+        {
+            if (CheckpointManager.Instance != null)
+                CheckpointManager.Instance.DebugActivatedCheckpoints();
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning($"[PlayerController] DebugActivatedCheckpoints failed: {ex.Message}");
+        }
 
         Debug.Log($"Respawned at last checkpoint: {respawnPosition}");
     }

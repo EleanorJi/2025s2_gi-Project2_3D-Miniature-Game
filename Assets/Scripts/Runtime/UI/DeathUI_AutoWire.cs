@@ -56,20 +56,7 @@ public class DeathUI_AutoWire : MonoBehaviour
         cookie = CookiesInventory.Instance ? CookiesInventory.Instance.cookies : 0;
 
         // Auto-wire PlayerHealth by tag or by type
-        if (!playerHealth)
-        {
-            var pgo = GameObject.FindGameObjectWithTag("Player");
-            if (pgo) playerHealth = pgo.GetComponent<PlayerHealth>();
-            if (!playerHealth) playerHealth = FindOne<PlayerHealth>();
-        }
-
-        if (!playerHealth)
-        {
-            Debug.LogError("[DeathUI] PlayerHealth NOT found in scene. " +
-                           "Give your player the 'Player' tag or drag PlayerHealth into the field.");
-            enabled = false;
-            return;
-        }
+        FindAndWirePlayerHealth();
 
         // Auto-wire panel if not assigned
         if (!panel) panel = gameObject;
@@ -86,10 +73,51 @@ public class DeathUI_AutoWire : MonoBehaviour
         SetCanvasGroupVisible(false);
         if (panel && panel.activeSelf) panel.SetActive(false);
     }
+    
+    /// <summary>
+    /// 查找并连接到PlayerHealth组件
+    /// </summary>
+    private void FindAndWirePlayerHealth()
+    {
+        if (!playerHealth)
+        {
+            var pgo = GameObject.FindGameObjectWithTag("Player");
+            if (pgo) playerHealth = pgo.GetComponent<PlayerHealth>();
+            if (!playerHealth) playerHealth = FindOne<PlayerHealth>();
+        }
+
+        if (!playerHealth)
+        {
+            Debug.LogError("[DeathUI] PlayerHealth NOT found in scene. " +
+                           "Give your player the 'Player' tag or drag PlayerHealth into the field.");
+            enabled = false;
+            return;
+        }
+        
+        Debug.Log($"[DeathUI] Found PlayerHealth on '{playerHealth.gameObject.name}'");
+    }
+
+    private void Start()
+    {
+        // 在Start中再次检查PlayerHealth连接，确保场景加载完成后能正确连接
+        if (!playerHealth)
+        {
+            Debug.LogWarning("[DeathUI] PlayerHealth not found in Awake, retrying in Start...");
+            FindAndWirePlayerHealth();
+        }
+    }
 
     private void OnEnable()
     {
+        // 如果PlayerHealth引用丢失，尝试重新查找
+        if (!playerHealth)
+        {
+            Debug.LogWarning("[DeathUI] PlayerHealth reference lost, attempting to reconnect...");
+            FindAndWirePlayerHealth();
+        }
+        
         if (!playerHealth) return;
+        
         playerHealth.OnDied.AddListener(HandleDied);
         playerHealth.OnRespawned.AddListener(HandleRespawned);
 #if UNITY_EDITOR
@@ -141,10 +169,17 @@ public class DeathUI_AutoWire : MonoBehaviour
         
         if (useGlobalController && GlobalDeathUIController.Instance != null && !isLevel3Boss)
         {
-            GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
-
-            HandleGamePause(true);
-            return;
+            try
+            {
+                GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
+                HandleGamePause(true);
+                return;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[DeathUI] Failed to use GlobalDeathUIController: {ex.Message}. Falling back to local UI.");
+                // Fall through to use local UI as backup
+            }
         }
 
         if (hintText) hintText.text = hint;
@@ -162,9 +197,17 @@ public class DeathUI_AutoWire : MonoBehaviour
         
         if (useGlobalController && GlobalDeathUIController.Instance != null && !isLevel3Boss)
         {
-            GlobalDeathUIController.Instance.HideDeathUI();
-            HandleGamePause(false);
-            return;
+            try
+            {
+                GlobalDeathUIController.Instance.HideDeathUI();
+                HandleGamePause(false);
+                return;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogWarning($"[DeathUI] Failed to hide GlobalDeathUIController: {ex.Message}. Using local UI.");
+                // Fall through to use local UI as backup
+            }
         }
 
         ShowPanel(false);

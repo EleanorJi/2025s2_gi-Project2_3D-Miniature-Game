@@ -69,12 +69,38 @@ public class PlayerHealth : MonoBehaviour
         _dead = false;
         RaisePct();
 
-        if (respawnPoint) transform.position = respawnPoint.position;
+        // 执行完整的重生逻辑
+        PerformFullRespawn();
 
         Debug.Log("[PlayerHealth] Respawned.");
-
-       
         OnRespawned.Invoke();
+    }
+    
+    /// <summary>
+    /// 执行完整的重生逻辑，包括物理状态重置和位置重置
+    /// </summary>
+    private void PerformFullRespawn()
+    {
+        PlayerController playerController = GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            // 调用PlayerController的重生逻辑
+            playerController.PerformDirectRespawn();
+        }
+        else
+        {
+            // 如果没有PlayerController，至少重置位置
+            if (respawnPoint) 
+            {
+                transform.position = respawnPoint.position;
+            }
+            else
+            {
+                // 尝试使用CheckpointManager获取重生点
+                Vector3 respawnPosition = CheckpointManager.Instance?.GetLastRespawnPosition() ?? transform.position;
+                transform.position = respawnPosition;
+            }
+        }
     }
 
     private void RaisePct()

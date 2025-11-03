@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 namespace Antventure.UI
 {
@@ -62,12 +63,76 @@ namespace Antventure.UI
             DontDestroyOnLoad(gameObject);
 
             InitializeComponents();
+            
+            // Subscribe to scene loaded events to ensure UI components are valid after scene changes
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         private void Start()
         {
             // Apply settings again in Start to ensure Inspector values are correctly applied
             ApplyCurrentSettings();
+        }
+
+        private void OnDestroy()
+        {
+            // Unsubscribe from scene events to prevent memory leaks
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        /// <summary>
+        /// Called when a new scene is loaded - ensures UI components are still valid
+        /// </summary>
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // Validate and reinitialize UI components if necessary
+            ValidateAndReinitializeUI();
+            
+            Debug.Log($"[GlobalDeathUI] Scene loaded: {scene.name}, UI components validated and reinitialized if needed");
+        }
+
+        /// <summary>
+        /// Validates UI components and reinitializes them if they are missing or invalid
+        /// </summary>
+        private void ValidateAndReinitializeUI()
+        {
+            bool needsReinit = false;
+
+            // Check if critical UI components are missing or destroyed
+            if (deathCanvas == null || deathPanel == null)
+            {
+                needsReinit = true;
+                Debug.LogWarning("[GlobalDeathUI] Critical UI components are missing, reinitializing...");
+            }
+            else
+            {
+                // Check if the canvas is still valid (not destroyed)
+                try
+                {
+                    var canvasName = deathCanvas.name; // This will throw if the object is destroyed
+                    var panelAlpha = deathPanel.alpha; // This will throw if the object is destroyed
+                }
+                catch (System.Exception)
+                {
+                    needsReinit = true;
+                    Debug.LogWarning("[GlobalDeathUI] UI components are destroyed, reinitializing...");
+                }
+            }
+
+            if (needsReinit)
+            {
+                // Clear references to destroyed components
+                deathCanvas = null;
+                deathPanel = null;
+                deathImage = null;
+                deathMessageText = null;
+                backgroundOverlay = null;
+                imageRectTransform = null;
+
+                // Reinitialize components
+                InitializeComponents();
+                ApplyCurrentSettings();
+            }
         }
 
         /// <summary>
@@ -111,6 +176,13 @@ namespace Antventure.UI
                     originalImageSize = imageRectTransform.sizeDelta;
             }
 
+            // If no UI components found, create them at runtime
+            if (deathCanvas == null)
+            {
+                Debug.LogWarning("[GlobalDeathUI] No UI components found, creating runtime UI...");
+                CreateDeathUIRuntime();
+            }
+
             // Set initial state to hidden
             if (deathPanel != null)
             {
@@ -136,6 +208,9 @@ namespace Antventure.UI
         /// <param name="duration">Display duration, <=0 uses default duration</param>
         public void ShowDeathUI(string message = null, Sprite sprite = null, float duration = -1f)
         {
+            // Validate UI components before showing
+            ValidateAndReinitializeUI();
+            
             if (currentDisplayCoroutine != null)
             {
                 StopCoroutine(currentDisplayCoroutine);
