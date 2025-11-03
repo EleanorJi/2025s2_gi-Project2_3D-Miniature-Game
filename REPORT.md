@@ -104,13 +104,13 @@ Following the evaluation plan, we conducted comprehensive user testing with 10 p
 #### 2.2 Participants
 
 *   **Total Participants:** 10 (6 female, 4 male)
-*   **Age Range:** Age: 18-25.
+*   **Age Range:** 18-25.
 *   **Gaming Experience:** All participants reported playing puzzle or adventure games at least monthly.
 *   **Platform Preference:** 2/10 primarily game on PC, 8/10 on multiple platforms
 
 ### 3. Key Findings
 #### 3.1 SUS Results
-*   **Average SUS Score:** 85 (above the industry average of 68)
+*   **Average SUS Score:** 85
 *   **Score Range:** 73-90
 *   **Interpretation:** The game demonstrates "good" usability with room for improvement in specific areas.
 #### 3.2 Major Usability Issues Identified
@@ -142,20 +142,22 @@ Based on the evaluation findings, we implemented the following improvements:
 * **Visual Effects:** Improved water shader effects
 
 #### 4.4 Level 2: Outdoor Environment
-* **Enemy Animation:** Added movement animations for insect enemies
-* **Environmental Feedback:** Implemented traffic light color changes during the ending sequence
-* **Boundary Definition:** Added sewer boundaries to prevent players from straying off the intended path
-* **Gameplay Refinement:** Reorganized rock placement in the "jump mode change" obstacle area and added cookie collection points
-* **UI Enhancement:** Improved cookie collection counter display
-* **Bug Fixes:** Resolved wall-jumping and backward wall-clipping exploits
+* **Enemy Animation:** Added and optimized movement animations for insect enemies, enhancing their appearance and behavior throughout the level.
+* **Shader Optimization:** Improved visual effects across the entire scene, including reflective water surfaces and enhanced particle effects for cookie prompts.
+* **Environmental Feedback:** Implemented dynamic traffic light color changes during the ending sequence.
+* **Boundary Definition:** Added sewer boundaries to prevent players from leaving the intended path.
+* **Gameplay Refinement:** Reorganized rock placement in the "jump mode change" obstacle area and introduced cookie collection points.
+* **UI Enhancement:** Upgraded the cookie collection counter display for better clarity.
+* **Bug Fixes**: Addressed and resolved issues related to wall-jumping and backward wall-clipping exploits.
 
 #### 4.5 Level 3: Boss Battle
-* **Camera Consistency:** Changed from fixed camera to player-following camera to match other levels
-* **Health System:** Added player health bar with visual feedback
-* **Boss Mechanics:** Implemented pigeon attack patterns with corresponding animations
-* **UI Polish:** Added smooth transitions to health bars for both player and boss
-* **Resource Management:** Limited summoning ability based on cookies collected in Level 2 and found in Level 3
-* **Enhanced Gameplay:** Added health recovery mechanics and additional cookie collection to increase strategic depth
+* **Opening Sequence:** Added an opening transitions and control tutorial UI
+* **Camera Consistency:** Transitioned from a fixed camera to a player-following camera to maintain consistency with other levels
+* **Health System:** Introduced a player health bar with dynamic visual feedback
+* **Boss Mechanics:** Implemented pigeon attack patterns accompanied by corresponding animations
+* **UI Polish:** Added smooth transition effects to both player and boss health bars
+* **Resource Management:** Limited summoning ability based on cookies collected in Level 2 and discovered in Level 3
+* **Enhanced Gameplay:** Incorporated health recovery mechanics and additional cookie collection points to deepen strategic gameplay
 
 ### 5. Impact Assessment
 Post-implementation testing with 3 original participants showed significant improvement in user experience:
@@ -238,7 +240,7 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
     * [EndLevel1.cs](Assets/Scripts/Runtime/checkPoint/EndLevel1.cs)
 
 ##### 2.2 Animation Work
-* Created and implemented all character and enemy animations.
+* Created and implemented part of character and enemy animations.
 * Developed animation controllers and state machines.
 * Animated the protagonist ant, pigeon boss, and helper ants.
 * Relevant files
