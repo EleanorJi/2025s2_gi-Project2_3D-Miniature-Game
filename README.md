@@ -226,18 +226,18 @@ The game is set in a fully 3D environment, but with level design that encourages
             -   **Black Beetles:** Do not carry cookies and serve as additional obstacles.
         -   **Brick Barriers:** Strategically placed brick cube obstacles prevent players from bypassing the flower bed challenge, ensuring engagement with the insect mechanics.
         -   **Death Effect:** When hit by venom, insects undergo a dramatic multi-stage death animation: the body first collapses inward, then dissolves and dissipates, simulating the corrosive melting effect of the poison. This effect combines custom shaders with particle systems for a visually compelling result, replacing the original explosion effect with a more realistic toxin interaction.
-        
-        <p align="center">
-          <img src="images/FlowerBed.png" alt="Flower Bed design Level 2" width="400">
-        </p>
-        
-        **Three-Stage Death Animation:**
-        
-        <p align="center">
-          <img src="images/InsectDeath_Collapse.png" alt="Phase 1: Collapse - Insect crumples inward" width="250">
-          <img src="images/InsectDeath_Dissolve.png" alt="Phase 2: Dissolve - Body becomes transparent" width="250">
-          <img src="images/InsectDeath_Dissipate.png" alt="Phase 3: Dissipate - Particle burst effect" width="250">
-        </p>
+
+            <p align="center">
+              <img src="images/FlowerBed.png" alt="Flower Bed design Level 2" width="400">
+            </p>
+
+            **Three-Stage Death Animation:**
+
+            <p align="center">
+              <img src="images/InsectDeath_Collapse.png" alt="Phase 1: Collapse - Insect crumples inward" width="250">
+              <img src="images/InsectDeath_Dissolve.png" alt="Phase 2: Dissolve - Body becomes transparent" width="250">
+              <img src="images/InsectDeath_Dissipate.png" alt="Phase 3: Dissipate - Particle burst effect" width="250">
+            </p>
       -   **Leaf Parachute:** Discover that leaves can be used as a "parachute" to increase drag, preventing fatal falls when dropping from the flower bed. The ant anthropomorphically grasps the leaf stem and holds it above, creating a charming and visually engaging animation that enhances the game's personality. This design evolved from the simple "object on back" mechanic used in Level 1 to a more dynamic and expressive interaction.
         <p align="center">
           <img src="images/Parachute.png" alt="Ant with parachute design Level 2" width="400">
