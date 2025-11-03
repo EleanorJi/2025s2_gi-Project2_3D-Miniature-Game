@@ -53,6 +53,26 @@ public class SpiderDeathZone : MonoBehaviour
 
         _busy = true;
 
+        // —— 优先检查：如果设置了专属重生点，直接使用（优先于水域和checkpoint）—— //
+        if (respawnOverride)
+        {
+            // 直接传送到指定重生点
+            SafeWarpImmediate(root, respawnOverride);
+            
+            // 播放死亡效果
+            GlobalSfx.PlayDeathSfx();
+            if (DeathUIOverlay.Instance)
+            {
+                if (holdSeconds > 0f)
+                    DeathUIOverlay.Instance.Show(overrideMessage, overrideSprite, holdSeconds);
+                else
+                    DeathUIOverlay.Instance.Show(overrideMessage, overrideSprite, null);
+            }
+            
+            StartCoroutine(ClearBusyNextFrame());
+            return;
+        }
+
         // —— 尝试定位当前所在的大水域（若开启集成）—— //
         FloodSequence area = null;
         if (enableWaterAreaIntegration)
@@ -62,7 +82,7 @@ public class SpiderDeathZone : MonoBehaviour
                 area = FindFloodAreaContaining(root.position);
         }
 
-        // —— Strategy A：优先交给 FloodSequence 自己“内部处理死亡” —— //
+        // —— Strategy A：优先交给 FloodSequence 自己"内部处理死亡" —— //
         // 条件：已开启集成且确实在该水域里，并且你更偏好水域处理（避免被全局 checkpoint 传到别处）
         if (preferFloodAreaHandle && area != null && area.IsPlayerInsideZonePublic())
         {
@@ -83,23 +103,7 @@ public class SpiderDeathZone : MonoBehaviour
             return;
         }
 
-        // —— Strategy B：没有/不使用水域处理时，若指定了“本区专属重生点”，覆盖下一次重生 —— //
-        if (respawnOverride)
-        {
-            // 1) 若有 RespawnManager：建议使用“下一次复活点覆盖”接口（你项目若无，此步会被忽略）
-            if (respawnManager)
-            {
-                respawnManager.OverrideNextRespawn(respawnOverride.position, respawnOverride.rotation);
-            }
-            else
-            {
-                // 2) 没有管理器也没关系：退而求其次，直接把玩家先搬到重生点，再调用 Die()
-                //    这样 Die() 的全局流程即使再传送，也基本会落在同一位置，避免被传到“后面关卡”。
-                SafeWarpImmediate(root, respawnOverride);
-            }
-        }
-
-        // —— 真正执行通用“死亡”流程（交给全局生命周期处理）—— //
+        // —— Strategy B：执行通用"死亡"流程（交给全局生命周期处理）—— //
         pc.Die();
         GlobalSfx.PlayDeathSfx();
 
