@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 11402414}
   - component: {fileID: 11488104}
   m_Layer: 4
-  m_Name: WaterPro_DayTime
+  m_Name: WaterHoney
   m_TagString: Water Volume
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
