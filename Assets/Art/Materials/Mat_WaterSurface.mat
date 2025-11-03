@@ -28,7 +28,7 @@ Material:
     - _BumpMap:
         m_Texture: {fileID: 2800000, guid: 524e9f9afe7af43b6ba6be4d5f46eeca, type: 3}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 2.3916068, y: 1.1958034}
+        m_Offset: {x: 2.5091264, y: 1.2545632}
     - _Fresnel:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -36,7 +36,7 @@ Material:
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 3}
-        m_Offset: {x: -1.5944046, y: -0.7972023}
+        m_Offset: {x: -1.672751, y: -0.8363755}
     - _ReflectionTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}

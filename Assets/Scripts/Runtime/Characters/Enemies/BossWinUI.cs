@@ -12,6 +12,10 @@ public class BossWinUI : MonoBehaviour
     [Header("UI to hide on win")]
     public GameObject[] hideOnWin;      // Drag PlayerHealthBar (or other HUD) here
 
+    [Header("Cookies")]
+    [Tooltip("通关时是否把 Cookie 清零并刷新 UI")]
+    public bool resetCookiesOnWin = true;
+
     [Header("Copy")]
     [TextArea] public string hint = "You defeated the pigeon!\nLeft click to continue";
 
@@ -58,7 +62,13 @@ public class BossWinUI : MonoBehaviour
 
     private void HandleBossDied()
     {
-        // Hide HUD (e.g. Player Health Bar)
+        // 1) 先处理 Cookie —— 会自动触发 Level3CookieUI.Refresh
+        if (resetCookiesOnWin && CookiesInventory.Instance != null)
+        {
+            CookiesInventory.Instance.Clear();   // cookies = 0; OnChanged(0)
+        }
+
+        // 2) 隐藏 HUD（玩家血条等）
         if (hideOnWin != null)
         {
             foreach (var go in hideOnWin)
@@ -67,6 +77,7 @@ public class BossWinUI : MonoBehaviour
             }
         }
 
+        // 3) 打开胜利面板 & 冻结游戏
         ShowPanel(true);
     }
 
