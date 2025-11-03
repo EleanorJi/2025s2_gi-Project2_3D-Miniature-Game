@@ -1,8 +1,8 @@
 using UnityEngine;
 using Antventure.UI;
-
 using Antventure.UI.Menus;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
@@ -41,10 +41,11 @@ public class PlayerController : MonoBehaviour
     private bool jumpInput;
     private bool pickupInput;
 
-    private System.Collections.Generic.List<GameObject> groundContacts = new System.Collections.Generic.List<GameObject>();
+    private List<GameObject> groundContacts = new List<GameObject>();
     private PlayerInputController inputController;
 
     public trafficlights trafficlights;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -72,7 +73,6 @@ public class PlayerController : MonoBehaviour
         parachuteCarrier = GetComponent<ParachuteCarrier>();
         if (parachuteCarrier == null)
         {
-
             Debug.Log("[PlayerController] No ParachuteCarrier component found - this is optional");
         }
 
@@ -117,8 +117,7 @@ public class PlayerController : MonoBehaviour
 
         if (inputController != null && !inputController.IsInputEnabled())
         {
-            // Debug.Log("Input is disabled. Skip the processing of player input.");
-            // Control animation
+
             StopMovement();
             return;
         }
@@ -158,19 +157,17 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
     }
 
-
     void UpdateAnimationParameters()
     {
         if (antAnimator != null)
         {
             bool isCarryingSomething = IsCarryingItem ||
-                                     (parachuteCarrier != null && parachuteCarrier.HasLeaf());
+                                       (parachuteCarrier != null && parachuteCarrier.HasLeaf());
 
             antAnimator.SetBool("IsMoving", isMoving);
             antAnimator.SetBool("PickUp", isCarryingSomething);
         }
     }
-
 
     void UpdateMovementState()
     {
@@ -242,7 +239,6 @@ public class PlayerController : MonoBehaviour
                 // update animation parameters immediately
                 UpdateAnimationParameters();
 
-
                 GlobalSfx.PlayLeafPickupSfx(transform.position);
 
                 Debug.Log("Picked up: " + carriedItem.name);
@@ -253,6 +249,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
     // Set to idle state forcibly
     void ForceIdleState()
     {
@@ -293,16 +290,15 @@ public class PlayerController : MonoBehaviour
                 itemRb.linearVelocity = Vector3.zero;
             }
 
-            // 立即更新动画参数
+
             UpdateAnimationParameters();
-            // 添加放下物品的音效
+
             GlobalSfx.PlayLeafPickupSfx(transform.position);
 
             Debug.Log("Dropped: " + carriedItem.name + " at position: " + dropPoint.position);
             carriedItem = null;
         }
     }
-
 
     void OnCollisionEnter(Collision collision)
     {
@@ -327,8 +323,8 @@ public class PlayerController : MonoBehaviour
                 stove.OnPlayerEnter(this);
             }
         }
-
     }
+
     void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
@@ -366,7 +362,6 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("feather"))
         {
-
             var rend = this.GetComponentInChildren<Renderer>();
             if (rend != null)
                 StartCoroutine(FlashRed(rend, 0.1f));
@@ -393,6 +388,9 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Player died!");
         // dropItem before die
         DropItem();
+
+        // ★★★ 死亡时清掉所有小兵 ★★★
+        MinionAnchor.KillAll();
 
         // reset physical state
         rb.linearVelocity = Vector3.zero;
@@ -424,13 +422,8 @@ public class PlayerController : MonoBehaviour
         if (renderer == null)
             yield break;
 
-
         renderer.material.color = Color.red;
-
         yield return new WaitForSeconds(duration);
-
-
         renderer.material.color = Color.white;
     }
-
 }
