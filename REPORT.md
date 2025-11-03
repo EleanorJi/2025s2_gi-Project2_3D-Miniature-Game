@@ -370,6 +370,106 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 * Wrote the Water Shader Technical Report.
 
 
+### Personal Contribution Report - [Naixin Zhang]
+
+#### 1. Overview of Contributions
+I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts.
+
+#### 2. Key Contributions
+
+##### 2.1 Level 2 (Street Environment) Design & Implementation
+* Designed and built the entire outdoor street level environment, including flower bed puzzles, water hazards, insect enemies, parachute mechanics, honey zone and level2 ending scene.
+* Implemented comprehensive gameplay systems: charge jump mechanics, cookie collection, enemy interactions, water interactions, and environmental hazards.
+* Created camera cinematic sequences and zone-based camera controls for enhanced player experience.
+* Relevant files
+  * Scene
+    * [Level2_Street.unity](Assets/Scenes/Level2_Street.unity)
+  * Core Gameplay Mechanics
+    * [ChargeJumpModule.cs](Assets/Scripts/Runtime/Level2/ChargeJumpModule.cs)
+    * [ChargeJumpZone.cs](Assets/Scripts/Runtime/Level2/ChargeJumpZone.cs)
+    * [PlayerPoisonShooter.cs](Assets/Scripts/Runtime/Level2/PlayerPoisonShooter.cs)
+    * [CookiePickup.cs](Assets/Scripts/Runtime/Level2/CookiePickup.cs)
+    * [CookiesInventory.cs](Assets/Scripts/Runtime/Level2/CookiesInventory.cs)
+    * [CookieFollower.cs](Assets/Scripts/Runtime/Level2/CookieFollower.cs)
+  * Enemy & Combat Systems
+    * [SpwanBugs.cs](Assets/Scripts/Runtime/Attack/SpwanBugs.cs)
+    * [InsectDeath.cs](Assets/Scripts/Runtime/Level2/InsectDeath.cs)
+    * [InsectLaneMover.cs](Assets/Scripts/Runtime/Level2/InsectLaneMover.cs)
+    * [BugDestory.cs](Assets/Scripts/Runtime/Level2/BugDestory.cs)
+    * [BugCookieHandler.cs](Assets/Scripts/Runtime/Level2/BugCookieHandler.cs)
+    * [PoisonProjectile.cs](Assets/Scripts/Runtime/Attack/PoisonProjectile.cs)
+  * Parachute System
+    * [ParachuteLeafPickup.cs](Assets/Scripts/Runtime/Level2/ParachuteLeafPickup.cs)
+    * [ParachuteCarrier.cs](Assets/Scripts/Runtime/Level2/ParachuteCarrier.cs)
+    * [ParachuteDropZone.cs](Assets/Scripts/Runtime/Level2/ParachuteDropZone.cs)
+    * [ParachuteGate.cs](Assets/Scripts/Runtime/Level2/ParachuteGate.cs)
+  * Water & Hazard Systems
+    * [WaterContactRelay.cs](Assets/Scripts/Runtime/Level2/WaterContactRelay.cs)
+    * [FloodSequence.cs](Assets/Scripts/Runtime/Level2/FloodSequence.cs)
+    * [FloodStartZone.cs](Assets/Scripts/Runtime/Level2/FloodStartZone.cs)
+    * [SpiderDeathZone.cs](Assets/Scripts/Runtime/Level2/SpiderDeathZone.cs)
+    * [HoneyLifeResetTrigger.cs](Assets/Scripts/Runtime/Level2/HoneyLifeResetTrigger.cs)
+    * [KillPlayerOnTouch.cs](Assets/Scripts/Runtime/Level2/KillPlayerOnTouch.cs)
+  * Camera & Cinematics
+    * [CameraCinematicSequence.cs](Assets/Scripts/Runtime/Level2/CameraCinematicSequence.cs)
+    * [CinematicTrigger.cs](Assets/Scripts/Runtime/Level2/CinematicTrigger.cs)
+    * [CameraFollowZone_PitchLock.cs](Assets/Scripts/Runtime/Level2/CameraFollowZone_PitchLock.cs)
+  * Environmental Interactions
+    * [RockSurface.cs](Assets/Scripts/Runtime/Level2/RockSurface.cs)
+    * [RockTracker.cs](Assets/Scripts/Runtime/Level2/RockTracker.cs)
+    * [StickyGooMashR.cs](Assets/Scripts/Runtime/Level2/StickyGooMashR.cs)
+    * [trafficlights.cs](Assets/Scripts/Runtime/Level2/trafficlights.cs)
+  * UI & Feedback Systems
+    * [SkillChargeUI.cs](Assets/Scripts/Runtime/Level2/SkillChargeUI.cs)
+    * [DeathUIOverlay.cs](Assets/Scripts/Runtime/Level2/DeathUIOverlay.cs)
+    * [SimpleInfoPopup.cs](Assets/Scripts/Runtime/Level2/SimpleInfoPopup.cs)
+    * [SimpleInfoTrigger.cs](Assets/Scripts/Runtime/Level2/SimpleInfoTrigger.cs)
+    * [SimpleInfoSession.cs](Assets/Scripts/Runtime/Level2/SimpleInfoSession.cs)
+    * [TopEdgeDirectionIndicator.cs](Assets/Scripts/Runtime/Level2/TopEdgeDirectionIndicator.cs)
+  * Utility & Polish
+    * [AutoDestroyParticle.cs](Assets/Scripts/Runtime/Level2/AutoDestroyParticle.cs)
+    * [CheckpointOneWayWall.cs](Assets/Scripts/Runtime/Level2/CheckpointOneWayWall.cs)
+    * [SoftAirWall.cs](Assets/Scripts/Runtime/Level2/SoftAirWall.cs)
+    * [AmbientZone.cs](Assets/Scripts/Runtime/Level2/AmbientZone.cs)
+    * [GlobalSfx.cs](Assets/Scripts/Runtime/Level2/GlobalSfx.cs)
+    * [WaterUVScroller.cs](Assets/Scripts/Runtime/Level2/WaterUVScroller.cs)
+
+##### 2.2 Shader Development
+* Developed two custom shader systems with script integration for Level 2 visual effects.
+* Implemented real-time reflection/refraction water system for enhanced environmental realism.
+* Created multi-stage dissolve and collapse shader for dramatic enemy death animations.
+* Relevant files
+  * Water System (Reflection/Refraction)
+    * [HoneyWater.shader](Assets/Art/Shader/HoneyShader/Shaders/HoneyWater.shader)
+    * [WaterFX.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterFX.cs)
+    * [WaterVolume.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterVolume.cs)
+    * [WaterWaves.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterWaves.cs)
+    * [WaterMeshGenerator.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterMeshGenerator.cs)
+    * [WaterVolumeEditor.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterVolumeEditor.cs)
+  * Dissolve Effect System
+    * [DissolveEmission.shader](Assets/Art/Shader/DissolveEmissionShader/DissolveEmission.shader)
+    * [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
+
+##### 2.3 Particle Systems Development
+* Designed and implemented particle effects for gameplay feedback and visual polish in Level 2.
+* Created particle systems for combat mechanics, collectible interactions, and enemy death effects.
+* Integrated particle systems with gameplay scripts for dynamic triggering and animation synchronization.
+* Key particle systems implemented:
+  * **Poison Spray Effect:** Trail particle system for the ant's venom attack, providing clear visual feedback for the shooting mechanic. Features a green toxic trail with fade-out effects.
+  * **Cookie Sparkle Effect:** Attractive glowing particle system for cookie collectibles, using small star particles to draw player attention and indicate interactable objects.
+  * **Enemy Death Ember Effect:** Fire and smoke particle burst triggered by the dissolve shader at specific dissolution threshold (0.45), creating a dramatic explosion effect synchronized with the enemy's collapse animation.
+* Relevant files
+  * [PlayerPoisonShooter.cs](Assets/Scripts/Runtime/Level2/PlayerPoisonShooter.cs)
+  * [PoisonProjectile.cs](Assets/Scripts/Runtime/Attack/PoisonProjectile.cs)
+  * [CookiePickup.cs](Assets/Scripts/Runtime/Level2/CookiePickup.cs)
+  * [InsectDeath.cs](Assets/Scripts/Runtime/Level2/InsectDeath.cs)
+  * [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
+  * [AutoDestroyParticle.cs](Assets/Scripts/Runtime/Level2/AutoDestroyParticle.cs)
+
+##### 2.4 Reporting
+* Wrote technical documentation for the HoneyWater shader system and Dissolve shader system.
+
+
 ## References and External Resources
 
 TODO - see specification for details
