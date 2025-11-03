@@ -53,7 +53,7 @@ public class DeathUI_AutoWire : MonoBehaviour
     private void Awake()
     {
         // Cache cookies for respawn
-        cookie = CookiesInventory.Instance.cookies;
+        cookie = CookiesInventory.Instance ? CookiesInventory.Instance.cookies : 0;
 
         // Auto-wire PlayerHealth by tag or by type
         if (!playerHealth)
@@ -111,9 +111,17 @@ public class DeathUI_AutoWire : MonoBehaviour
     {
         if (_isShown && Input.GetMouseButtonDown(0) && playerHealth != null)
         {
-            CookiesInventory.Instance.cookies = cookie;
-            cookie = CookiesInventory.Instance ? CookiesInventory.Instance.cookies : 0;
-            Level3CookieUI.Instance.Refresh(cookie);
+
+            if (CookiesInventory.Instance != null)
+            {
+                CookiesInventory.Instance.cookies = cookie;
+                cookie = CookiesInventory.Instance.cookies;
+
+                if (Level3CookieUI.Instance != null)
+                    Level3CookieUI.Instance.Refresh(cookie);
+            }
+
+
             playerHealth.Respawn();
         }
     }
@@ -122,7 +130,10 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleDied()
     {
-        // Play death sound as soon as death is detected
+        // ★★ 1) 死亡瞬间清空所有小兵（Minion） ★★
+        ClearAllMinions();
+
+        // 2) 播放死亡音效
         PlaySfx(deathSfx);
 
         string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -323,5 +334,18 @@ public class DeathUI_AutoWire : MonoBehaviour
 
         _audioSource.volume = sfxVolume;
         _audioSource.PlayOneShot(clip);
+    }
+
+    // ========= Minion clear =========
+    private void ClearAllMinions()
+    {
+        var minions = FindObjectsOfType<MinionAnchor>();
+        foreach (var m in minions)
+        {
+            if (m != null)
+            {
+                Destroy(m.gameObject);
+            }
+        }
     }
 }

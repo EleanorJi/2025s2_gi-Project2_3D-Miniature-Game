@@ -2,6 +2,19 @@ using UnityEngine;
 
 public class MinionAnchor : MonoBehaviour
 {
+
+    public static void KillAll()
+    {
+        var minions = FindObjectsOfType<MinionAnchor>();
+        foreach (var m in minions)
+        {
+            if (m != null)
+            {
+                Destroy(m.gameObject);
+            }
+        }
+    }
+
     [Header("Follow Target")]
     public Transform follow;                // player
     public Vector3 localOffset;             // Offset around the player (set during summoning)
