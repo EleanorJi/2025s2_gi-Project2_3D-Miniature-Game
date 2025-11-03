@@ -9,17 +9,17 @@ public class DissolveSphere : MonoBehaviour
     private float animStartTime;
     
     [Header("Animation Timing (Total ~3s)")]
-    [Tooltip("阶段1：坍塌到0.4的时间")]
+    [Tooltip("Phase 1: Collapse to 0.4")]
     public float collapsePhase1Duration = 1.0f;
     
-    [Tooltip("阶段2：坍塌继续到1.0 + 消散到1.0 的时间")]
+    [Tooltip("Phase 2: Continue collapse to 1.0 + dissolve to 1.0")]
     public float combinedPhaseDuration = 2.0f;
     
-    [Tooltip("消散达到这个值时播放粒子效果")]
+    [Tooltip("Trigger particle effect when dissolve reaches this value")]
     public float particleTriggerDissolve = 0.45f;
     
     [Header("Particle Effect")]
-    [Tooltip("粒子系统名称（在子物体中查找）")]
+    [Tooltip("Particle system name to find in child objects")]
     public string particleSystemName = "Ember_Particles";
     
     private ParticleSystem emberParticles;
@@ -34,7 +34,7 @@ public class DissolveSphere : MonoBehaviour
             renderer.material = mat;
         }
         
-        // 初始化参数为0
+        // Initialize parameters to 0
         if (mat != null)
         {
             mat.SetFloat("_DissolveAmount", 0);
@@ -44,9 +44,9 @@ public class DissolveSphere : MonoBehaviour
 
     void FindParticleSystem()
     {
-        if (emberParticles != null) return; // 已找到，不重复查找
+        if (emberParticles != null) return;
         
-        // 方法1: 在当前物体的兄弟节点和父物体中查找
+        // Method 1: Search in sibling and parent objects
         Transform root = transform.parent;
         if (root != null)
         {
@@ -57,14 +57,14 @@ public class DissolveSphere : MonoBehaviour
                     emberParticles = child.GetComponent<ParticleSystem>();
                     if (emberParticles != null)
                     {
-                        Debug.Log($"[DissolveSphere] 找到粒子系统: {child.name} (路径: {GetFullPath(child)})");
+                        Debug.Log($"[DissolveSphere] Found particle system: {child.name} (path: {GetFullPath(child)})");
                         return;
                     }
                 }
             }
         }
         
-        // 方法2: 在整个死亡模型中查找（向上找到根，再向下搜索）
+        // Method 2: Search in entire death model hierarchy
         Transform searchRoot = transform;
         while (searchRoot.parent != null && searchRoot.parent.name != "ladybug" && searchRoot.parent.name != "ladybugblack")
         {
@@ -78,13 +78,13 @@ public class DissolveSphere : MonoBehaviour
                 emberParticles = child.GetComponent<ParticleSystem>();
                 if (emberParticles != null)
                 {
-                    Debug.Log($"[DissolveSphere] 找到粒子系统: {child.name} (路径: {GetFullPath(child)})");
+                    Debug.Log($"[DissolveSphere] Found particle system: {child.name} (path: {GetFullPath(child)})");
                     return;
                 }
             }
         }
         
-        Debug.LogWarning($"[DissolveSphere] 在 {gameObject.name} 中未找到名为 '{particleSystemName}' 的粒子系统");
+        Debug.LogWarning($"[DissolveSphere] Particle system '{particleSystemName}' not found in {gameObject.name}");
     }
     
     string GetFullPath(Transform t)
@@ -99,7 +99,7 @@ public class DissolveSphere : MonoBehaviour
     }
 
     /// <summary>
-    /// 开始死亡动画（坍塌+消散+粒子）
+    /// Start death animation (collapse + dissolve + particle)
     /// </summary>
     public void StartDissolve(float speed = 1.0f)
     {
@@ -107,11 +107,11 @@ public class DissolveSphere : MonoBehaviour
         animStartTime = Time.time;
         particleTriggered = false;
         
-        // 在启动动画时查找粒子系统（确保此时死亡模型已激活）
+        // Find particle system when starting animation (ensure death model is active)
         FindParticleSystem();
         
-        // speed参数可以用来整体调速（可选）
-        // 这里我们使用固定的时间段，但您可以根据需要调整
+        // Speed parameter can be used for overall timing adjustment (optional)
+        // Currently using fixed time segments, but can be adjusted as needed
     }
 
     public void StopDissolve()
@@ -134,37 +134,37 @@ public class DissolveSphere : MonoBehaviour
         float collapseValue = 0f;
         float dissolveValue = 0f;
         
-        // === 阶段1：只坍塌（0 -> 0.4） ===
+        // === Phase 1: Collapse only (0 -> 0.4) ===
         if (elapsed < collapsePhase1Duration)
         {
             float t1 = elapsed / collapsePhase1Duration;
             collapseValue = Mathf.Lerp(0f, 0.4f, t1);
             dissolveValue = 0f;
         }
-        // === 阶段2：坍塌继续（0.4 -> 1.0）+ 消散开始（0 -> 1.0） ===
+        // === Phase 2: Continue collapse (0.4 -> 1.0) + Start dissolve (0 -> 1.0) ===
         else if (elapsed < totalDuration)
         {
             float t2 = (elapsed - collapsePhase1Duration) / combinedPhaseDuration;
             collapseValue = Mathf.Lerp(0.4f, 1.0f, t2);
             dissolveValue = Mathf.Lerp(0f, 1.0f, t2);
             
-            // 当消散到达指定值时，播放粒子效果
+            // Trigger particle effect when dissolve reaches specified value
             if (!particleTriggered && dissolveValue >= particleTriggerDissolve)
             {
                 particleTriggered = true;
                 TriggerParticleEffect();
             }
         }
-        // === 完成后保持最终状态 ===
+        // === After completion, maintain final state ===
         else
         {
             collapseValue = 1.0f;
             dissolveValue = 1.0f;
-            // 可以选择在这里停止动画
+            // Optionally stop animation here
             // isActive = false;
         }
         
-        // 应用到材质
+        // Apply to material
         mat.SetFloat("_AnimationPrompt", collapseValue);
         mat.SetFloat("_DissolveAmount", dissolveValue);
     }
@@ -173,12 +173,12 @@ public class DissolveSphere : MonoBehaviour
     {
         if (emberParticles != null)
         {
-            Debug.Log($"[DissolveSphere] 播放粒子效果: {emberParticles.name}");
+            Debug.Log($"[DissolveSphere] Playing particle effect: {emberParticles.name}");
             emberParticles.Play();
         }
         else
         {
-            Debug.LogWarning("[DissolveSphere] 粒子系统未找到，无法播放");
+            Debug.LogWarning("[DissolveSphere] Particle system not found, cannot play");
         }
     }
 }

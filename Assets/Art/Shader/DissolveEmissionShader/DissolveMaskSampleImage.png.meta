@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: de6142f5264d5bc4f9391c9a97d8fade
-timeCreated: 1495129912
-licenseType: Store
 TextureImporter:
   fileIDToRecycleName: {}
   serializedVersion: 4
@@ -65,11 +63,4 @@ TextureImporter:
   spritePackingTag: 
   userData: 
   assetBundleName: 
-  assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 123865
-  packageName: Simple Dissolve Shader
-  packageVersion: 1.1
-  assetPath: Assets/DissolveEmissionShader/DissolveMaskSampleImage.png
-  uploadId: 298604
+  assetBundleVariant:
