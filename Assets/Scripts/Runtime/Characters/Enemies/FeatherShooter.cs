@@ -2,30 +2,29 @@ using UnityEngine;
 
 public class FeatherShooter : MonoBehaviour
 {
-    [Header("Fire Points (三个发射点)")]
+
     public Transform[] firePoints;
 
-    [Header("Projectile Prefab (根预制体)")]
-    public GameObject featherPrefab;  
+    public GameObject featherPrefab;
 
-    [Header("Targeting")]
+
     public string playerTag = "Player";
     public float lagSeconds = 0.5f;
 
-    [Header("Projectile Params")]
+
     public float projectileSpeed = 12f;
     public float turnRateDeg = 180f;
-    [Tooltip("单根羽毛生存时间；")]
+
     public float lifeTime = 1.0f;
     public int damage = 20;
     public bool keepStartHeight = true;
 
-    [Header("Trigger")]
+
     public bool useAutoTimer = true;
     public float firstDelay = 0.5f;
     public float fireInterval = 3f;
-    public bool enableTestHotkey = true;  // P 键
-    public bool fireOnStartOnce = false;  // 进场立即打一轮（调试用）
+    public bool enableTestHotkey = true;  // P 
+    public bool fireOnStartOnce = false; 
 
     GameObject _lastWaveRoot;
     Transform _player;
@@ -39,7 +38,7 @@ public class FeatherShooter : MonoBehaviour
 
     void Start()
     {
-        // 定时器更稳，不受 Update 里其它逻辑影响
+
         if (useAutoTimer)
             InvokeRepeating(nameof(AnimEvent_FlapFire), firstDelay, fireInterval);
 
@@ -67,7 +66,7 @@ public class FeatherShooter : MonoBehaviour
             return;
         }
 
-        // 自检：预制体上必须有 FeatherProjectile
+
         var probe = featherPrefab.GetComponent<FeatherProjectile>();
         if (!probe)
         {
@@ -75,14 +74,14 @@ public class FeatherShooter : MonoBehaviour
             return;
         }
 
-        // 清理上一波（避免场景里越积越多）
+        // delete last wave
         if (_lastWaveRoot) Destroy(_lastWaveRoot);
         _lastWaveRoot = new GameObject("FeatherWave");
 
         //_lastWaveRoot.transform.SetParent(transform, false);
 
 
-        //修改bug:鸽子朝向玩家时羽毛转向问题
+
         _lastWaveRoot.transform.SetParent(null, false);  // 不跟随鸽子，位置旋转保持不变
         _lastWaveRoot.transform.position = transform.position; // 放在鸽子位置
         _lastWaveRoot.transform.rotation = Quaternion.identity; // 取消旋转
@@ -93,7 +92,7 @@ public class FeatherShooter : MonoBehaviour
         {
             if (!fp) continue;
 
-            // 取目标的“滞后位置”，只在水平面朝向
+
             Vector3 target = _player
                 ? (_rec ? _rec.GetPastPosition(lagSeconds) : _player.position)
                 : fp.position + fp.forward;
@@ -106,7 +105,7 @@ public class FeatherShooter : MonoBehaviour
 
             var go = Instantiate(featherPrefab, fp.position, rot, _lastWaveRoot.transform);
 
-            // 赋参数
+
             var proj = go.GetComponent<FeatherProjectile>();
             proj.playerTag       = playerTag;
             proj.lagSeconds      = lagSeconds;
@@ -120,7 +119,7 @@ public class FeatherShooter : MonoBehaviour
             if (!proj.visual && go.transform.childCount > 0)
                 proj.visual = go.transform.GetChild(0);
 
-            // 防呆打印
+
             // Debug.Log($"[FeatherShooter] Fire one from {fp.name} → dir {dir}");
         }
     }

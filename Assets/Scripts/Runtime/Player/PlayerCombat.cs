@@ -4,44 +4,41 @@ using UnityEngine.Audio;
 public class PlayerCombat : MonoBehaviour
 {
     [Header("Shoot")]
-    public Transform firePoint;               // 开火点
-    public GameObject projectilePrefab;       // 子弹预制体
+    public Transform firePoint;               // fire point
+    public GameObject projectilePrefab;       // projectile prefab
     public float fireCooldown = 0.3f;
-    public int playerDamage = 5;              // 玩家子弹伤害
+    public int playerDamage = 5;              // player projectile damage
     private float lastShotTime;
 
     [Header("Summon (1 cookie per minion)")]
-    public GameObject minionPrefab;           // 小兵预制体（包含 MinionAnchor + MinionShooter）
-    public float summonSpread = 0.6f;         // 生成在玩家周围的半径
-    public float minionLifetime = 20f;        // 小兵寿命
-    public float minionFireInterval = 0.7f;   // 小兵射击间隔
-    public int minionDamage = 1;              // 小兵子弹伤害
+    public GameObject minionPrefab;           // minion prefab (includes MinionAnchor + MinionShooter)
+    public float summonSpread = 0.6f;         // radius around player for spawning
+    public float minionLifetime = 20f;        // minion lifetime
+    public float minionFireInterval = 0.7f;   // minion fire interval
+    public int minionDamage = 1;              // minion projectile damage
 
     [Header("Boss")]
-    public Transform boss;                    // Boss（可留空，运行时按 Tag 寻找）
+    public Transform boss;                    // Boss (can be left empty, will find by tag at runtime)
     public string bossTag = "Boss";
 
     #region Audio
-    [Header("Audio (drop your clips here)")]
-    [Tooltip("射击音效。可放多条，随机播放其一。")]
+
     public AudioClip[] shootClips;
     [Range(0f, 1f)] public float shootVolume = 0.8f;
 
-    [Tooltip("召唤成功音效。可放多条，随机播放其一。")]
+    [Tooltip("Summon success sound effect. Multiple clips can be added, one will be played randomly.")]
     public AudioClip[] summonClips;
     [Range(0f, 1f)] public float summonVolume = 0.9f;
 
-    [Tooltip("Cookie 不足时提示音效（可选）。")]
+    [Tooltip("Cookie insufficient prompt sound effect (optional).")]
     public AudioClip[] errorClips;
     [Range(0f, 1f)] public float errorVolume = 0.8f;
 
-    [Tooltip("将所有音效输出到指定的 Mixer Group（可选）。")]
+
     public AudioMixerGroup outputMixerGroup;
 
-    [Header("Audio Tweaks")]
-    [Tooltip("是否对每次播放做轻微音高随机，避免重复听感。")]
     public bool enablePitchJitter = true;
-    [Tooltip("音高随机范围，例如 0.95~1.05。")]
+    [Tooltip("0.95~1.05。")]
     public Vector2 pitchRange = new Vector2(0.97f, 1.03f);
 
     private AudioSource sfxSource;
@@ -49,11 +46,11 @@ public class PlayerCombat : MonoBehaviour
 
     void Awake()
     {
-        // 安全创建/复用一个 AudioSource，用来 PlayOneShot
+
         sfxSource = GetComponent<AudioSource>();
         if (!sfxSource) sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.playOnAwake = false;
-        sfxSource.spatialBlend = 0f; // UI/玩家开火一般用 2D 声音；想做3D可调成1并合理设置Rolloff
+        sfxSource.spatialBlend = 0f; // 2D sound
         if (outputMixerGroup) sfxSource.outputAudioMixerGroup = outputMixerGroup;
     }
 
@@ -61,7 +58,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Input.GetMouseButton(0)) TryShoot();
 
-        // 按 K：每次召唤 1 个，需消耗 1 个 Cookie
+        // use K key to summon one minion
         if (Input.GetKeyDown(KeyCode.K)) TrySummonOneMinion();
     }
 
@@ -76,40 +73,39 @@ public class PlayerCombat : MonoBehaviour
         var proj = go.GetComponent<PoisonProjectile>();
         if (proj != null)
         {
-            proj.damage    = playerDamage; // 玩家伤害
-            proj.targetTag = "";           // 空串：可命中任意（含 Boss）
-            proj.logHits   = true;         // 打印命中日志便于调试
+            proj.damage    = playerDamage; // player damage
+            proj.targetTag = "";          // hit anything
+            proj.logHits   = true;         // log hits for debugging
         }
 
-        // 播放射击音效
+        // Play shoot sound effect
         PlaySFX(shootClips, shootVolume);
     }
 
     void TrySummonOneMinion()
     {
-        // 1) Cookie 检查：需 1 个 cookie
         if (CookiesInventory.Instance == null || !CookiesInventory.Instance.Spend(1))
         {
-            // ✨ Cookie 不足：弹出中央UI提示（自动1秒淡出）
+            // not enough cookies
             NoCookieUI.ShowCenter("You need at least 1 cookie to summon a minion.");
             Debug.Log("[Summon] Not enough cookies (need 1).");
 
-            // 播放错误提示音（可选）
+            // Play error sound effect (optional)
             PlaySFX(errorClips, errorVolume);
             return;
         }
 
-        // 2) 找 Boss 引用
+        // 2) Find Boss reference
         EnsureBoss();
         if (!minionPrefab) return;
 
-        // 3) 在玩家周围位置随机生成（不重叠）
+        // 3) Randomly generate a position around the player (non-overlapping)
         Vector2 rnd = Random.insideUnitCircle * summonSpread;
         Vector3 spawnPos = transform.position + new Vector3(rnd.x, 0f, rnd.y);
 
         var m = Instantiate(minionPrefab, spawnPos, Quaternion.identity);
 
-        // 4) 绑定 Anchor，使其跟随玩家并贴地
+        // 4) Bind Anchor to follow the player and stay on the ground
         var anchor = m.GetComponent<MinionAnchor>();
         if (anchor)
         {
@@ -117,7 +113,7 @@ public class PlayerCombat : MonoBehaviour
             anchor.localOffset = new Vector3(rnd.x, 0f, rnd.y);
         }
 
-        // 5) 配置射击逻辑
+        // 5) Configure shooting logic
         var shooter = m.GetComponent<MinionShooter>();
         if (shooter)
         {
@@ -129,10 +125,10 @@ public class PlayerCombat : MonoBehaviour
             shooter.lifeTime = minionLifetime;
         }
 
-        // 6) 禁用小兵与玩家、与其他小兵的碰撞
+        // 6) Disable collisions between minions and the player, as well as between minions
         DisableCollisions(m);
 
-        // 播放召唤音效
+        // Play summon sound effect
         PlaySFX(summonClips, summonVolume);
     }
 
@@ -152,22 +148,20 @@ public class PlayerCombat : MonoBehaviour
         if (go) boss = go.transform;
     }
 
-    /// <summary>
-    /// 让新召唤的小兵不与玩家和既有小兵发生物理碰撞。
-    /// </summary>
+
     void DisableCollisions(GameObject newMinion)
     {
         var newCols = newMinion.GetComponentsInChildren<Collider>(includeInactive: true);
         var playerCol = GetComponent<Collider>();
 
-        // 不与玩家碰撞
+        // not collide with player
         if (playerCol)
         {
             foreach (var c in newCols)
                 if (c) Physics.IgnoreCollision(c, playerCol, true);
         }
 
-        // 不与已存在的小兵碰撞
+        // not collide with existing minions
         var allMinions = FindObjectsOfType<MinionAnchor>();
         foreach (var other in allMinions)
         {
@@ -185,7 +179,7 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    // === 音效播放工具 ===
+
     void PlaySFX(AudioClip[] clips, float volume)
     {
         if (sfxSource == null || clips == null || clips.Length == 0) return;
@@ -205,7 +199,7 @@ public class PlayerCombat : MonoBehaviour
 
         sfxSource.PlayOneShot(clip, Mathf.Clamp01(volume));
 
-        // 恢复音高，避免影响后续播放
+
         if (enablePitchJitter) sfxSource.pitch = originalPitch;
     }
 }

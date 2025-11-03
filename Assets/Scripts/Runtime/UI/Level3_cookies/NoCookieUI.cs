@@ -8,9 +8,9 @@ public class NoCookieUI : MonoBehaviour
     public static NoCookieUI Instance;
 
     [Header("Assets")]
-    public Sprite cookieIcon;                // 拖 cookieicon
-    public Sprite roundedPanelSprite;        // 可选 9-sliced
-    public TMP_FontAsset textFont;           // 可选
+    public Sprite cookieIcon;                // cookieicon
+    public Sprite roundedPanelSprite;        // Optional 9-sliced
+    public TMP_FontAsset textFont;           // Optional
 
     [Header("Style")]
     [Range(0f, 1f)] public float panelAlpha = 0.60f;
@@ -140,7 +140,6 @@ public class NoCookieUI : MonoBehaviour
         Destroy(root);
     }
 
-
     private IEnumerator CoFadeToBlackAndLoadNext()
     {
 
@@ -152,11 +151,11 @@ public class NoCookieUI : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / fadeDuration);
-            fadePanel.alpha = Mathf.Lerp(1f, 0f, t); // 从1淡出到0
+            fadePanel.alpha = Mathf.Lerp(1f, 0f, t); // Fade from 1 to 0
             yield return null;
         }
 
-        fadePanel.alpha = 0f; // 确保最终值准确
+        fadePanel.alpha = 0f; // Ensure final value is accurate
 
     }
 

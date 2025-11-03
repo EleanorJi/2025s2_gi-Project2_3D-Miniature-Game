@@ -5,18 +5,22 @@ using TMPro;
 public class BossWinUI : MonoBehaviour
 {
     [Header("Refs")]
-    public Health boss;                 // Boss Health (会自动用 Tag=Boss 查找)
-    public GameObject panel;            // Win 面板（不填则用本物体）
-    public TMP_Text hintText;           // 可选的提示文案
+    public Health boss;                 // Boss Health
+    public GameObject panel;            // Win panel
+    public TMP_Text hintText;           // Optional hint text
 
     [Header("UI to hide on win")]
-    public GameObject[] hideOnWin;      // 把 PlayerHealthBar（或其它HUD）拖进来
+    public GameObject[] hideOnWin;      // Drag PlayerHealthBar (or other HUD) here
+
+    [Header("Cookies")]
+    [Tooltip("通关时是否把 Cookie 清零并刷新 UI")]
+    public bool resetCookiesOnWin = true;
 
     [Header("Copy")]
     [TextArea] public string hint = "You defeated the pigeon!\nLeft click to continue";
 
     [Header("After Win")]
-    public string sceneToLoad = "StartScene"; // 左键时要回到的场景
+    public string sceneToLoad = "StartScene"; // Scene to load on left click
 
     // gameplay gating
     private MonoBehaviour[] _disabledPlayerScripts;
@@ -27,7 +31,7 @@ public class BossWinUI : MonoBehaviour
     {
         if (!panel) panel = gameObject;
 
-        // 找 Boss 并订阅
+        // Find Boss and subscribe
         if (!boss)
         {
             var b = GameObject.FindGameObjectWithTag("Boss");
@@ -35,10 +39,10 @@ public class BossWinUI : MonoBehaviour
         }
         if (boss) boss.OnDeath.AddListener(HandleBossDied);
 
-        // 需要禁用/恢复的脚本列表
+        // Build lists of scripts to disable/restore
         BuildDisableLists(FindPlayerGO(), Camera.main ? Camera.main.gameObject : null);
 
-        // 初始化隐藏面板
+        // Initialize hidden panel
         if (panel.activeSelf) panel.SetActive(false);
         _shown = false;
     }
@@ -58,7 +62,13 @@ public class BossWinUI : MonoBehaviour
 
     private void HandleBossDied()
     {
-        // 隐藏 HUD（如玩家血条）
+        // 1) 先处理 Cookie —— 会自动触发 Level3CookieUI.Refresh
+        if (resetCookiesOnWin && CookiesInventory.Instance != null)
+        {
+            CookiesInventory.Instance.Clear();   // cookies = 0; OnChanged(0)
+        }
+
+        // 2) 隐藏 HUD（玩家血条等）
         if (hideOnWin != null)
         {
             foreach (var go in hideOnWin)
@@ -67,12 +77,13 @@ public class BossWinUI : MonoBehaviour
             }
         }
 
+        // 3) 打开胜利面板 & 冻结游戏
         ShowPanel(true);
     }
 
     private void Continue()
     {
-        // 恢复时间与控制，再切场景
+        // Restore time and controls, then change scene
         Time.timeScale = 1f;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -97,7 +108,7 @@ public class BossWinUI : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
 
-            // 禁用移动/攻击/镜头
+            // Disable movement/attack/camera
             SetScriptsEnabled(_disabledPlayerScripts, false);
             SetScriptsEnabled(_disabledCameraScripts, false);
         }

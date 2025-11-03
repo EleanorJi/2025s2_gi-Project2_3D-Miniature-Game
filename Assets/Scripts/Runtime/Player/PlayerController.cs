@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
         parachuteCarrier = GetComponent<ParachuteCarrier>();
         if (parachuteCarrier == null)
         {
-            // 如果没有找到也没关系，只是可选的功能
+
             Debug.Log("[PlayerController] No ParachuteCarrier component found - this is optional");
         }
 
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
     }
 
-    // 更新动画参数的方法
+
     void UpdateAnimationParameters()
     {
         if (antAnimator != null)
@@ -239,10 +239,10 @@ public class PlayerController : MonoBehaviour
                 Rigidbody itemRb = carriedItem.GetComponent<Rigidbody>();
                 if (itemRb) itemRb.isKinematic = true;
 
-                // 立即更新动画参数
+                // update animation parameters immediately
                 UpdateAnimationParameters();
 
-                // 添加拿起物品的音效
+
                 GlobalSfx.PlayLeafPickupSfx(transform.position);
 
                 Debug.Log("Picked up: " + carriedItem.name);
@@ -366,7 +366,7 @@ public class PlayerController : MonoBehaviour
 
         if (other.CompareTag("feather"))
         {
-            // 改变玩家材质颜色，闪红0.1秒
+
             var rend = this.GetComponentInChildren<Renderer>();
             if (rend != null)
                 StartCoroutine(FlashRed(rend, 0.1f));
@@ -429,7 +429,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
-        // 恢复原始颜色
+
         renderer.material.color = Color.white;
     }
 

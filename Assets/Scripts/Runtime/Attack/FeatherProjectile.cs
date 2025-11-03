@@ -6,23 +6,22 @@ public class FeatherProjectile : MonoBehaviour
 {
     [Header("Targeting")]
     public string playerTag = "Player";
-    public float lagSeconds = 0.5f;              // 追踪玩家过去的位置（没有 recorder 也能跑）
+    public float lagSeconds = 0.5f;              // follow player position with this much delay
 
     [Header("Motion")]
-    public float speed = 12f;                    // 水平前进速度
-    public float turnRateDeg = 180f;             // 只绕世界Y轴的转向速度
-    public Rigidbody rb;                         // 可为空；非Kinematic则用velocity推进
-    public float lifeTime = 1.0f;                // <=0 不自毁
-    public bool keepStartHeight = true;          // 锁定发射高度
+    public float speed = 12f;                    // horizontal forward speed
+    public float turnRateDeg = 180f;             // turning speed around the world's Y axis
+    public Rigidbody rb;                         // can be null; use velocity to move if not kinematic
+    public float lifeTime = 1.0f;                // <=0 means no self-destruction
+    public bool keepStartHeight = true;          // lock launch height
 
     [Header("Damage")]
     public int damage = 20;
 
     [Header("Visual Orientation")]
-    public Transform visual;                     // ★ 羽毛网格子物体（不要拖根）
-    public bool alignVisualYawToForward = true;  // ★ 视觉跟随根的“Yaw”
+    public Transform visual;                     // ★ feather mesh object
+    public bool alignVisualYawToForward = true;  // visual yaw follows projectile forward
     public Vector3 visualFlatLocalEuler = new Vector3(-90f, 0f, 0f);
-    // ↑ 让网格“躺平”的欧拉角。若尖端方向不对，改成 (90,0,0) 或 (0,0,90) 等测试。
 
     // --- internal ---
     Transform _player;

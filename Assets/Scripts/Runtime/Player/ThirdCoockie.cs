@@ -20,7 +20,7 @@ public class ThirdCoockie : MonoBehaviour
         col.isTrigger = true;                // as pickup trigger
     }
 
-    // ¡î key: when SetActive(true) again, allow pickup again
+    // key: when SetActive(true) again, allow pickup again
     void OnEnable()
     {
         _consumed = false;
@@ -33,16 +33,16 @@ public class ThirdCoockie : MonoBehaviour
 
         _consumed = true; // lock once
 
-        // 1£©first add to inventory & refresh UI
+        // 1ï¿½ï¿½first add to inventory & refresh UI
         CookiesInventory.Instance?.Add(amount);
         if (CookiesInventory.Instance != null)
             Level3CookieUI.Instance?.Refresh(CookiesInventory.Instance.cookies);
 
-        // 2£©play sound effect (doesn't depend on this object's active state)
+        // 2ï¿½ï¿½play sound effect (doesn't depend on this object's active state)
         if (playSfx)
             GlobalSfx.PlayCookieSfx(transform.position, sfxVolume, sfxAs2D);
 
-        // 3£©finally deactivate object
+        // 3ï¿½ï¿½finally deactivate object
         if (deactivateDelay <= 0f) gameObject.SetActive(false);
         else StartCoroutine(DeactivateLater());
     }
