@@ -11115,8 +11115,16 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 464684, guid: 0692d73bcc7479b449d0b356b6009c32, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 464684, guid: 0692d73bcc7479b449d0b356b6009c32, type: 3}
       propertyPath: m_LocalScale.y
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 464684, guid: 0692d73bcc7479b449d0b356b6009c32, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.505
       objectReference: {fileID: 0}
     - target: {fileID: 464684, guid: 0692d73bcc7479b449d0b356b6009c32, type: 3}
       propertyPath: m_LocalPosition.x
@@ -58338,7 +58346,7 @@ Transform:
   m_GameObject: {fileID: 983552210}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -1.2676082e-10, w: 1}
-  m_LocalPosition: {x: 0.03, y: 0.56, z: -0.02}
+  m_LocalPosition: {x: -0.078, y: 0.508, z: -0.112}
   m_LocalScale: {x: 1.4057488, y: 1.1031502, z: 0.9578472}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -61473,10 +61481,10 @@ MonoBehaviour:
   holdSeconds: 4
   enableWaterAreaIntegration: 0
   waterArea: {fileID: 0}
-  autoFindContainingArea: 1
+  autoFindContainingArea: 0
   respawnOverride: {fileID: 983552211}
   respawnManager: {fileID: 0}
-  preferFloodAreaHandle: 1
+  preferFloodAreaHandle: 0
 --- !u!1 &1056710376
 GameObject:
   m_ObjectHideFlags: 0
@@ -75829,7 +75837,7 @@ MonoBehaviour:
   enableWaterAreaIntegration: 1
   waterArea: {fileID: 1365058325}
   autoFindContainingArea: 1
-  respawnOverride: {fileID: 575812939}
+  respawnOverride: {fileID: 0}
   respawnManager: {fileID: 0}
   preferFloodAreaHandle: 1
 --- !u!1 &1290701668
@@ -135991,6 +135999,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &3055174591362789767
 GameObject:
   m_ObjectHideFlags: 0
@@ -136717,6 +136729,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!137 &4202902678183107229
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -137817,6 +137833,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!199 &6440560298298258288
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -142925,6 +142945,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!65 &6974564916353018595
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -143371,6 +143395,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!4 &7742497254190994394
 Transform:
   m_ObjectHideFlags: 0
@@ -143543,6 +143571,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!4 &7831182107880572877
 Transform:
   m_ObjectHideFlags: 0
@@ -148703,6 +148735,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!137 &8459884232270209013
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -148828,6 +148864,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!4 &8513225870763504989
 Transform:
   m_ObjectHideFlags: 0
@@ -149002,6 +149042,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!4 &8885879389924975209
 Transform:
   m_ObjectHideFlags: 0
@@ -149108,6 +149152,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &9062149625239296005
 GameObject:
   m_ObjectHideFlags: 0
@@ -149314,6 +149362,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!4 &9152116280389020251
 Transform:
   m_ObjectHideFlags: 0

@@ -886,6 +886,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &883768318644822075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1453,6 +1457,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &1737114311024215579
 GameObject:
   m_ObjectHideFlags: 0
@@ -1851,6 +1859,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &1847638573186805879
 GameObject:
   m_ObjectHideFlags: 0
@@ -2320,6 +2332,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &2707096557172810940
 GameObject:
   m_ObjectHideFlags: 0
@@ -2732,6 +2748,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &3504589623155360364
 GameObject:
   m_ObjectHideFlags: 0
@@ -2985,6 +3005,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &3589687284898875141
 GameObject:
   m_ObjectHideFlags: 0
@@ -3589,6 +3613,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &4733712176283354256
 GameObject:
   m_ObjectHideFlags: 0
@@ -4246,6 +4274,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &5903474137193502518
 GameObject:
   m_ObjectHideFlags: 0
@@ -4921,6 +4953,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &6356552469211490327
 GameObject:
   m_ObjectHideFlags: 0
@@ -11965,6 +12001,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &8822933640119026951
 GameObject:
   m_ObjectHideFlags: 0
@@ -12406,6 +12446,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e5e5f5f25b03bd489e3f221643b39ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collapsePhase1Duration: 1
+  combinedPhaseDuration: 2
+  particleTriggerDissolve: 0.45
+  particleSystemName: Ember_Particles
 --- !u!1 &9192476745570737087
 GameObject:
   m_ObjectHideFlags: 0
@@ -12591,10 +12635,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.27237162
+  m_Radius: 0.30921665
   m_Height: 0.8470795
-  m_Direction: 1
-  m_Center: {x: -0.07410243, y: 0.0051865974, z: 0.30086002}
+  m_Direction: 0
+  m_Center: {x: -0.07410243, y: 0.0051865974, z: 0.19792092}
 --- !u!114 &5327797884684770861
 MonoBehaviour:
   m_ObjectHideFlags: 0
