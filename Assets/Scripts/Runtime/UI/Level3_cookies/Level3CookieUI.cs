@@ -8,14 +8,14 @@ public class Level3CookieUI : MonoBehaviour
     public static Level3CookieUI Instance;
 
     [Header("References")]
-    public RectTransform cookieContainer;   // UI 容器（建议就是你的 ShardContainer）
-    public Sprite cookieSprite;             // 你的 cookieicon（Sprite 资源）
-    public TMP_Text callLabel;              // 左上角 “Call” 文本（可选；若不需要可留空）
+    public RectTransform cookieContainer;   // UI container for cookie icons
+    public Sprite cookieSprite;             // cookie icon (Sprite asset)
+    public TMP_Text callLabel;              // Top-left "Call" text (optional; leave empty if not needed)
 
     [Header("Icon Layout")]
-    public Vector2 iconSize = new Vector2(32, 32); // 每个图标尺寸（如容器有Layout可忽略）
-    public bool useNativeSize = false;             // 勾上后用Sprite原图尺寸
-    public bool clearWhenZero = false;             // 为 true 则当数量为0时清空/隐藏容器
+    public Vector2 iconSize = new Vector2(32, 32); // Size of each icon (ignore if container has Layout)
+    public bool useNativeSize = false;             // If checked, use Sprite's native size
+    public bool clearWhenZero = false;             // If true, clear/hide container when count is 0
 
     private readonly List<Image> _icons = new();
 
@@ -43,14 +43,12 @@ public class Level3CookieUI : MonoBehaviour
         Refresh(cur);
     }
 
-    /// <summary>
-    /// 根据 current 数量，创建/复用足够的 Image 图标对象
-    /// </summary>
+
     void EnsureIcons(int current)
     {
         if (!cookieContainer || !cookieSprite) return;
 
-        // 如果当前需求比已有多，则创建缺少的
+        // If current demand is greater than existing, create missing ones
         for (int i = _icons.Count; i < current; i++)
         {
             var go = new GameObject($"cookie_{i}", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
@@ -70,29 +68,27 @@ public class Level3CookieUI : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// 外部/事件回调：当 Cookie 数量变化时更新 UI
-    /// </summary>
+
     public void Refresh(int current)
     {
         current = Mathf.Max(0, current);
 
-        // 先确保有足够的图标对象（只增不减，减少时用隐藏来避免GC抖动）
+        // Ensure there are enough icon objects (only increase, not decrease; hide when reducing to avoid GC jitter)
         EnsureIcons(current);
 
-        // 按数量开关显示
+        // Show/hide based on count
         for (int i = 0; i < _icons.Count; i++)
             _icons[i].gameObject.SetActive(i < current);
 
-        // 没有 Cookie 时的额外处理（可选）
+        // Additional handling when there are no Cookies (optional)
         if (cookieContainer)
             cookieContainer.gameObject.SetActive(!clearWhenZero || current > 0);
 
-        // 更新“Call (xN)”文本（如不需要，可不绑定 callLabel）
+        // Update "Call (xN)" text (leave unbound if not needed)
         if (callLabel)
             callLabel.text = $"Call ({current})";
 
-        // 若容器上挂了 Horizontal/Vertical/Grid Layout Group，下面这句会强制刷新一次布局
+        // If the container has a Horizontal/Vertical/Grid Layout Group, the following line will force a layout rebuild
         LayoutRebuilder.MarkLayoutForRebuild(cookieContainer);
     }
 }

@@ -78,11 +78,11 @@ public class BossPigeon : MonoBehaviour
             animator = GetComponent<Animator>();
             if (animator)
             {
-                Debug.Log("自动获取到 Animator: " + animator.name);
+                Debug.Log("find Animator: " + animator.name);
             }
             else
             {
-                Debug.LogWarning("在当前物体上找不到 Animator 组件");
+                Debug.LogWarning("can not find Animator 组件");
             }
         }
 
@@ -106,7 +106,7 @@ public class BossPigeon : MonoBehaviour
 
         while (enabled)
         {
-            // pick next interval now (so windup不占用间隔外的随机性)
+            // pick next interval now
             float interval = Random.Range(attackIntervalMin, attackIntervalMax);
 
             // aim
@@ -125,15 +125,15 @@ public class BossPigeon : MonoBehaviour
             if (windupTime > 0f)
             {
                 if (sfxSource && windupClip) sfxSource.PlayOneShot(windupClip);
-                // if (animator) animator.SetTrigger("Windup"); // 可在 Animator 里配一个 Windup 触发
+                // if (animator) animator.SetTrigger("Windup"); 
                 yield return new WaitForSeconds(windupTime);
             }
 
             // fire burst
             FireOnce();
 
-            //bug修改：将FireOnce函数中的动画放在攻击函数中就可以触发攻击动画了
-            // SFX/动画
+
+
             if (sfxSource && burstClip)
             {
                 sfxSource.PlayOneShot(burstClip);
@@ -143,8 +143,8 @@ public class BossPigeon : MonoBehaviour
             Debug.Log("触发攻击动画: Flap");
             if (animator)
             {
-                animator.SetTrigger("Flap"); // 发射时的翅膀拍打
-                Debug.Log("Flap trigger 已设置");
+                animator.SetTrigger("Flap"); 
+                Debug.Log("Flap trigger set");
             }
 
             // cooldown till next tick
@@ -154,11 +154,11 @@ public class BossPigeon : MonoBehaviour
 
     private void FireOnce()
     {
-        Debug.Log("调用了FireOnce");
+        Debug.Log("use FireOnce");
 
         if (!sandBurst) 
             return;
-        Debug.Log("过return");
+        Debug.Log("return");
 
         // ensure origin & rotation
         if (fireOrigin)
@@ -166,17 +166,16 @@ public class BossPigeon : MonoBehaviour
             sandBurst.transform.SetPositionAndRotation(fireOrigin.position, fireOrigin.rotation);
         }
 
-        // 方式 A：完全用 Emission.Bursts（推荐你现在这种配置）
-        // - 粒子系统自身设置好一个 Burst（或多段 Burst），脚本只需要 Play()
+
+
         if (!useEmitCount)
         {
-            // Stop → Clear → Play 的顺序更可控，避免上一次遗留状态
+            // Stop → Clear → Play
             sandBurst.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             sandBurst.Play();
         }
         else
         {
-            // 方式 B：脚本直接 Emit 固定数量
             sandBurst.Emit(Mathf.Max(1, emitCount));
         }
 

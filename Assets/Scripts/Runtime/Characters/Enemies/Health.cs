@@ -8,13 +8,12 @@ public class Health : MonoBehaviour
     [Header("Health")]
     public int maxHealth = 200;
 
-    // 注意：为了兼容你现有的 UI/脚本，这里保持为 public 字段。
-    // 如果以后想改成只读属性，记得同步改所有引用处。
+
     [Tooltip("Current HP")]
     public int currentHealth = 0;
 
     [Header("Events")]
-    // 参数：current, max
+
     public UnityEvent<int, int> OnHealthChanged = new UnityEvent<int, int>();
     public UnityEvent OnDeath = new UnityEvent();
 
@@ -22,13 +21,12 @@ public class Health : MonoBehaviour
 
     private void Awake()
     {
-        // 初始化 current 值（若未设置或越界就回满）
+        // Clamp initial health
         if (currentHealth <= 0 || currentHealth > maxHealth)
             currentHealth = maxHealth;
 
         _dead = (currentHealth <= 0);
 
-        // 关键：开局就通知一次，避免 UI 等到第一次受击才更新
         SafeInvokeChanged();
         // Debug.Log($"[Health:{name}] Awake -> {currentHealth}/{maxHealth}");
     }
@@ -111,19 +109,6 @@ public class Health : MonoBehaviour
     private void DebugResetFull() => ResetToFull();
 
 
-
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("positionShoot"))
-    //    {
-    //        Debug.Log("123123131");
-    //        // 改变玩家材质颜色，闪红0.1秒
-    //        var rend = this.GetComponentInChildren<Renderer>();
-    //        if (rend != null)
-    //            StartCoroutine(FlashRed(rend, 0.1f));
-    //    }
-    //}
-
     IEnumerator FlashRed(Renderer renderer, float duration)
     {
         if (renderer == null)
@@ -134,7 +119,7 @@ public class Health : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
-        // 恢复原始颜色
+
         renderer.material.color = Color.white;
     }
 

@@ -5,13 +5,13 @@ using UnityEngine.UI;
 public class PlayerHealthBarFill : MonoBehaviour
 {
     [Header("Refs")]
-    public PlayerHealth target;   // 留空自动找 Tag=Player
-    public Image hpImg;           // 绿色条
-    public Image hpEffectImg;     // 缓冲条
+    public PlayerHealth target;   // find Tag=Player
+    public Image hpImg;           // green bar
+    public Image hpEffectImg;     // buffer bar
 
     [Header("Timings")]
-    public float damageLagTime = 0.35f;  // 掉血时缓冲条延迟跟随
-    public float healRiseTime  = 0.20f;  // 回血时绿色条上升动画
+    public float damageLagTime = 0.35f;  // delay for buffer bar when taking damage
+    public float healRiseTime  = 0.20f;  // animation time for green bar when healing
 
     [Header("Visual Calibration (optional)")]
     public float minFill = 0f;
@@ -26,7 +26,7 @@ public class PlayerHealthBarFill : MonoBehaviour
         ForceFilled(hpImg);
         ForceFilled(hpEffectImg);
 
-        // 初始同步（避免第一次受击前显示不对）
+        // initial sync (avoid incorrect display before first hit)
         ImmediateRefreshFromTarget();
     }
 
@@ -35,7 +35,7 @@ public class PlayerHealthBarFill : MonoBehaviour
         EnsureTarget();
         Subscribe(true);
 
-        // 关键：对象重新启用时，可能错过了重生事件 → 主动刷新
+        // key point: when the object is re-enabled, it may miss the respawn event → actively refresh
         ImmediateRefreshFromTarget();
     }
 
@@ -45,16 +45,17 @@ public class PlayerHealthBarFill : MonoBehaviour
         Subscribe(false);
     }
 
-    // —— 事件 —— //
+
     void OnRespawned()
     {
-        // 有些系统在重生流程里会先恢复数值再开启UI，这里再等1帧更稳妥
+        // Some systems may restore values before opening the UI during the respawn process,
+        // so it's safer to wait for 1 frame here.
         StartCoroutine(NextFrameRefresh());
     }
 
     IEnumerator NextFrameRefresh()
     {
-        yield return null; // 等一帧，确保血量已恢复 & 位置稳定
+        yield return null; // wait for 1 frame to ensure health is restored & position is stable
         ImmediateRefreshFromTarget();
     }
 
@@ -63,19 +64,19 @@ public class PlayerHealthBarFill : MonoBehaviour
         pct = Mathf.Clamp01(pct);
         if (pct < _currentPct)
         {
-            // 掉血：绿色条瞬到，缓冲条延后跟随
+            // Taking damage: green bar snaps to new value, buffer bar follows with delay
             SetGreen(pct);
             StartAnim(LerpEffect(hpEffectImg ? hpEffectImg.fillAmount : _currentPct, pct, damageLagTime));
         }
         else if (pct > _currentPct)
         {
-            // 回血：先提缓冲条到目标，再把绿色条平滑抬上去
+            // Healing: buffer bar rises to target, then green bar smoothly follows
             SetEffect(pct);
             StartAnim(LerpGreen(_currentPct, pct, healRiseTime));
         }
     }
 
-    // —— 工具 —— //
+
     void EnsureTarget()
     {
         if (target) return;
@@ -178,6 +179,6 @@ public class PlayerHealthBarFill : MonoBehaviour
         _anim = null;
     }
 
-    // 如果想在别的脚本里手动强制刷新，可以公开一个方法：
+
     public void RefreshNow() => ImmediateRefreshFromTarget();
 }

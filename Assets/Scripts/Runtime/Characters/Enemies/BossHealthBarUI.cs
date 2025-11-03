@@ -46,7 +46,7 @@ public class BossHealthBarUI : MonoBehaviour
         if (target)
         {
             target.OnHealthChanged.AddListener(HandleChanged);
-            HandleChanged(target.currentHealth, target.maxHealth); // 初始刷新
+            HandleChanged(target.currentHealth, target.maxHealth); // refresh once
         }
     }
 
@@ -82,7 +82,7 @@ public class BossHealthBarUI : MonoBehaviour
         slider.value = (max > 0) ? (float)cur / max : 0f;
     }
 
-    // ---- 新增：外部可强制刷新一次（用于重生后立刻更新 UI） ----
+
     public void RefreshNow()
     {
         if (target) HandleChanged(target.currentHealth, target.maxHealth);

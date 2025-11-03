@@ -19,7 +19,7 @@ public class HealingItem : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerHealth>().Heal(30);
-            Debug.Log("当前的血量是" + other.GetComponent<PlayerHealth>()._currentHealth);
+            Debug.Log("a" + other.GetComponent<PlayerHealth>()._currentHealth);
 
             Destroy(gameObject);
         }
