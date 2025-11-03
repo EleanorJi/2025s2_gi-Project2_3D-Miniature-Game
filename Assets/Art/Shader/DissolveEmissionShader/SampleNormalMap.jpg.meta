@@ -107,11 +107,4 @@ TextureImporter:
   pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
-  assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 123865
-  packageName: Simple Dissolve Shader
-  packageVersion: 1.1
-  assetPath: Assets/DissolveEmissionShader/SampleNormalMap.jpg
-  uploadId: 298604
+  assetBundleVariant:

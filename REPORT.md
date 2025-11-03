@@ -205,6 +205,95 @@ This shader operates in the Transparent render queue with Alpha Blending, which 
 </p>
 
 
+### 2. Dynamic Water System with Reflection and Refraction for Level 2
+
+#### 2.1 Shader Overview
+
+The HoneyRefraction shader is a custom vertex/fragment shader written in Cg/HLSL that simulates realistic water and flowing honey surfaces in Level 2's outdoor environment. This system goes beyond a simple shader—it is a complete **shader-script collaborative system** that dynamically generates water mesh geometry at runtime and renders real-time reflection and refraction of the scene. The result is a convincing liquid surface with proper depth perception and environmental interaction.
+
+#### 2.2 Shader File Links
+
+* [HoneyWater.shader](Assets/Art/Shader/HoneyShader/Shaders/HoneyWater.shader) - Main shader for rendering
+* [WaterFX.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterFX.cs) - Reflection/refraction rendering controller
+* [WaterVolume.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterVolume.cs) - Dynamic mesh generation system
+
+#### 2.3 Key Features and Implementation
+
+**Shader Layer:**
+* **Dual Scrolling Normal Maps:** Two normal maps scroll at different speeds (controlled by `WaveSpeed` parameter), creating organic, non-repeating wave distortions when combined
+* **Fresnel Effect:** Calculates the blend ratio between reflection and refraction based on the dot product of view direction and surface normal, simulating realistic water viewing angles where shallow angles show more reflection
+* **Distorted Sampling:** Uses normal map bumps to offset reflection and refraction UV coordinates (`_ReflDistort` and `_RefrDistort`), creating the characteristic ripple distortion of light passing through water
+
+**Script-Driven System:**
+* **Real-time Reflection/Refraction Cameras:** `WaterFX.cs` dynamically creates reflection and refraction cameras each frame before rendering, rendering the scene to RenderTextures that are then sampled by the shader
+* **Reflection Matrix Calculation:** Computes a reflection matrix based on the water plane's position and normal, flipping the camera perspective to achieve mirror-like reflection
+* **Oblique Projection Clipping:** Uses oblique projection matrices to ensure only objects above/below the water plane are rendered, avoiding unnecessary rendering overhead
+* **Dynamic Mesh Generation:** `WaterVolume.cs` generates water surface mesh at runtime based on `rows` and `columns` parameters, supporting irregular water body shapes
+
+#### 2.4 Integration with Unity and Technical Context
+
+This system employs the **dual camera rendering** technique, a classic approach for high-quality water surfaces in Unity. In the `OnWillRenderObject()` callback, the system:
+1. Creates corresponding reflection/refraction cameras for each main camera rendering this water surface
+2. Flips the reflection camera and renders to a 256x256 RenderTexture
+3. Renders the refraction camera to capture the scene below the water surface from the current viewpoint
+4. The shader samples these two RenderTextures and blends them using Fresnel, producing the final color
+
+The `Update()` method calculates UV offsets based on `Time.timeSinceLevelLoad`, achieving continuous scrolling animation of normal maps. This time-based UV animation is a standard technique in Unity shaders for creating flowing effects.
+
+The mesh generation system allows the water body to adapt to different container shapes (such as channels and ponds), while providing collision detection and water level query functions that can interact with the game's physics system (such as buoyancy and submersion detection).
+
+#### 2.5 Visual Demonstration
+<p align="center">
+  <img src="images/report/honeyWaterShader.gif" alt="Honey Water Shader Level 2" width="600">
+</p>
+
+
+### 3. Dissolve and Collapse Shader for Enemy Death Effect
+
+#### 3.1 Shader Overview
+
+The DissolveShader is a custom Surface Shader combining **vertex deformation** and **pixel dissolution** techniques. It creates a dramatic three-stage death animation for insect enemies in Level 2: first, the mesh collapses toward its center; then it gradually dissolves and disappears; finally, particle effects are triggered at a specific dissolution threshold. The entire sequence lasts approximately 3 seconds, precisely controlled by the `DissolveSphere.cs` script's timeline system.
+
+#### 3.2 Shader File Links
+
+* [DissolveEmission.shader](Assets/Art/Shader/DissolveEmissionShader/DissolveEmission.shader) - Main shader
+* [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs) - Animation controller script
+
+#### 3.3 Key Features and Implementation
+
+**Vertex Deformation (Collapse Effect):**
+* **Custom Vertex Function:** Declares a vertex processing function via `#pragma vertex vert`, executed before the Surface Shader
+* **Z-Axis Compression:** Uses the `_AnimationPrompt` parameter (0-1 range) to remap vertex Z-coordinates to 40%-100% of their original values, creating a collapsing-toward-center visual effect
+* **Noise Perturbation:** Samples color values from the main texture as noise, applying varying degrees of deformation to different vertices to produce an uneven crumbling sensation
+* **Remap Function:** Custom value range remapping function that transforms `_AnimationPrompt` from [0,1] to the ranges needed for deformation
+
+**Pixel Dissolution (Dissolve Effect):**
+* **Noise Mask Sampling:** Uses `_DissolveMap` texture as the dissolution pattern; pixels with values below the `_DissolveAmount` threshold are discarded via `discard`
+* **Edge Glow:** Pixels within the dissolution boundary (between `_DissolveAmount` and `_DissolveAmount + _DissolveWidth`) are set to `_DissolveColor` with emission added, forming a flame-like edge effect
+* **Progressive Dissolution:** As `_DissolveAmount` increases from 0 to 1, more pixels are discarded until the entire model completely disappears
+
+**Multi-Stage Animation Control:**
+* **Phase 1 (0-1s):** Only increases `_AnimationPrompt` from 0 to 0.4, producing initial collapse
+* **Phase 2 (1-3s):** Simultaneously increases `_AnimationPrompt` to 1.0 and `_DissolveAmount` to 1.0, continuing collapse while beginning dissolution
+* **Particle Trigger:** When `_DissolveAmount` reaches 0.45, `DissolveSphere.cs` triggers the `Ember_Particles` particle system to play fire/smoke effects
+
+#### 3.4 Integration with Unity and Technical Context
+
+This shader uses Unity's **Surface Shader framework** but injects custom vertex processing through `#pragma vertex vert`. This hybrid approach allows us to leverage Surface Shader's lighting calculation convenience while implementing low-level vertex deformation.
+
+In the game logic, when `InsectDeath.cs` detects an insect hit by poison:
+1. Disables all colliders (preventing repeated hits)
+2. Switches to the death model and calls `DissolveSphere.StartDissolve()`
+3. `DissolveSphere.cs` updates shader parameters frame-by-frame in `Update()`
+4. Automatically finds and plays the particle system when dissolution reaches 0.45
+5. Destroys the entire GameObject after 3.5 seconds
+
+This design decouples visual effects (Shader), animation control (DissolveSphere.cs), game logic (InsectDeath.cs), and particle systems, facilitating adjustment and reuse. The `tex2Dlod` sampling in the vertex shader reads textures during the vertex stage; while performance-intensive, it provides each vertex with a unique noise value, avoiding the rigidity of uniform deformation.
+
+#### 3.5 Visual Demonstration
+<p align="center">
+  <img src="images/report/dissolveShader.gif" alt="Enemy Dissolve Shader" width="600">
+</p>
 
 
 ## Summary of Contributions
@@ -281,6 +370,150 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 * Wrote the Water Shader Technical Report.
 
 
+### Personal Contribution Report - [Naixin Zhang]
+
+#### 1. Overview of Contributions
+I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts.
+
+#### 2. Key Contributions
+
+##### 2.1 Level 2 (Street Environment) Design & Implementation
+* Designed and built the entire outdoor street level environment, including flower bed puzzles, water hazards, insect enemies, parachute mechanics, honey zone and level2 ending scene.
+* Implemented comprehensive gameplay systems: charge jump mechanics, cookie collection, enemy interactions, water interactions, and environmental hazards.
+* Created camera cinematic sequences and zone-based camera controls for enhanced player experience.
+* Relevant files
+  * Scene
+    * [Level2_Street.unity](Assets/Scenes/Level2_Street.unity)
+  * Core Gameplay Mechanics
+    * [ChargeJumpModule.cs](Assets/Scripts/Runtime/Level2/ChargeJumpModule.cs)
+    * [ChargeJumpZone.cs](Assets/Scripts/Runtime/Level2/ChargeJumpZone.cs)
+    * [PlayerPoisonShooter.cs](Assets/Scripts/Runtime/Level2/PlayerPoisonShooter.cs)
+    * [CookiePickup.cs](Assets/Scripts/Runtime/Level2/CookiePickup.cs)
+    * [CookiesInventory.cs](Assets/Scripts/Runtime/Level2/CookiesInventory.cs)
+    * [CookieFollower.cs](Assets/Scripts/Runtime/Level2/CookieFollower.cs)
+  * Enemy & Combat Systems
+    * [SpwanBugs.cs](Assets/Scripts/Runtime/Attack/SpwanBugs.cs)
+    * [InsectDeath.cs](Assets/Scripts/Runtime/Level2/InsectDeath.cs)
+    * [InsectLaneMover.cs](Assets/Scripts/Runtime/Level2/InsectLaneMover.cs)
+    * [BugDestory.cs](Assets/Scripts/Runtime/Level2/BugDestory.cs)
+    * [BugCookieHandler.cs](Assets/Scripts/Runtime/Level2/BugCookieHandler.cs)
+    * [PoisonProjectile.cs](Assets/Scripts/Runtime/Attack/PoisonProjectile.cs)
+  * Parachute System
+    * [ParachuteLeafPickup.cs](Assets/Scripts/Runtime/Level2/ParachuteLeafPickup.cs)
+    * [ParachuteCarrier.cs](Assets/Scripts/Runtime/Level2/ParachuteCarrier.cs)
+    * [ParachuteDropZone.cs](Assets/Scripts/Runtime/Level2/ParachuteDropZone.cs)
+    * [ParachuteGate.cs](Assets/Scripts/Runtime/Level2/ParachuteGate.cs)
+  * Water & Hazard Systems
+    * [WaterContactRelay.cs](Assets/Scripts/Runtime/Level2/WaterContactRelay.cs)
+    * [FloodSequence.cs](Assets/Scripts/Runtime/Level2/FloodSequence.cs)
+    * [FloodStartZone.cs](Assets/Scripts/Runtime/Level2/FloodStartZone.cs)
+    * [SpiderDeathZone.cs](Assets/Scripts/Runtime/Level2/SpiderDeathZone.cs)
+    * [HoneyLifeResetTrigger.cs](Assets/Scripts/Runtime/Level2/HoneyLifeResetTrigger.cs)
+    * [KillPlayerOnTouch.cs](Assets/Scripts/Runtime/Level2/KillPlayerOnTouch.cs)
+  * Camera & Cinematics
+    * [CameraCinematicSequence.cs](Assets/Scripts/Runtime/Level2/CameraCinematicSequence.cs)
+    * [CinematicTrigger.cs](Assets/Scripts/Runtime/Level2/CinematicTrigger.cs)
+    * [CameraFollowZone_PitchLock.cs](Assets/Scripts/Runtime/Level2/CameraFollowZone_PitchLock.cs)
+  * Environmental Interactions
+    * [RockSurface.cs](Assets/Scripts/Runtime/Level2/RockSurface.cs)
+    * [RockTracker.cs](Assets/Scripts/Runtime/Level2/RockTracker.cs)
+    * [StickyGooMashR.cs](Assets/Scripts/Runtime/Level2/StickyGooMashR.cs)
+    * [trafficlights.cs](Assets/Scripts/Runtime/Level2/trafficlights.cs)
+  * UI & Feedback Systems
+    * [SkillChargeUI.cs](Assets/Scripts/Runtime/Level2/SkillChargeUI.cs)
+    * [DeathUIOverlay.cs](Assets/Scripts/Runtime/Level2/DeathUIOverlay.cs)
+    * [SimpleInfoPopup.cs](Assets/Scripts/Runtime/Level2/SimpleInfoPopup.cs)
+    * [SimpleInfoTrigger.cs](Assets/Scripts/Runtime/Level2/SimpleInfoTrigger.cs)
+    * [SimpleInfoSession.cs](Assets/Scripts/Runtime/Level2/SimpleInfoSession.cs)
+    * [TopEdgeDirectionIndicator.cs](Assets/Scripts/Runtime/Level2/TopEdgeDirectionIndicator.cs)
+  * Utility & Polish
+    * [AutoDestroyParticle.cs](Assets/Scripts/Runtime/Level2/AutoDestroyParticle.cs)
+    * [CheckpointOneWayWall.cs](Assets/Scripts/Runtime/Level2/CheckpointOneWayWall.cs)
+    * [SoftAirWall.cs](Assets/Scripts/Runtime/Level2/SoftAirWall.cs)
+    * [AmbientZone.cs](Assets/Scripts/Runtime/Level2/AmbientZone.cs)
+    * [GlobalSfx.cs](Assets/Scripts/Runtime/Level2/GlobalSfx.cs)
+    * [WaterUVScroller.cs](Assets/Scripts/Runtime/Level2/WaterUVScroller.cs)
+
+##### 2.2 Shader Development
+* Developed two custom shader systems with script integration for Level 2 visual effects.
+* Implemented real-time reflection/refraction water system for enhanced environmental realism.
+* Created multi-stage dissolve and collapse shader for dramatic enemy death animations.
+* Relevant files
+  * Water System (Reflection/Refraction)
+    * [HoneyWater.shader](Assets/Art/Shader/HoneyShader/Shaders/HoneyWater.shader)
+    * [WaterFX.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterFX.cs)
+    * [WaterVolume.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterVolume.cs)
+    * [WaterWaves.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterWaves.cs)
+    * [WaterMeshGenerator.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterMeshGenerator.cs)
+    * [WaterVolumeEditor.cs](Assets/Art/Shader/HoneyShader/Scripts/WaterVolumeEditor.cs)
+  * Dissolve Effect System
+    * [DissolveEmission.shader](Assets/Art/Shader/DissolveEmissionShader/DissolveEmission.shader)
+    * [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
+
+##### 2.3 Particle Systems Development
+* Designed and implemented particle effects for gameplay feedback and visual polish in Level 2.
+* Created particle systems for combat mechanics, collectible interactions, and enemy death effects.
+* Integrated particle systems with gameplay scripts for dynamic triggering and animation synchronization.
+* Key particle systems implemented:
+  * **Poison Spray Effect:** Trail particle system for the ant's venom attack, providing clear visual feedback for the shooting mechanic. Features a green toxic trail with fade-out effects.
+  * **Cookie Sparkle Effect:** Attractive glowing particle system for cookie collectibles, using small star particles to draw player attention and indicate interactable objects.
+  * **Enemy Death Ember Effect:** Fire and smoke particle burst triggered by the dissolve shader at specific dissolution threshold (0.45), creating a dramatic explosion effect synchronized with the enemy's collapse animation.
+* Relevant files
+  * [PlayerPoisonShooter.cs](Assets/Scripts/Runtime/Level2/PlayerPoisonShooter.cs)
+  * [PoisonProjectile.cs](Assets/Scripts/Runtime/Attack/PoisonProjectile.cs)
+  * [CookiePickup.cs](Assets/Scripts/Runtime/Level2/CookiePickup.cs)
+  * [InsectDeath.cs](Assets/Scripts/Runtime/Level2/InsectDeath.cs)
+  * [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
+  * [AutoDestroyParticle.cs](Assets/Scripts/Runtime/Level2/AutoDestroyParticle.cs)
+
+##### 2.4 Reporting
+* Wrote technical documentation for the HoneyWater shader system and Dissolve shader system.
+
+
 ## References and External Resources
 
-TODO - see specification for details
+### Audio Resources
+1. **Epidemic Sound** - Background music and sound effects  
+   [https://www.epidemicsound.com](https://www.epidemicsound.com)  
+   Licensed royalty-free music and sound effects for game audio. Individual tracks were selected and customized using GarageBand (macOS) to match gameplay pacing and atmosphere.
+
+2. **GarageBand (macOS)** - Audio editing and composition  
+   Apple's digital audio workstation used for audio editing, mixing, and creating custom sound compositions from licensed source material.
+
+### Shader Development Resources
+3. **Roystan's Toon Water Shader Tutorial** (Referenced in Section 1.3)  
+   Ross, R. "Toon Water Shader" Tutorial  
+   [https://roystan.net/articles/toon-water.html](https://roystan.net/articles/toon-water.html)  
+   Referenced for Level 1 Kitchen sink water shader implementation principles.
+
+### 3D Models and Visual Assets
+4. **Unity Asset Store** - 3D models and textures  
+   [https://assetstore.unity.com](https://assetstore.unity.com)  
+   Selected environmental models, prop assets, and texture libraries used throughout the game levels.
+
+5. **Sketchfab** - Additional 3D models  
+   [https://sketchfab.com](https://sketchfab.com)  
+   Community-sourced 3D models for environmental details and background objects.
+
+### Development Tools and Documentation
+6. **Unity Documentation** - Engine reference  
+   [https://docs.unity3d.com](https://docs.unity3d.com)  
+   Official Unity engine documentation for scripting, shader programming, and engine features.
+
+7. **Microsoft C# Documentation**  
+   [https://learn.microsoft.com/en-us/dotnet/csharp/](https://learn.microsoft.com/en-us/dotnet/csharp/)  
+   C# language reference for gameplay scripting and system implementation.
+
+### Shader Programming References
+8. **Unity Shader Reference**  
+   [https://docs.unity3d.com/Manual/SL-Reference.html](https://docs.unity3d.com/Manual/SL-Reference.html)  
+   Unity ShaderLab and HLSL programming documentation for custom shader development.
+
+### Project Management and Collaboration
+9. **GitHub** - Version control  
+   [https://github.com](https://github.com)  
+   Git repository hosting and version control for collaborative development.
+
+10. **Monday.com** - Project management  
+    [https://monday.com](https://monday.com)  
+    Task tracking, timeline management, and team collaboration platform.
