@@ -140,7 +140,6 @@ public class NoCookieUI : MonoBehaviour
         Destroy(root);
     }
 
-
     private IEnumerator CoFadeToBlackAndLoadNext()
     {
 

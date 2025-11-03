@@ -2249,6 +2249,9 @@ MonoBehaviour:
   separateImageTextAlpha: 0
   useGlobalController: 1
   deathSprite: {fileID: 0}
+  deathSfx: {fileID: 8300000, guid: 5845dff6ed3464507833d39f0ce75a00, type: 3}
+  respawnSfx: {fileID: 0}
+  sfxVolume: 0.9
   cookie: 0
 --- !u!1 &527133021
 GameObject:
