@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class SpwanBugs : MonoBehaviour
 {
-    public static SpwanBugs Instance; // 单例实例
+    public static SpwanBugs Instance; // Singleton instance
 
-    public GameObject bugPrefab;                 // 主虫子预制体
-    public GameObject secondBugPrefab;           // 第二种虫子预制体
-    public float bugPrefabChance = 0.5f;         // 出现第一种虫子的概率（0..1）
+    public GameObject bugPrefab;                 // Main insect prefab
+    public GameObject secondBugPrefab;           // The second type of insect model
+    public float bugPrefabChance = 0.5f;         // The probability of the first type of insect appearing (0..1)
 
     public Transform[] spawnPoints;
 
@@ -22,17 +22,17 @@ public class SpwanBugs : MonoBehaviour
 
     public bool startOnAwake = true;
     
-    public bool[] reverseDirection;              // 控制每个生成点的方向是否反转
+    public bool[] reverseDirection;              // Control whether the direction of each generation point is reversed
 
-    public int maxPrimaryBugs = 5;               // 最大第一种虫子数量
-    private int currentPrimaryBugs = 0;          // 当前场上的第一种虫子数量
+    public int maxPrimaryBugs = 5;               // The largest number of the first type of insects
+    private int currentPrimaryBugs = 0;          // The current number of the first type of insects on the field
 
-    // 在类中添加
+    // Add to the class
     private List<List<GameObject>> spawnedBugsPerPoint = new List<List<GameObject>>();
 
     void Awake()
     {
-        // 单例模式初始化
+        // Singleton pattern initialization
         if (Instance == null)
         {
             Instance = this;
@@ -43,7 +43,7 @@ public class SpwanBugs : MonoBehaviour
             Destroy(gameObject);
         }
         
-        // 初始化maxPrimaryBugs为5
+        // Set the value of maxPrimaryBugs to 5
         maxPrimaryBugs = 5;
     }
 
@@ -67,13 +67,13 @@ public class SpwanBugs : MonoBehaviour
             return;
         }
 
-        // 初始化方向数组
+        // Initialize the direction array
         if (reverseDirection.Length != spawnPoints.Length)
         {
             Array.Resize(ref reverseDirection, spawnPoints.Length);
         }
 
-        // 初始化列表
+        // Initialize the list
         spawnedBugsPerPoint.Clear();
         for (int i = 0; i < spawnPoints.Length; i++)
         {
@@ -97,13 +97,13 @@ public class SpwanBugs : MonoBehaviour
                 yield break;
             }
 
-            //先随机生成一个速度，三只虫子共享这个速度
+            //First, a random speed is generated, and the three insects share this speed.
             float sharedSpeed = UnityEngine.Random.Range(minSpeed, maxSpeed);
 
            
             List<GameObject> currentBatch = new List<GameObject>();
 
-            // 连续生成三只虫子，每只之间有0.5秒间隔
+            // Generate three insects one after another, with a 0.5-second interval between each pair.
             for (int i = 0; i < 3; i++)
             {
                 GameObject chosenPrefab = secondBugPrefab;
@@ -122,7 +122,7 @@ public class SpwanBugs : MonoBehaviour
                 Quaternion rot = spPoint.rotation;
                 GameObject bug = Instantiate(chosenPrefab, pos, rot);
 
-                // 根据虫子类型增加相应的计数
+                // Increase the corresponding count according to the type of the insect.
                 if (chosenPrefab == bugPrefab)
                 {
                     currentPrimaryBugs++;
@@ -133,11 +133,11 @@ public class SpwanBugs : MonoBehaviour
               
                 float speed = sharedSpeed;
 
-                // 确定移动方向（根据是否反转）
+                // Determine the direction of movement (based on whether it is reversed)
                 Vector3 moveDir = spPoint.forward;
                 if (reverseDirection[index])
                 {
-                    moveDir = -moveDir; // 反转方向
+                    moveDir = -moveDir; // Reverse direction
                 }
                 
                 if (moveDir.sqrMagnitude < 0.0001f) moveDir = Vector3.forward;
@@ -158,7 +158,7 @@ public class SpwanBugs : MonoBehaviour
                     rb.linearVelocity = moveDir * speed;
                 }
 
-                // 添加销毁事件监听
+                // Add event listener for destruction
                 BugDestroyListener listener = bug.AddComponent<BugDestroyListener>();
                 listener.onDestroyed = () => {
                     if (chosenPrefab == bugPrefab)
@@ -169,17 +169,17 @@ public class SpwanBugs : MonoBehaviour
 
                 SetCookieOnBug(bug);
 
-                // 每只虫子之间间隔0.5秒
-                if (i < 2) // 前两只虫子生成后等待，最后一只不需要等待
+                // There is a 0.5-second interval between each insect.
+                if (i < 2) // The first two insects are generated and then wait. The last one doesn't need to wait.
                 {
                     yield return new WaitForSeconds(0.5f);
                 }
             }
 
-            // 等待当前批次的所有虫子死亡
+            // Wait for all the insects in the current batch to die.
             while (currentBatch.Count > 0)
             {
-                // 检查并移除已经死亡的虫子
+                // Check and remove the dead insects
                 for (int i = currentBatch.Count - 1; i >= 0; i--)
                 {
                     if (currentBatch[i] == null || !currentBatch[i].activeInHierarchy)
@@ -188,14 +188,14 @@ public class SpwanBugs : MonoBehaviour
                     }
                 }
 
-                // 如果还有存活的虫子，继续等待
+                // If there are still surviving insects, continue to wait.
                 if (currentBatch.Count > 0)
                 {
-                    yield return new WaitForSeconds(0.5f); // 每0.5秒检查一次
+                    yield return new WaitForSeconds(0.5f); // Check every 0.5 seconds
                 }
             }
 
-            //在下一批生成前添加一个短暂延迟让他没那么快生成 = =
+            //Add a short delay before the next batch is generated so that it doesn't generate so quickly
             yield return new WaitForSeconds(1f);
         }
     }
@@ -209,13 +209,13 @@ public class SpwanBugs : MonoBehaviour
         {
             if (t.name.Equals("Cookie", StringComparison.OrdinalIgnoreCase))
             {
-                // 根据随机概率显示
+                // According to the random probability, it shows
                 bool show = UnityEngine.Random.value < cookieDisplayChance;
                 t.gameObject.SetActive(show);
                 if (show)
                 {
                     cookieObj = t.gameObject;
-                    // 为 Cookie 添加跟随/掉落逻辑
+                    // Add following/dropping logic to the Cookie
                     var follower = cookieObj.GetComponent<CookieFollower>();
                     if (follower == null)
                     {
@@ -230,7 +230,7 @@ public class SpwanBugs : MonoBehaviour
         }
     }
 
-    // 新增方法：减少maxPrimaryBugs计数
+    // Reduce the count of maxPrimaryBugs
     public void DecreaseMaxPrimaryBugs()
     {
 
@@ -239,7 +239,7 @@ public class SpwanBugs : MonoBehaviour
     }
 }
 
-// 辅助组件，用于监听虫子销毁事件
+// Auxiliary component, used to listen for the event of bug destruction
 public class BugDestroyListener : MonoBehaviour
 {
     public System.Action onDestroyed;

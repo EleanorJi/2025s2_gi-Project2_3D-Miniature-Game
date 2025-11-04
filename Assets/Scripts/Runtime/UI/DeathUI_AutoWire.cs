@@ -99,7 +99,7 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void Start()
     {
-        // 在Start中再次检查PlayerHealth连接，确保场景加载完成后能正确连接
+        // Recheck the PlayerHealth connection in Start to ensure that it is properly connected after the scene loading is complete.
         if (!playerHealth)
         {
             Debug.LogWarning("[DeathUI] PlayerHealth not found in Awake, retrying in Start...");
@@ -109,7 +109,7 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void OnEnable()
     {
-        // 如果PlayerHealth引用丢失，尝试重新查找
+        // If the PlayerHealth reference is missing, try to re-search for it.
         if (!playerHealth)
         {
             Debug.LogWarning("[DeathUI] PlayerHealth reference lost, attempting to reconnect...");
@@ -158,10 +158,10 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     private void HandleDied()
     {
-        // ★★ 1) 死亡瞬间清空所有小兵（Minion） ★★
+        // 1) At the moment of death, all minions are instantly wiped out.
         ClearAllMinions();
 
-        // 2) 播放死亡音效
+        // 2) Play the death sound effect
         PlaySfx(deathSfx);
 
         string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;

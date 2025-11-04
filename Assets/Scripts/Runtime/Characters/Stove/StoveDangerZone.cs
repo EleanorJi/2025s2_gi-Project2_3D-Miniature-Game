@@ -16,7 +16,7 @@ public class StoveDangerZone : MonoBehaviour
     private bool wasDangerousLastCheck = true; // The default assumption is that it is initially dangerous.
 
     [Header("Death UI Settings (Stove Specific)")]
-    [TextArea] public string deathMessage = "你被火焰吞噬了！";
+    [TextArea] public string deathMessage = "You have been consumed by the flames!";
     public Sprite deathSprite;
     [Tooltip("<=0 uses default duration")]
     public float deathHoldSeconds = 4f;
@@ -152,10 +152,10 @@ public class StoveDangerZone : MonoBehaviour
         {
             Debug.Log("The player encounters a dangerous stove!");
 
-            // 播放死亡音效
+            // Play the death sound effect
             GlobalSfx.PlayDeathSfx();
 
-            // 显示可配置的死亡 UI
+            // Display the configurable death UI
             if (DeathUIOverlay.Instance != null)
             {
                 if (deathHoldSeconds > 0f)
@@ -164,7 +164,7 @@ public class StoveDangerZone : MonoBehaviour
                     DeathUIOverlay.Instance.Show(deathMessage, deathSprite, null);
             }
 
-            // 杀死玩家
+            // kill Player
             player.Die();
         }
         else

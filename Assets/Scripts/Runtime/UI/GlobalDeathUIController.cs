@@ -235,16 +235,16 @@ namespace Antventure.UI
 
         private IEnumerator DisplayDeathUI(string message, Sprite sprite, float duration)
         {
-            // 设置内容
+            // Set the content
             SetupDeathContent(message, sprite);
 
-            // 淡入
+            // fade in
             yield return StartCoroutine(FadeIn());
 
-            // 等待显示时间
+            // Waiting display time
             yield return new WaitForSecondsRealtime(duration);
 
-            // 淡出
+            // Fade out
             yield return StartCoroutine(FadeOut());
 
             currentDisplayCoroutine = null;
@@ -252,19 +252,19 @@ namespace Antventure.UI
 
         private void SetupDeathContent(string message, Sprite sprite)
         {
-            // 设置消息文本
+            // Set message text
             if (deathMessageText != null)
             {
                 deathMessageText.text = string.IsNullOrEmpty(message) ? defaultDeathMessage : message;
             }
 
-            // 设置死亡图片
+            // Set the death image
             if (deathImage != null)
             {
                 Sprite displaySprite = sprite != null ? sprite : defaultDeathSprite;
                 deathImage.sprite = displaySprite;
 
-                // 调整图片大小以适应屏幕中央限制
+                // Resize the image to fit within the central limit of the screen.
                 if (displaySprite != null && imageRectTransform != null)
                 {
                     AdjustImageSize(displaySprite);
@@ -276,25 +276,25 @@ namespace Antventure.UI
         {
             if (imageRectTransform == null) return;
 
-            // 获取屏幕尺寸
+            // Obtain screen size
             Vector2 screenSize = new Vector2(Screen.width, Screen.height);
             Vector2 maxAllowedSize = screenSize * imageMaxScreenRatio;
 
-            // 可选的最大尺寸限制
+            // Optional maximum size limit
             if (useImageMaxSizeLimit)
             {
                 maxAllowedSize.x = Mathf.Min(maxAllowedSize.x, imageMaxSize.x);
                 maxAllowedSize.y = Mathf.Min(maxAllowedSize.y, imageMaxSize.y);
             }
 
-            // 获取原始图片尺寸
+            // Obtain the original image size
             Vector2 spriteSize = new Vector2(sprite.texture.width, sprite.texture.height);
 
             Vector2 finalSize;
 
             if (maintainAspectRatio)
             {
-                // 保持宽高比，按最小缩放比例缩放
+                // Maintain the aspect ratio and scale down to the minimum zoom ratio.
                 float scaleX = maxAllowedSize.x / spriteSize.x;
                 float scaleY = maxAllowedSize.y / spriteSize.y;
                 float scale = Mathf.Min(scaleX, scaleY);
@@ -303,7 +303,7 @@ namespace Antventure.UI
             }
             else
             {
-                // 不保持宽高比，直接使用最大允许尺寸
+                // Do not maintain the aspect ratio, and use the maximum allowable size directly.
                 finalSize = maxAllowedSize;
             }
 

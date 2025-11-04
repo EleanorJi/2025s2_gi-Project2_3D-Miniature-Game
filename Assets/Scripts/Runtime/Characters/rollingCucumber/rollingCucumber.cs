@@ -12,7 +12,7 @@ public class rollingCucumber : MonoBehaviour
     private bool movingToLeft = true;
     private int rotationDirection = 1;
 
-    // 添加公共属性供其他脚本访问
+    // Add public attributes for other scripts to access
     public bool IsMovingLeft => movingToLeft;
     public Vector3 LeftEndPos => leftEndPos;
     public Vector3 RightEndPos => rightEndPos;

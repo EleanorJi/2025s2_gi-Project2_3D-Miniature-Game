@@ -137,12 +137,6 @@ public class PlayerController : MonoBehaviour
 
         // Update animation parameters
         UpdateAnimationParameters();
-
-        // Debugging: Pressing the R key results in death.
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Die();
-        }
     }
 
     void FixedUpdate()
@@ -387,16 +381,16 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Player died!");
         
-        // ★★★ 首先触发PlayerHealth的死亡事件，这会显示死亡UI ★★★
+        // First, trigger the death event of PlayerHealth, which will display the death UI.
         PlayerHealth playerHealth = GetComponent<PlayerHealth>();
         if (playerHealth != null)
         {
-            // 设置健康值为0来触发死亡事件
+            // Set the health value to 0 to trigger the death event.
             playerHealth.TakeDamage("PlayerController.Die()", playerHealth.CurrentHealth);
-            return; // PlayerHealth.Respawn()会被死亡UI调用，不需要在这里处理重生
+            return; // PlayerHealth.Respawn()It will be called by the death UI and does not need to be handled here for resurrection.
         }
         
-        // 如果没有PlayerHealth组件，则尝试用全局/本地死亡UI做兜底显示
+        // If the PlayerHealth component is not present, then attempt to use the global/local death UI as a fallback display option.
         try
         {
             if (Antventure.UI.GlobalDeathUIController.Instance != null)
@@ -408,14 +402,14 @@ public class PlayerController : MonoBehaviour
                 DeathUIOverlay.Instance.Show();
             }
         }
-        catch { /* 防御性兜底，不影响后续重生 */ }
+        catch { /* Defensive fallback, without affecting the subsequent rebirth */ }
 
-        // 然后使用原来的逻辑
+        // Then, use the original logic
         PerformDirectRespawn();
     }
     
     /// <summary>
-    /// 直接重生逻辑（当没有PlayerHealth组件时使用）
+    /// Direct Respawn Logic (used when there is no PlayerHealth component)
     /// </summary>
     public void PerformDirectRespawn()
     {
@@ -424,7 +418,7 @@ public class PlayerController : MonoBehaviour
         // dropItem before die
         DropItem();
 
-        // ★★★ 死亡时清掉所有小兵 ★★★
+        // Kill all the minions when dying.
         MinionAnchor.KillAll();
 
         // reset physical state
@@ -441,7 +435,7 @@ public class PlayerController : MonoBehaviour
         // reset position
         transform.rotation = Quaternion.identity;
 
-        // debug（防御空引用，以免场景切换后旧引用导致异常）
+        // debug
         try
         {
             if (CheckpointManager.Instance != null)

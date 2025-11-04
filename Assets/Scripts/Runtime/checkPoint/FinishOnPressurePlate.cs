@@ -10,16 +10,16 @@ public class FinishOnPressurePlate : MonoBehaviour
 {
     [Header("Source (Pressure Plate)")]
     [SerializeField] private PressurePlateController plate;
-    [SerializeField] private float confirmDelay = 0.4f;   // 糖块稳定落盘的确认延迟
+    [SerializeField] private float confirmDelay = 0.4f;   // Confirmation of the stable drop of the sugar cubes is delayed
 
     [Header("Win UI")]
-    [SerializeField] private GameObject winPanel;   // 可不拖；会自动找名为 "WinPanel"
-    [SerializeField] private TMP_Text titleText;    // 可不拖；找 WinPanel 下第一个 TMP
-    [SerializeField] private TMP_Text subText;      // 可不拖；找 WinPanel 下第二个 TMP（显示倒计时）
-    [SerializeField] private Button homeButton;     // 备用：手动返回按钮（可不拖）
+    [SerializeField] private GameObject winPanel;   // Automatically search for the name "WinPanel"
+    [SerializeField] private TMP_Text titleText;    // Find the first TMP under WinPanel
+    [SerializeField] private TMP_Text subText;      // Find the second TMP (displaying the countdown) under WinPanel
+    [SerializeField] private Button homeButton;     // Manual return button
 
     [TextArea] [SerializeField] private string winTitle = "Congratulations!";
-    [TextArea] [SerializeField] private string subTemplate = "You’ve completed the tutorial.\nBack to Home in {0}s";
+    [TextArea] [SerializeField] private string subTemplate = "You've completed the tutorial.\nBack to Home in {0}s";
 
     [Header("Auto Return")]
     [SerializeField] private string homeSceneName = "StartScene";
@@ -37,7 +37,7 @@ public class FinishOnPressurePlate : MonoBehaviour
 
     private void Awake()
     {
-        // 自动找 UI 引用
+        // Automatic UI reference finding
         if (!winPanel)  winPanel = GameObject.Find("WinPanel");
 
         if (winPanel)
@@ -94,17 +94,17 @@ public class FinishOnPressurePlate : MonoBehaviour
         if (titleText) titleText.text = winTitle;
         if (subText)   subText.text   = string.Format(subTemplate, Mathf.CeilToInt(autoReturnDelay));
 
-        // 暂停游戏，但用"未缩放时间"做倒计时
+        // Pause the game, but use "unscaled time" for the countdown.
         Time.timeScale = 0f;
 
-        // 使用统一的鼠标管理系统来显示鼠标，而不是直接设置
+        // Use a unified mouse management system to display the mouse instead of directly setting it.
         if (UnifiedCursorManager.Instance != null)
         {
             UnifiedCursorManager.Instance.ShowPauseMenuCursor();
         }
         else
         {
-            // 兜底方案：如果没有UnifiedCursorManager，使用原来的方式
+            // Fallback solution: If UnifiedCursorManager is not available, use the original method
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
@@ -119,7 +119,7 @@ public class FinishOnPressurePlate : MonoBehaviour
         while (t > 0f)
         {
             if (subText) subText.text = string.Format(subTemplate, Mathf.CeilToInt(t));
-            t -= Time.unscaledDeltaTime;     // 关键：未缩放时间
+            t -= Time.unscaledDeltaTime;     // Unscaled time
             yield return null;
         }
         ReturnHome();
@@ -129,7 +129,7 @@ public class FinishOnPressurePlate : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        // 在切换场景前，恢复鼠标管理系统的正常状态
+        // Before switching scenes, restore the normal state of the mouse management system
         if (UnifiedCursorManager.Instance != null)
         {
             UnifiedCursorManager.Instance.HidePauseMenuCursor();
@@ -138,7 +138,7 @@ public class FinishOnPressurePlate : MonoBehaviour
         if (!Application.CanStreamedLevelBeLoaded(homeSceneName))
         {
             Debug.LogError($"[Finish] Scene '{homeSceneName}' is NOT in Build Settings.");
-            // 兜底：尝试回到 Build Settings 中第一个场景
+            // Fallback: Try to return to the first scene in the Build Settings.
             if (SceneManager.sceneCountInBuildSettings > 0)
                 SceneManager.LoadScene(0);
             return;

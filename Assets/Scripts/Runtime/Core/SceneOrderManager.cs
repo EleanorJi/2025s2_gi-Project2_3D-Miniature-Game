@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// 场景顺序管理器 - 提供按顺序跳转场景的功能
+/// Scene Sequence Manager - Provides the function of sequentially jumping to scenes
 /// </summary>
 public class SceneOrderManager : MonoBehaviour
 {
@@ -21,8 +21,8 @@ public class SceneOrderManager : MonoBehaviour
         }
     }
 
-    // 场景顺序列表 - 可在Inspector中编辑
-    [Header("场景顺序设置")]
+    // Scene sequence list - Editable in Inspector
+    [Header("Scene sequence setting")]
     [SerializeField] private string[] scenes = new string[]
     {
         "StartScene",
@@ -46,7 +46,7 @@ public class SceneOrderManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 加载下一个场景
+    /// Load the next scene
     /// </summary>
     public void LoadNextScene()
     {
@@ -56,19 +56,19 @@ public class SceneOrderManager : MonoBehaviour
         if (currentIndex >= 0 && currentIndex < scenes.Length - 1)
         {
             string nextScene = scenes[currentIndex + 1];
-            Debug.Log($"从 {currentScene} 跳转到 {nextScene}");
+            Debug.Log($"from {currentScene} to {nextScene}");
             SceneManager.LoadScene(nextScene);
         }
         else
         {
-            Debug.Log($"已经是最后一个场景: {currentScene}");
-            // 可以选择回到第一个场景或者其他逻辑
+            Debug.Log($"It is now the final scene: {currentScene}");
+            // Can choose to return to the first scene or follow another logic.
             SceneManager.LoadScene(scenes[0]);
         }
     }
 
     /// <summary>
-    /// 加载上一个场景
+    /// Load the previous scene
     /// </summary>
     public void LoadPreviousScene()
     {
@@ -78,23 +78,23 @@ public class SceneOrderManager : MonoBehaviour
         if (currentIndex > 0)
         {
             string previousScene = scenes[currentIndex - 1];
-            Debug.Log($"从 {currentScene} 跳转到 {previousScene}");
+            Debug.Log($"from {currentScene} to {previousScene}");
             SceneManager.LoadScene(previousScene);
         }
         else
         {
-            Debug.Log($"已经是第一个场景: {currentScene}");
+            Debug.Log($"It is already the first scene: {currentScene}");
         }
     }
 
     /// <summary>
-    /// 获取当前场景在顺序中的索引
+    /// Obtain the index of the current scene in the sequence
     /// </summary>
     private int GetSceneIndex(string sceneName)
     {
         for (int i = 0; i < scenes.Length; i++)
         {
-            // 支持完整路径和简单名称匹配
+            // Support full path and simple name matching
             if (scenes[i] == sceneName || 
                 scenes[i].EndsWith("/" + sceneName) ||
                 sceneName.EndsWith("/" + scenes[i]))
@@ -106,7 +106,7 @@ public class SceneOrderManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 获取下一个场景名称（不加载）
+    /// Get the name of the next scene (without loading)
     /// </summary>
     public string GetNextSceneName()
     {
@@ -117,23 +117,23 @@ public class SceneOrderManager : MonoBehaviour
         {
             return scenes[currentIndex + 1];
         }
-        return scenes[0]; // 循环到第一个
+        return scenes[0]; // Loop back to the first one
     }
 
     /// <summary>
-    /// 设置新的场景顺序
+    /// Set the new scene sequence
     /// </summary>
     public void SetSceneOrder(string[] newOrder)
     {
         if (newOrder != null && newOrder.Length > 0)
         {
             System.Array.Copy(newOrder, scenes, Mathf.Min(newOrder.Length, scenes.Length));
-            Debug.Log("场景顺序已更新");
+            Debug.Log("The scene sequence has been updated.");
         }
     }
 
     /// <summary>
-    /// 获取当前场景顺序
+    /// Obtain the current scene sequence
     /// </summary>
     public string[] GetSceneOrder()
     {
@@ -141,38 +141,38 @@ public class SceneOrderManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 在Unity Inspector中显示当前场景信息
+    /// Display the current scene information in the Unity Inspector
     /// </summary>
-    [ContextMenu("显示当前场景信息")]
+    [ContextMenu("Display current scene information")]
     public void ShowCurrentSceneInfo()
     {
         string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         int currentIndex = GetSceneIndex(currentScene);
         
-        Debug.Log($"=== 场景顺序信息 ===");
-        Debug.Log($"当前场景: {currentScene} (索引: {currentIndex})");
-        Debug.Log($"场景总数: {scenes.Length}");
-        Debug.Log($"场景顺序:");
+        Debug.Log($"=== Scene sequence information ===");
+        Debug.Log($"Current scene: {currentScene} (index: {currentIndex})");
+        Debug.Log($"Total scene: {scenes.Length}");
+        Debug.Log($"Sequence of Scenes:");
         for (int i = 0; i < scenes.Length; i++)
         {
-            string marker = (i == currentIndex) ? " <- 当前" : "";
+            string marker = (i == currentIndex) ? " <- current" : "";
             Debug.Log($"  {i}: {scenes[i]}{marker}");
         }
         
         if (currentIndex >= 0 && currentIndex < scenes.Length - 1)
         {
-            Debug.Log($"下一个场景: {scenes[currentIndex + 1]}");
+            Debug.Log($"next scene: {scenes[currentIndex + 1]}");
         }
         else
         {
-            Debug.Log($"下一个场景: {scenes[0]} (循环到开始)");
+            Debug.Log($"next scene: {scenes[0]} (Loop back to the beginning)");
         }
     }
 
     /// <summary>
-    /// 测试跳转到下一个场景（仅在编辑器中）
+    /// Test: Jump to the next scene (only in the editor)
     /// </summary>
-    [ContextMenu("测试跳转下一场景")]
+    [ContextMenu("Test to jump to the next scene")]
     public void TestLoadNextScene()
     {
         #if UNITY_EDITOR
@@ -182,7 +182,7 @@ public class SceneOrderManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("请在播放模式下测试场景跳转");
+            Debug.LogWarning("Please test the scene transition in the playback mode.");
         }
         #endif
     }

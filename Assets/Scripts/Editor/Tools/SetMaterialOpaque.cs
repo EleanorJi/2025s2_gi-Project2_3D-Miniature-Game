@@ -11,7 +11,7 @@ public class SetMaterialOpaque : EditorWindow
         GameObject obj = Selection.activeGameObject;
         if (obj == null)
         {
-            Debug.LogWarning("⚠️ 没有选中任何物体，请先选中你的模型。");
+            Debug.LogWarning("No object is selected. Please select your model first.");
             return;
         }
 
@@ -40,7 +40,7 @@ public class SetMaterialOpaque : EditorWindow
         }
 
         AssetDatabase.SaveAssets();
-        Debug.Log($"✅ 已将 {count} 个材质改为 Opaque。");
+        Debug.Log($"{count} materials have been changed to Opaque.");
     }
 }
 #endif

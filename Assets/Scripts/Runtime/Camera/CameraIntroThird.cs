@@ -30,7 +30,6 @@ public class CameraIntroThird : MonoBehaviour
 
         var info = animator.GetCurrentAnimatorStateInfo(0);
 
-        // 当当前状态是目标状态且已经执行结束，且不在过渡中时触发
         if (info.IsName(targetStateName) && info.normalizedTime >= 1f && !animator.IsInTransition(0))
         {
             hasTriggered = true;
@@ -40,7 +39,7 @@ public class CameraIntroThird : MonoBehaviour
 
     void OnAnimatorEnd()
     {
-        Debug.Log("动画播放完成 " + targetStateName);
+        Debug.Log("target " + targetStateName);
         gameObjects[0].SetActive(false);
         gameObjects[1].SetActive(true);
        

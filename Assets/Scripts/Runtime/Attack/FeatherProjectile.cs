@@ -47,7 +47,7 @@ public class FeatherProjectile : MonoBehaviour
         if (!visual && transform.childCount > 0)
             visual = transform.GetChild(0);
 
-        // 启动时把根的朝向“水平化”，避免 forward 带俯仰
+        // When starting up, align the root in a "horizontal" position to avoid the "forward" movement causing pitch.
         Vector3 f = transform.forward; f.y = 0f;
         if (f.sqrMagnitude > 1e-6f)
             transform.rotation = Quaternion.LookRotation(f.normalized, Vector3.up);
@@ -60,13 +60,13 @@ public class FeatherProjectile : MonoBehaviour
         if (lifeTime > 0f)
         {
             _dieAt = Time.time + lifeTime;
-            StartCoroutine(SelfDestructAfter(lifeTime)); // 兜底
+            StartCoroutine(SelfDestructAfter(lifeTime)); // Guaranteeing the bottom line
         }
     }
 
     void Update()
     {
-        // --- 只在水平面追踪（绕Y轴） ---
+        // --- Only tracking on the horizontal plane (around the Y-axis) ---
         if (_player && turnRateDeg > 0f)
         {
             Vector3 targetPos = _rec ? _rec.GetPastPosition(lagSeconds) : _player.position;
@@ -81,7 +81,7 @@ public class FeatherProjectile : MonoBehaviour
             }
         }
 
-        // --- 水平前进 ---
+        // --- Progress in Level ---
         Vector3 fwd = transform.forward; fwd.y = 0f;
         if (fwd.sqrMagnitude < 1e-6f) fwd = Vector3.forward;
         fwd.Normalize();
@@ -92,23 +92,23 @@ public class FeatherProjectile : MonoBehaviour
         if (keepStartHeight)
             transform.position = new Vector3(transform.position.x, _startY, transform.position.z);
 
-        // --- 视觉：保持水平 + 跟随Yaw（尖端对着玩家） ---
+        // Visuals: Maintain horizontal position + Follow Yaw (the tip points towards the player)
         if (visual)
         {
             if (alignVisualYawToForward)
             {
-                // 只拿根的 Yaw，叠加一个“躺平”的本地欧拉修正
+                // Just a single "yaw" value, combined with a local Euler correction for "lying flat"
                 Quaternion yaw = Quaternion.AngleAxis(transform.eulerAngles.y, Vector3.up);
                 visual.rotation = yaw * Quaternion.Euler(visualFlatLocalEuler);
             }
             else
             {
-                // 不跟随朝向时，纯粹保持固定水平角
+                // When not following the direction, simply maintain a fixed horizontal angle
                 visual.rotation = Quaternion.Euler(visualFlatLocalEuler);
             }
         }
 
-        // --- 自毁 ---
+        // Self-destruction
         if (_dieAt > 0f && Time.time >= _dieAt)
             Destroy(gameObject);
     }

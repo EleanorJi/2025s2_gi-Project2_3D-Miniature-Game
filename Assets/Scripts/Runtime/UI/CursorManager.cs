@@ -4,14 +4,14 @@ namespace Antventure.UI
 {
     public class CursorManager : MonoBehaviour
     {
-        [Header("Cursor Textures - 拖拽PNG文件到这里")]
-        [SerializeField] private Texture2D handCursor; // 手型光标 - 拖拽 hand 2.png 到这里
-        [SerializeField] private Texture2D defaultCursor; // 默认箭头光标 - 拖拽 cursor 1.png 到这里
+        [Header("Cursor Textures")]
+        [SerializeField] private Texture2D handCursor; // Hand-shaped cursor
+        [SerializeField] private Texture2D defaultCursor; //Default arrow cursor
         
         [Header("Cursor Settings")]
-        [SerializeField] private bool useCustomCursors = true; // 使用自定义光标
-        [SerializeField] private Vector2 handHotspot = new Vector2(16, 16); // 手型光标热点位置
-        [SerializeField] private Vector2 defaultHotspot = new Vector2(0, 0); // 默认光标热点位置
+        [SerializeField] private bool useCustomCursors = true; // Use custom cursor
+        [SerializeField] private Vector2 handHotspot = new Vector2(16, 16); // The position of the cursor hotspot for the hand shape
+        [SerializeField] private Vector2 defaultHotspot = new Vector2(0, 0); // Default cursor hotspot position
         
         public static CursorManager Instance { get; private set; }
 

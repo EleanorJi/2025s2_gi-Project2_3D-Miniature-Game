@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SetMaterialOpaqueRuntime : MonoBehaviour
 {
-    [Header("配置选项")]
+    [Header("settings")]
     public bool executeOnStart = true;
     public bool includeChildren = true;
     
@@ -24,7 +24,7 @@ public class SetMaterialOpaqueRuntime : MonoBehaviour
 
         foreach (Renderer r in renderers)
         {
-            // 使用 materials 而不是 sharedMaterials
+            // use materials
             Material[] materials = r.materials;
             bool materialsChanged = false;
             
@@ -33,7 +33,7 @@ public class SetMaterialOpaqueRuntime : MonoBehaviour
                 Material mat = materials[i];
                 if (mat != null && mat.shader.name.Contains("Standard"))
                 {
-                    // 创建材质实例，避免修改原始资源
+                    // Create material instances to avoid modifying the original resources
                     Material newMat = new Material(mat);
                     SetupOpaqueMaterial(newMat);
                     materials[i] = newMat;
@@ -48,7 +48,7 @@ public class SetMaterialOpaqueRuntime : MonoBehaviour
             }
         }
 
-        Debug.Log($"✅ 已将 {count} 个材质改为 Opaque。");
+        Debug.Log($"{count} materials have been changed to Opaque.");
     }
     
     private void SetupOpaqueMaterial(Material mat)
@@ -63,8 +63,8 @@ public class SetMaterialOpaqueRuntime : MonoBehaviour
         mat.renderQueue = -1;
     }
     
-    // 在 Inspector 中右键点击组件可执行
-    [ContextMenu("执行设置为不透明")]
+    // Right-clicking on a component in Inspector will execute
+    [ContextMenu("Set the execution to be opaque")]
     private void ExecuteManual()
     {
         SetToOpaque();

@@ -23,7 +23,7 @@ public class FireController : MonoBehaviour
     private float shrinkTimer = 0f;
     private float resetTimer = 0f;
 
-    // 存储当前状态，用于恢复动画
+    // Store the current state for use in restoring the animation
     private Vector3[] currentScales;
     private Vector3[] currentPositions;
 
@@ -84,7 +84,7 @@ public class FireController : MonoBehaviour
                         fireChildren[i].localScale = childInitialScales[i] * scaleFactor;
                     }
                     
-                    // 更新当前状态
+                    // update
                     currentScales[i] = fireChildren[i].localScale;
                     currentPositions[i] = fireChildren[i].localPosition;
                 }
@@ -109,7 +109,7 @@ public class FireController : MonoBehaviour
                 {
                     if (shrinkFromBottomCenter)
                     {
-                        // 从当前状态插值到初始状态
+                        // Interpolate from the current state to the initial state
                         fireChildren[i].localScale = Vector3.Lerp(currentScales[i], childInitialScales[i], progress);
                         fireChildren[i].localPosition = Vector3.Lerp(currentPositions[i], childInitialPositions[i], progress);
                     }
@@ -126,7 +126,7 @@ public class FireController : MonoBehaviour
                 IsFullyReset = true;
                 SetChildrenActive(true);
                 
-                // 确保最终状态完全正确
+                // Ensure that the final state is completely correct.
                 for (int i = 0; i < fireChildren.Length; i++)
                 {
                     if (fireChildren[i] != null)
@@ -169,7 +169,7 @@ public class FireController : MonoBehaviour
 
     public void StartReset()
     {
-        // 在开始恢复前保存当前状态
+        // Save the current state before starting the restoration process.
         for (int i = 0; i < fireChildren.Length; i++)
         {
             if (fireChildren[i] != null)

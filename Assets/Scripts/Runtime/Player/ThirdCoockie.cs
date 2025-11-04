@@ -33,16 +33,16 @@ public class ThirdCoockie : MonoBehaviour
 
         _consumed = true; // lock once
 
-        // 1��first add to inventory & refresh UI
+        // 1) first add to inventory & refresh UI
         CookiesInventory.Instance?.Add(amount);
         if (CookiesInventory.Instance != null)
             Level3CookieUI.Instance?.Refresh(CookiesInventory.Instance.cookies);
 
-        // 2��play sound effect (doesn't depend on this object's active state)
+        // 2) play sound effect (doesn't depend on this object's active state)
         if (playSfx)
             GlobalSfx.PlayCookieSfx(transform.position, sfxVolume, sfxAs2D);
 
-        // 3��finally deactivate object
+        // 3) finally deactivate object
         if (deactivateDelay <= 0f) gameObject.SetActive(false);
         else StartCoroutine(DeactivateLater());
     }

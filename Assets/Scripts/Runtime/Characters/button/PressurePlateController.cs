@@ -8,14 +8,14 @@ public class PressurePlateController : MonoBehaviour
     [SerializeField] private string sugarTag = "Sugar";
 
     [Header("Button Movement Settings")]
-    [SerializeField] private float pressDistance = 0.1f; // 按钮按下的距离
-    [SerializeField] private float pressSpeed = 2f; // 按下速度
+    [SerializeField] private float pressDistance = 0.1f; // The distance of the button press
+    [SerializeField] private float pressSpeed = 2f; // Press the speed button
 
     [Header("Object Visibility Control")]
-    [SerializeField] private GameObject objectToHide; // 要隐藏的物体
+    [SerializeField] private GameObject objectToHide; // The object to be hidden
 
     [Header("Checkpoint Control")]
-    [SerializeField] private Checkpoint checkpoint; // 要控制的checkpoint (Checkpoint2.5.1)
+    [SerializeField] private Checkpoint checkpoint; // The checkpoint to be controlled (Checkpoint 2.5.1)
 
     public System.Action<bool> OnPlateActivated;
     public System.Action<GameObject> OnSugarPlaced;
@@ -24,7 +24,7 @@ public class PressurePlateController : MonoBehaviour
     private readonly HashSet<GameObject> sugarsOnPlate = new();   // The sugar currently on the board
     private readonly HashSet<GameObject> announcedPlaced = new(); // The sugar that has been announced as "placed successfully"
     
-    // 按钮移动相关变量
+    // Variables related to button movement
     private Vector3 originalPosition;
     private Vector3 pressedPosition;
     private bool isPressed = false;
@@ -39,14 +39,14 @@ public class PressurePlateController : MonoBehaviour
                              $"Create it and assign it to the small trigger collider under Sugar.");
         }
         
-        // 记录原始位置并计算按下位置
+        // Record the original position and calculate the pressed position
         originalPosition = transform.position;
         pressedPosition = originalPosition - Vector3.up * pressDistance;
     }
 
     private void Update()
     {
-        // 平滑移动按钮
+        // Smooth movement button
         if (isPressed && pressLerpTime < 1f)
         {
             pressLerpTime += Time.deltaTime * pressSpeed;
@@ -68,9 +68,9 @@ public class PressurePlateController : MonoBehaviour
         {
             SetPressedState(true);
             OnPlateActivated?.Invoke(true);
-            HideObject(); // 当压力板被激活时隐藏物体
+            HideObject(); // When the pressure plate is activated, the hidden object is revealed.
             
-            // 当糖块放在压力板上时，停止checkpoint的渲染
+            // When the sugar cube is placed on the pressure plate, stop the rendering of the checkpoint.
             if (checkpoint != null)
             {
                 checkpoint.isActivated = false;
@@ -91,9 +91,9 @@ public class PressurePlateController : MonoBehaviour
         {
             SetPressedState(false);
             OnPlateActivated?.Invoke(false);
-            ShowObject(); // 当压力板复位时显示物体
+            ShowObject(); // When the pressure plate is reset, the object is displayed.
             
-            // 当糖块离开压力板时，重新激活checkpoint的渲染
+            // When the sugar cube leaves the pressure plate, re-activate the rendering of the checkpoint.
             if (checkpoint != null)
             {
                 checkpoint.isActivated = true;
@@ -136,7 +136,7 @@ public class PressurePlateController : MonoBehaviour
         isPressed = pressed;
     }
 
-    // 隐藏物体的方法
+    // The method of hiding an object
     private void HideObject()
     {
         if (objectToHide != null)
@@ -145,7 +145,7 @@ public class PressurePlateController : MonoBehaviour
         }
     }
 
-    // 显示物体的方法
+    // The method of displaying objects
     private void ShowObject()
     {
         if (objectToHide != null)
@@ -154,7 +154,7 @@ public class PressurePlateController : MonoBehaviour
         }
     }
 
-    // 在Inspector中修改参数时实时更新按下位置
+    // When modifying parameters in Inspector, the pressed position is updated in real time.
     private void OnValidate()
     {
         if (Application.isPlaying)

@@ -22,9 +22,9 @@ public class EndLevel1 : MonoBehaviour
     public float totalSequenceTime = 4f;   // The total time of the entire ending sequence (camera movement + animation playback)
     
     [Header("Fade Out Settings")]
-    public Image blackFadePanel;           // 黑色淡出面板
-    public float fadeOutDuration = 2f;     // 淡出持续时间
-    public float fadeOutDelay = 1f;        // 开始淡出前的延迟时间
+    public Image blackFadePanel;           // Black fading panel
+    public float fadeOutDuration = 2f;     // Fade-out duration
+    public float fadeOutDelay = 1f;        // The delay time before the fade-out begins
 
     private PlayerInputController playerInputController;
     private CameraFollow cameraFollow;
@@ -60,7 +60,7 @@ public class EndLevel1 : MonoBehaviour
             Debug.LogError("Cannot find the object with the Player tag");
         }
 
-        // 获取End物体的Animator组件
+        // Obtain the Animator component of the End object
         if (endAnimationObject != null)
         {
             endAnimator = endAnimationObject.GetComponent<Animator>();
@@ -82,7 +82,7 @@ public class EndLevel1 : MonoBehaviour
             }
         }
 
-        // 初始化黑色面板（确保开始时是隐藏的）
+        // Initialize the black panel (make sure it is hidden at the beginning)
         if (blackFadePanel != null)
         {
             Color color = blackFadePanel.color;
@@ -149,7 +149,7 @@ public class EndLevel1 : MonoBehaviour
 
         if (endAnimator != null && endAnimationObject != null)
         {
-            // 方法1：等待动画状态播放完成
+            // Wait for the animation state to finish playing.
             yield return StartCoroutine(WaitForAnimationToFinish(endAnimator));
 
             Debug.Log("First animation finished playing. Hiding the first animation object.");
@@ -160,26 +160,26 @@ public class EndLevel1 : MonoBehaviour
         {
             Debug.Log("Triggering the second animation's IsEnd parameter...");
             nextAnimator.SetBool("IsEnd", true);
-            yield return new WaitForSeconds(2f); // 可选：等待第二个动画播放 2 秒
+            yield return new WaitForSeconds(2f); //Wait for the second animation to play for 2 seconds.
         }
 
-        // 在加载下一关前执行黑色淡出效果
+        // Perform a black fade-out effect before loading the next level.
         yield return StartCoroutine(FadeOutBlackScreen());
 
         Debug.Log("Sequence completed. Loading next level.");
         LoadNextLevel();
     }
 
-    // 新增方法：等待动画播放完成
+    // Wait for the animation to finish playing.
     IEnumerator WaitForAnimationToFinish(Animator animator)
     {
-        // 等待一帧确保动画状态已更新
+        // Wait for one frame to ensure that the animation state has been updated
         yield return null;
 
-        // 获取当前播放的动画状态信息
+        // Obtain the current playback status information of the animation
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        // 等待动画播放完成
+        // Wait for the animation to finish playing.
         while (stateInfo.normalizedTime < 1.0f)
         {
             yield return null;
@@ -228,32 +228,32 @@ public class EndLevel1 : MonoBehaviour
             yield break;
         }
 
-        // 延迟一段时间再开始淡出
+        // Delay for a while before starting to fade out
         if (fadeOutDelay > 0)
         {
             yield return new WaitForSeconds(fadeOutDelay);
         }
 
-        // 激活黑色面板
+        // Activate the black panel
         blackFadePanel.gameObject.SetActive(true);
 
         float timer = 0f;
         Color color = blackFadePanel.color;
-        float startAlpha = color.a; // 应该是0
+        float startAlpha = color.a; // 0
 
         while (timer < fadeOutDuration)
         {
             timer += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, timer / fadeOutDuration);
             
-            // 从透明渐变到不透明（黑色）
+            // From transparent gradient to opaque (black)
             color.a = Mathf.Lerp(startAlpha, 1f, t);
             blackFadePanel.color = color;
             
             yield return null;
         }
 
-        // 确保最终完全不透明
+        // Ensure that it is completely opaque in the end.
         color.a = 1f;
         blackFadePanel.color = color;
 
@@ -262,13 +262,13 @@ public class EndLevel1 : MonoBehaviour
 
     void LoadNextLevel()
     {
-        Debug.Log("Load the next level: 使用场景顺序跳转");
+        Debug.Log("Load the next level: Use scene sequence navigation");
         
         // Load by using the scene order
         SceneOrderManager.Instance.LoadNextScene();
     }
 
-    // 可选：添加一个公共方法用于在其他地方触发淡出
+    // Used to trigger the fade-out effect in other places
     public void TriggerFadeOut()
     {
         StartCoroutine(FadeOutBlackScreen());

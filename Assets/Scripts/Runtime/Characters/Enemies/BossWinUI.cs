@@ -62,13 +62,13 @@ public class BossWinUI : MonoBehaviour
 
     private void HandleBossDied()
     {
-        // 1) 先处理 Cookie —— 会自动触发 Level3CookieUI.Refresh
+        // 1) First, handle the Cookie - this will automatically trigger Level3CookieUI.Refresh
         if (resetCookiesOnWin && CookiesInventory.Instance != null)
         {
             CookiesInventory.Instance.Clear();   // cookies = 0; OnChanged(0)
         }
 
-        // 2) 隐藏 HUD（玩家血条等）
+        // 2) Hide HUD (player health bar, etc.)
         if (hideOnWin != null)
         {
             foreach (var go in hideOnWin)
@@ -77,7 +77,7 @@ public class BossWinUI : MonoBehaviour
             }
         }
 
-        // 3) 打开胜利面板 & 冻结游戏
+        // 3) Open the victory panel & freeze the game
         ShowPanel(true);
     }
 

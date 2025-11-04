@@ -17,7 +17,7 @@ public class CheckpointManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            // 监听场景加载，清理并重建检查点列表，避免持有已销毁引用
+            // Monitor the scene loading process, clean up and rebuild the checkpoint list to avoid holding references to objects that have been destroyed.
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
@@ -43,7 +43,7 @@ public class CheckpointManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // 场景切换后，清空已激活与最后检查点，重建当前场景的检查点列表
+        // After the scene change, clear the activated ones and the last checkpoint, and rebuild the checkpoint list for the current scene
         activatedCheckpoints.RemoveAll(cp => cp == null);
         activatedCheckpoints.Clear();
         lastActivatedCheckpoint = null;
@@ -68,7 +68,7 @@ public class CheckpointManager : MonoBehaviour
         // Directly return to the last activated save point location
         if (lastActivatedCheckpoint != null)
         {
-            // 防御：对象可能已被销毁（Unity 假空）
+            // Defense: The object may have been destroyed (Unity considers it null)
             if (lastActivatedCheckpoint == null)
             {
                 lastActivatedCheckpoint = null;
@@ -82,7 +82,7 @@ public class CheckpointManager : MonoBehaviour
         // If there is no active save point, return to the first save point or the default location.
         if (allCheckpoints.Count > 0)
         {
-            // 清理已销毁的元素
+            // Remove the destroyed elements
             allCheckpoints.RemoveAll(cp => cp == null);
             if (allCheckpoints.Count > 0)
                 return allCheckpoints[0].transform.position;
@@ -154,7 +154,7 @@ public class CheckpointManager : MonoBehaviour
             var checkpoint = activatedCheckpoints[i];
             if (checkpoint == null)
                 continue;
-            var go = checkpoint.gameObject; // 防御性访问
+            var go = checkpoint.gameObject; // Defensive access
             if (go == null)
                 continue;
             Debug.Log($" - {go.name} (Last: {checkpoint == lastActivatedCheckpoint})");

@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class FollowCucumberTranslation : MonoBehaviour
 {
-    [Header("跟随设置")]
-    public Transform cucumberTarget;  // 拖入黄瓜物体到这里
+    [Header("Follow settings")]
+    public Transform cucumberTarget;  // cucumber object
     
-    [Header("碰撞体设置")]
-    public BoxCollider leftBottomCollider;    // 左边的底部碰撞体
-    public BoxCollider rightBottomCollider;   // 右边的底部碰撞体
+    [Header("collider settings")]
+    public BoxCollider leftBottomCollider;    // The bottom collision body on the left
+    public BoxCollider rightBottomCollider;   // The bottom collision body on the right
     
     private rollingCucumber cucumberScript;
     private bool wasMovingLeft = true;
@@ -21,10 +21,10 @@ public class FollowCucumberTranslation : MonoBehaviour
         {
             cucumberScript = cucumberTarget.GetComponent<rollingCucumber>();
             
-            // 记录父物体的初始旋转
+            // Record the initial rotation of the parent object
             parentInitialRotation = transform.rotation;
             
-            // 分别记录每个碰撞体相对于黄瓜的初始偏移（本地坐标）
+            // Record separately the initial offset (in local coordinates) of each collision body relative to the cucumber.
             if (leftBottomCollider != null)
             {
                 leftColliderInitialOffset = leftBottomCollider.transform.position - cucumberTarget.position;
@@ -38,11 +38,11 @@ public class FollowCucumberTranslation : MonoBehaviour
         
         if (cucumberScript == null)
         {
-            Debug.LogError("无法找到rollingCucumber脚本");
+            Debug.LogError("The rollingCucumber script cannot be found.");
             return;
         }
         
-        // 初始设置碰撞体状态
+        // Initial setting of the collision body state
         UpdateColliders(cucumberScript.IsMovingLeft);
         wasMovingLeft = cucumberScript.IsMovingLeft;
     }
@@ -51,17 +51,17 @@ public class FollowCucumberTranslation : MonoBehaviour
     {
         if (cucumberScript == null || cucumberTarget == null) return;
         
-        // 获取黄瓜当前移动方向
+        // Obtain the current movement direction of the cucumber
         bool isMovingLeft = cucumberScript.IsMovingLeft;
         
-        // 如果方向改变，更新碰撞体
+        // If the direction changes, update the collision body.
         if (isMovingLeft != wasMovingLeft)
         {
             UpdateColliders(isMovingLeft);
             wasMovingLeft = isMovingLeft;
         }
         
-        // 更新碰撞体位置和旋转
+        // Update the position and rotation of the collision body
         UpdateColliderPositions();
     }
 
@@ -78,18 +78,18 @@ public class FollowCucumberTranslation : MonoBehaviour
     {
         if (cucumberTarget == null) return;
         
-        // 更新碰撞体位置，保持各自的初始相对位置，旋转与父物体保持一致
+        // Update the positions of the collision bodies, maintaining their original relative positions, and rotate in accordance with the parent object.
         if (leftBottomCollider != null)
         {
             leftBottomCollider.transform.position = cucumberTarget.position + leftColliderInitialOffset;
-            // 保持与父物体相同的旋转
+            // Maintain the same rotation as the parent object
             leftBottomCollider.transform.rotation = transform.rotation;
         }
         
         if (rightBottomCollider != null)
         {
             rightBottomCollider.transform.position = cucumberTarget.position + rightColliderInitialOffset;
-            // 保持与父物体相同的旋转
+            // Maintain the same rotation as the parent object
             rightBottomCollider.transform.rotation = transform.rotation;
         }
     }

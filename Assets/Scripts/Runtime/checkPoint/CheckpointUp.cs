@@ -46,7 +46,7 @@ public class CheckpointUp : MonoBehaviour
     [Header("Hint UI (When Not Enough)")]
     public CanvasGroup hintGroup;
     public TMP_Text hintText;
-    public string notEnoughText = "能量不足（需要 3 个饼干碎屑）";
+    public string notEnoughText = "Insufficient energy (requires 3 cookie crumbs)";
     public float hintFadeTime = 0.2f;
     public float hintStayTime = 1.2f;
 

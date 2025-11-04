@@ -57,12 +57,12 @@ public class FeatherShooter : MonoBehaviour
     {
         if (firePoints == null || firePoints.Length == 0)
         {
-            Debug.LogWarning("[FeatherShooter] firePoints 为空。");
+            Debug.LogWarning("[FeatherShooter] firePoints empty");
             return;
         }
         if (!featherPrefab)
         {
-            Debug.LogWarning("[FeatherShooter] featherPrefab 未设置。");
+            Debug.LogWarning("[FeatherShooter] featherPrefab not set");
             return;
         }
 
@@ -70,7 +70,7 @@ public class FeatherShooter : MonoBehaviour
         var probe = featherPrefab.GetComponent<FeatherProjectile>();
         if (!probe)
         {
-            Debug.LogError("[FeatherShooter] 生成失败：拖入的 Feather Prefab 根物体上没有 FeatherProjectile 组件。");
+            Debug.LogError("[FeatherShooter] Generation failed: The Feather Prefab root object you dragged in does not have the FeatherProjectile component.");
             return;
         }
 
@@ -82,10 +82,10 @@ public class FeatherShooter : MonoBehaviour
 
 
 
-        _lastWaveRoot.transform.SetParent(null, false);  // 不跟随鸽子，位置旋转保持不变
-        _lastWaveRoot.transform.position = transform.position; // 放在鸽子位置
-        _lastWaveRoot.transform.rotation = Quaternion.identity; // 取消旋转
-        probe.gameObject.transform.localScale=Vector3.one*0.5f;//保持羽毛大小
+        _lastWaveRoot.transform.SetParent(null, false);  // Do not follow the pigeon. The position rotation remains unchanged.
+        _lastWaveRoot.transform.position = transform.position; // In the position of a pigeon
+        _lastWaveRoot.transform.rotation = Quaternion.identity; // Cancel rotation
+        probe.gameObject.transform.localScale=Vector3.one*0.5f;//Maintain the size of the feathers
 
 
         foreach (var fp in firePoints)
