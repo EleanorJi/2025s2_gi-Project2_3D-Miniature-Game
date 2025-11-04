@@ -283,91 +283,9 @@ The particle system uses Unity's built-in collision detection system (`ParticleP
   <img src="images/report/poisonSprayParticles.gif" alt="Poison Spray Particle System" width="600">
 </p>
 
-### 2. Enemy Death Ember Particle System (Level 2) (Documentation Only)
+### 1.4 Integration with Unity's Rendering Pipeline
 
-#### 2.1 Overview
-
-The enemy death ember particle system creates a dramatic fire and smoke effect that triggers automatically when enemies die. It is synchronized with the dissolve shader animation to create a cohesive death sequence.
-
-#### 2.2 Implementation Details
-
-**Script Integration:**
-* Shader Script: [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
-* Game Logic Script: [InsectDeath.cs](Assets/Scripts/Runtime/Level2/InsectDeath.cs)
-* The particle system is automatically found and triggered by name ("Ember_Particles") when the dissolve animation reaches a threshold value (0.45)
-
-**Key Features:**
-* **Precise Timing:** Particle effect triggers exactly when `_DissolveAmount` reaches 0.45, creating a synchronized explosion effect with the collapsing and dissolving animation
-* **Automatic Discovery:** The system automatically searches child objects for a particle system named "Ember_Particles", making it easy to attach to different enemy prefabs
-* **Multi-Stage Animation:** Works in conjunction with the three-stage death animation:
-  1. Phase 1 (0-1s): Mesh collapse begins
-  2. Phase 2 (1-3s): Collapse continues + dissolution begins
-  3. Particle Trigger (at 0.45 dissolve): Fire/smoke explosion bursts
-
-**Technical Context:**
-The particle system is integrated with Unity's GameObject hierarchy system. The `DissolveSphere.cs` script uses `GetComponentsInChildren<ParticleSystem>()` to locate the particle system at runtime, ensuring flexibility in prefab structure. The particle effect adds visual impact to the death sequence without requiring manual timing coordination.
-
-#### 2.3 Visual Demonstration
-<p align="center">
-  <img src="images/report/enemyDeathParticles.gif" alt="Enemy Death Ember Particles" width="600">
-</p>
-
-### 3. Boss Sand Burst Particle System (Level 3)
-
-#### 3.1 Overview
-
-The boss sand burst particle system is used in Level 3's boss battle to create the pigeon's primary attack. The system emits a burst of sand particles that visually represent the boss's wind attack.
-
-#### 3.2 Implementation Details
-
-**Script Integration:**
-* Script File: [BossPigeon.cs](Assets/Scripts/Runtime/Characters/Enemies/BossPigeon.cs)
-* The system supports two firing modes: burst-based emission (using Unity's built-in burst system) or manual `Emit()` calls with configurable particle count
-
-**Key Features:**
-* **Flexible Emission Modes:** 
-  - Burst Mode: Uses Unity's `Emission.Bursts` system for automatic timing
-  - Manual Mode: Calls `ParticleSystem.Emit(emitCount)` for precise control (default 88 particles)
-* **Dynamic Positioning:** Particle system transform is updated to match the `fireOrigin` transform before each attack, ensuring accurate spawning position
-* **Animation Synchronization:** Particle emission is synchronized with boss animation triggers ("Flap" animation)
-* **Timing Control:** Configurable windup time (0.6s default) and attack intervals (3-5s random) for balanced gameplay
-
-**Technical Context:**
-The particle system is positioned at runtime using `SetPositionAndRotation()` to match the boss's attack origin point. This allows the particle system to be positioned correctly even if the boss moves or rotates. The system can be configured to either use Unity's automatic burst system or manual emission control, providing flexibility for different visual effects.
-
-#### 3.3 Visual Demonstration
-<p align="center">
-  <img src="images/report/bossSandBurst.gif" alt="Boss Sand Burst Particles" width="600">
-</p>
-
-### 4. Cookie Collection Sparkle Effect (Level 2)
-
-#### 4.1 Overview
-
-The cookie collection sparkle effect provides visual feedback when players collect cookies, making collectibles more noticeable and rewarding to collect.
-
-#### 4.2 Implementation Details
-
-**Script Integration:**
-* Script File: [CookiePickup.cs](Assets/Scripts/Runtime/Level2/CookiePickup.cs)
-* The particle system is attached to cookie prefabs and plays automatically when collected
-
-**Key Features:**
-* **Attractive Visual Feedback:** Small star-like particles create a glowing effect that draws player attention
-* **Automatic Triggering:** Particle system plays when the cookie is collected via trigger collision
-* **UI Integration:** Cookie collection triggers UI updates and audio feedback simultaneously
-
-**Technical Context:**
-The particle system enhances the game's feedback loop by providing immediate visual confirmation of successful collection. This is particularly important in Level 2 where cookie collection is a core mechanic for unlocking summoning abilities in Level 3.
-
-#### 4.3 Visual Demonstration
-<p align="center">
-  <img src="images/report/cookieSparkleParticles.gif" alt="Cookie Collection Sparkle Effect" width="600">
-</p>
-
-### 5. Integration with Unity's Rendering Pipeline
-
-All particle systems in our game utilize Unity's built-in ParticleSystem component, which is part of Unity's rendering pipeline. The systems are configured to:
+The particle system utilizes Unity's built-in ParticleSystem component, which is part of Unity's rendering pipeline. The system is configured to:
 
 * **Render Queue Integration:** Particles are rendered in the appropriate queue (typically Transparent) to ensure proper depth sorting with other game objects
 * **Performance Optimization:** Systems use appropriate `maxParticles` limits and emission rates to maintain stable frame rates
