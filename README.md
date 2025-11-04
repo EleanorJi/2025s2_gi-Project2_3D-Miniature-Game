@@ -365,7 +365,7 @@ The game is set in a fully 3D environment, but with level design that encourages
       <img src="images/feather.png" alt="Feather" width="400">
     </p> 
 
-    - Enemies (Spider, Pigeon Boss)
+    - Enemies (Pigeon Boss)
     <p align="center">
       <img src="images/pigeon_white.png" alt="Pigeon" width="400">
     </p> 

@@ -641,119 +641,149 @@ The main particle systems implemented:
    [https://sketchfab.com](https://sketchfab.com)  
    Community-sourced 3D models for environmental details and background objects.
 
+#### Level 0 (tutorial) Models
+5. **Books (Sketchfab)**
+   [https://sketchfab.com/3d-models/variety-of-books-9ecd80af3b7e4cd59efb4c141511a55b](https://sketchfab.com/3d-models/variety-of-books-9ecd80af3b7e4cd59efb4c141511a55b)
+   Books placed on the shelf which act as an obstacle to make players walk along a fixed route.
+
+6. **Bookshelf (Sketchfab)**  
+   [https://sketchfab.com/3d-models/modern-furniture-4bc3e9f3bd8d404ba130aa58323ba9bb](https://sketchfab.com/3d-models/modern-furniture-4bc3e9f3bd8d404ba130aa58323ba9bb)
+   Environment build where player walk on it (Tutorial Ground).
+
+5. **Hanger (Sketchfab)**  
+   [https://sketchfab.com/3d-models/wood-clothes-hanger-3b5ada364d634aa18007f9c8d8dc79ce](https://sketchfab.com/3d-models/wood-clothes-hanger-3b5ada364d634aa18007f9c8d8dc79ce)
+   An obstacle that allow the player to learn how to jump over it.
+
+6. **Arrow (Sketchfab)**  
+   [https://sketchfab.com/3d-models/direction-arrow-6ef46718c7b242e39fcad7f27ee858a5](https://sketchfab.com/3d-models/direction-arrow-6ef46718c7b242e39fcad7f27ee858a5)
+   An arrow that navigate the player the way to the end session.
+
 #### Level 1 (Kitchen) Models
-5. **Ant (Sketchfab)**  
+7. **Ant (Sketchfab)**  
    [https://sketchfab.com/3d-models/ant-dab7080251674ef98fc83b7604be2ffc](https://sketchfab.com/3d-models/ant-dab7080251674ef98fc83b7604be2ffc)
    Ant character base model used as a reference for proportions and topology.
 
-6. **Pigeon (Sketchfab)**  
+8. **Pigeon (Sketchfab)**  
    [https://sketchfab.com/3d-models/pigeon-5884a0f5200c44ceaa7d0399bea577f9](https://sketchfab.com/3d-models/pigeon-5884a0f5200c44ceaa7d0399bea577f9)  
    Pigeon visual reference used for the Level 3 boss appearance.
 
-7. **Kitchen Scene (Sketchfab)**  
+9. **Kitchen Scene (Sketchfab)**  
    [https://sketchfab.com/3d-models/kitchen-0b9b61c4dd7741f094dd0effc83a57af](https://sketchfab.com/3d-models/kitchen-0b9b61c4dd7741f094dd0effc83a57af)  
    Kitchen props and layout reference for Level 1 scene dressing.
 
-8. **Free Fire VFX (Unity Asset Store, URP)**  
+10. **Free Fire VFX (Unity Asset Store, URP)**  
    [https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-urp-266226](https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-urp-266226)
    Used for stove/fire visual effects in the kitchen level.
 
-9. **Salmon Knife (Poly Pizza / MilkAndBanana)**  
+11. **Salmon Knife (Poly Pizza / MilkAndBanana)**  
     [https://poly.pizza/m/LZbSfxvxPQ](https://poly.pizza/m/LZbSfxvxPQ)
     Large spatula/knife prop used as the bridge element. Attribution: "Salmon Knife by MilkAndBanana (https://poly.pizza/m/LZbSfxvxPQ)".
 
-10. **Sponge (Poly Pizza / Google)**  
+12. **Sponge (Poly Pizza / Google)**  
     [https://poly.pizza/m/9BIIMAjPXOJ](https://poly.pizza/m/9BIIMAjPXOJ)
     Washing sponge prop near the sink. Attribution: "Sponge by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza".
 
-11. **Cutting Board (Sketchfab)**   
+13. **Cutting Board (Sketchfab)**   
     [https://sketchfab.com/3d-models/cutting-board-ce34c8bf389d4053aae98b9d2752a7b9](https://sketchfab.com/3d-models/cutting-board-ce34c8bf389d4053aae98b9d2752a7b9)
     Cutting board surface used for the rolling cucumber obstacle.
 
-12. **Sugar Cube (Sketchfab)**  
+14. **Sugar Cube (Sketchfab)**  
     [https://sketchfab.com/3d-models/sugar-cube-1f8134f651de4e21acb1f4d2b9400f5a](https://sketchfab.com/3d-models/sugar-cube-1f8134f651de4e21acb1f4d2b9400f5a)
     Pickup prop for the stove puzzle.
 
-13. **Honeycomb (Poly Pizza / Google)**  
+15. **Honeycomb (Poly Pizza / Google)**  
     [https://poly.pizza/m/fcOXf3x_LgH](https://poly.pizza/m/fcOXf3x_LgH)
     Honey visual element. Attribution: "Honeycomb by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza".
 
-14. **Cucumber (Poly Pizza / Google)**  
+16. **Cucumber (Poly Pizza / Google)**  
     [https://poly.pizza/m/6tIy7yd7SPa](https://poly.pizza/m/6tIy7yd7SPa)
     Moving hazard for the rolling obstacle. Attribution: "Cucumber by Poly by Google [CC-BY]".
 
-15. **Milk Carton (Unity Asset Store)**  
+17. **Milk Carton (Unity Asset Store)**  
     [https://assetstore.unity.com/packages/3d/props/food/carton-of-milk-4k-pbr-162383](https://assetstore.unity.com/packages/3d/props/food/carton-of-milk-4k-pbr-162383)
     Used to construct the milk carton maze in Level 1.
 
 #### Level 2 (Outdoor / Street) Models
-16. **Animated Ladybug (Sketchfab)**  
+18. **Animated Ladybug (Sketchfab)**  
     [https://sketchfab.com/3d-models/ladybug-with-animated-walk-cycle-only-c9a31f4e28b74d5698b483cb358de269](https://sketchfab.com/3d-models/ladybug-with-animated-walk-cycle-only-c9a31f4e28b74d5698b483cb358de269)
     Animated NPC used for enemy/collectible carrier behavior in the flower bed.
 
-17. **Flowers and Garden Assets (Unity Asset Store)**  
+19. **Flowers and Garden Assets (Unity Asset Store)**  
     [https://assetstore.unity.com/packages/3d/vegetation/flowers/flowers-and-garden-assets-241214](https://assetstore.unity.com/packages/3d/vegetation/flowers/flowers-and-garden-assets-241214) 
     Flower bed composition and vegetation set dressing.
 
-18. **Low Poly City Building Kit (Unity Asset Store)**  
+20. **Low Poly City Building Kit (Unity Asset Store)**  
     [https://assetstore.unity.com/packages/3d/environments/urban/city-building-kit-100-low-poly-city-assets-308526](https://assetstore.unity.com/packages/3d/environments/urban/city-building-kit-100-low-poly-city-assets-308526) 
     Street backdrop and urban props for the outdoor section.
 
-19. **Leaf (Poly Pizza)**  
+21. **Leaf (Poly Pizza)**  
     [https://poly.pizza/m/4_FetA14dDV](https://poly.pizza/m/4_FetA14dDV)  
     Leaf prop used for the parachute mechanic.
 
-20. **Spider (Poly Pizza)**  
+22. **Spider (Poly Pizza)**  
     [https://poly.pizza/m/cbFePDoI8yi](https://poly.pizza/m/cbFePDoI8yi)
     Environmental enemy prop in Level 2.
 
-21. **Spider Web (Poly Pizza)**  
+23. **Spider Web (Poly Pizza)**  
     [https://poly.pizza/m/EHYNWew6JK](https://poly.pizza/m/EHYNWew6JK)
     Web obstacle/visual element for environmental storytelling.
 
-22. **Rocks (Poly Pizza)**  
+24. **Rocks (Poly Pizza)**  
     [https://poly.pizza/m/3jql0qtape-](https://poly.pizza/m/3jql0qtape-)   
     Rock platforms for the charged hop sequence.
 
+### Level 3 (Dock) Models
+25. **Beach (Sketchfab)**  
+    [https://sketchfab.com/3d-models/rowboat-on-a-beach-2b9b378102714021a58515104ed446ad](https://sketchfab.com/3d-models/rowboat-on-a-beach-2b9b378102714021a58515104ed446ad)   
+    The scene construction model of the third level serves as the basis for standing points.
+
+26. **Feather (Sketchfab)**  
+   [https://sketchfab.com/3d-models/feathers-c987c56694a44559b75ed66429b04ee4](https://sketchfab.com/3d-models/feathers-c987c56694a44559b75ed66429b04ee4)  
+   The attack model of Boss.
+
+27. **Healing item (ViapixGames)**  
+   [https://www.gamedevmarket.net/asset/healing-item-2-zxtQ](https://www.gamedevmarket.net/asset/healing-item-2-zxtQ)  
+   Healing blood bags for the player to heal when met damage from the pigeon.
+
 ### Development Tools and Documentation
-23. **Unity Documentation** - Engine reference  
+28. **Unity Documentation** - Engine reference  
    [https://docs.unity3d.com](https://docs.unity3d.com)  
    Official Unity engine documentation for scripting, shader programming, and engine features.
 
-24. **Microsoft C# Documentation**  
+29. **Microsoft C# Documentation**  
    [https://learn.microsoft.com/en-us/dotnet/csharp/](https://learn.microsoft.com/en-us/dotnet/csharp/)  
    C# language reference for gameplay scripting and system implementation.
 
 ### Shader Programming References
-25. **Unity Shader Reference**  
+30. **Unity Shader Reference**  
    [https://docs.unity3d.com/Manual/SL-Reference.html](https://docs.unity3d.com/Manual/SL-Reference.html)  
    Unity ShaderLab and HLSL programming documentation for custom shader development.
-26. **Toon Water (Roystan, article)**  
+31. **Toon Water (Roystan, article)**  
     [https://roystan.net/articles/toon-water/](https://roystan.net/articles/toon-water/)
     Conceptual and implementation guidance for stylized water—served as inspiration for HoneyWater.
-27. **Roystan's Toon Water Shader Tutorial** (Referenced in Section 1.3)  
+32. **Roystan's Toon Water Shader Tutorial** (Referenced in Section 1.3)  
    Ross, R. "Toon Water Shader" Tutorial  
    [https://roystan.net/articles/toon-water.html](https://roystan.net/articles/toon-water.html)  
    Referenced for Level 1 Kitchen sink water shader implementation principles.
-28. **Water Shader Tutorial (YouTube)**  
+33. **Water Shader Tutorial (YouTube)**  
     [https://www.youtube.com/watch?v=x9-wbo-2Rk8](https://www.youtube.com/watch?v=x9-wbo-2Rk8) 
     Practical breakdown for water material creation and parameter tuning.
 
 ### Learning Resources (Shader & Unity Workflow)
 
-29. **Unity Practices (Bilibili, chinese)**  
+34. **Unity Practices (Bilibili, chinese)**  
     [https://www.bilibili.com/video/BV1TZ4y1o76s/](https://www.bilibili.com/video/BV1TZ4y1o76s/)
     Unity workflow tips and best practices (Chinese video tutorial).
 
-30. **Unity Practices Playlist (YouTube)**  
+35. **Unity Practices Playlist (YouTube)**  
     [https://www.youtube.com/watch?v=-wCZDcoGBeE&list=PL0eyrZgxdwhwQZ9zPUC7TnJ-S0KxqGlrN](https://www.youtube.com/watch?v=-wCZDcoGBeE&list=PL0eyrZgxdwhwQZ9zPUC7TnJ-S0KxqGlrN)
     General Unity techniques and patterns used during prototyping and polishing.
 
 ### Project Management and Collaboration
-31. **GitHub** - Version control  
+36. **GitHub** - Version control  
    [https://github.com](https://github.com)  
    Git repository hosting and version control for collaborative development.
 
-32. **Monday.com** - Project management  
+37. **Monday.com** - Project management  
     [https://monday.com](https://monday.com)  
     Task tracking, timeline management, and team collaboration platform.
