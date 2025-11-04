@@ -449,7 +449,7 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 * Wrote the Water Shader Technical Report.
 
 
-### Personal Contribution Report - [Naixin Zhang]
+### Personal Contribution Report - Naixin Zhang
 
 #### 1. Overview of Contributions
 I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts.
@@ -548,7 +548,7 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
 ##### 2.4 Reporting
 * Wrote technical documentation for the HoneyWater shader system and Dissolve shader system.
 
-### Personal Contribution Report - [Zixin Xia]
+### Personal Contribution Report - Zixin Xia
 
 #### 1. Overview of Contributions
 I was mainly responsible for all aspects related to the tutorial levels and the final levels (level 0 and level 3 dock), including level design, Boss system, health bar control for players and bosses, player mechanics, camera system and visual effects, random item generation in the scene, summoner system, etc. My contributions also include the design of particle systems for player and enemy attacks, as well as the selection of scenes and models.
