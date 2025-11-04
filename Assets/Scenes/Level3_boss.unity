@@ -10091,6 +10091,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5267035084984261767}
   - component: {fileID: 5267035084984261768}
+  - component: {fileID: 5267035084984261769}
   m_Layer: 0
   m_Name: Pigeon movie
   m_TagString: Boss
@@ -10269,6 +10270,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5267035084984261769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4779326547992626749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25716720de25719459d954a625461af7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeOnStart: 1
+  includeChildren: 1
 --- !u!4 &5363743240197680581
 Transform:
   m_ObjectHideFlags: 0
