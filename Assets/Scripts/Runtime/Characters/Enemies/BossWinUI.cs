@@ -4,6 +4,9 @@ using TMPro;
 
 public class BossWinUI : MonoBehaviour
 {
+    // ★ Global flag: has the boss already been defeated in this scene?
+    public static bool HasWon { get; private set; }
+
     [Header("Refs")]
     public Health boss;                 // Boss Health
     public GameObject panel;            // Win panel
@@ -12,26 +15,36 @@ public class BossWinUI : MonoBehaviour
     [Header("UI to hide on win")]
     public GameObject[] hideOnWin;      // Drag PlayerHealthBar (or other HUD) here
 
-    [Header("Cookies")]
-    [Tooltip("通关时是否把 Cookie 清零并刷新 UI")]
-    public bool resetCookiesOnWin = true;
+    [Header("Cleanup on Win")]
+    [Tooltip("胜利时是否清掉所有召唤小兵（Minion）")]
+    public bool destroyAllMinionsOnWin = true;
+
+    [Tooltip("胜利时是否清掉所有羽毛子弹等投射物")]
+    public bool destroyAllProjectilesOnWin = true;
 
     [Header("Copy")]
     [TextArea] public string hint = "You defeated the pigeon!\nLeft click to continue";
 
     [Header("After Win")]
-    public string sceneToLoad = "StartScene"; // Scene to load on left click
+    public string sceneToLoad = "StartScene"; // 现在走 SceneOrderManager
 
-    // gameplay gating
+    [Header("Audio")]
+    [Tooltip("Sound effect that plays once when the boss is defeated")]
+    [SerializeField] private AudioClip winSfx;   // Drag Success.mp3 here
+
+    // Gameplay gating
     private MonoBehaviour[] _disabledPlayerScripts;
     private MonoBehaviour[] _disabledCameraScripts;
     private bool _shown;
 
     private void Awake()
     {
+        // Reset flag whenever this scene loads, so it doesn't carry over
+        HasWon = false;
+
         if (!panel) panel = gameObject;
 
-        // Find Boss and subscribe
+        // Find Boss and subscribe to its death event
         if (!boss)
         {
             var b = GameObject.FindGameObjectWithTag("Boss");
@@ -42,7 +55,7 @@ public class BossWinUI : MonoBehaviour
         // Build lists of scripts to disable/restore
         BuildDisableLists(FindPlayerGO(), Camera.main ? Camera.main.gameObject : null);
 
-        // Initialize hidden panel
+        // Initialize panel as hidden
         if (panel.activeSelf) panel.SetActive(false);
         _shown = false;
     }
@@ -62,8 +75,17 @@ public class BossWinUI : MonoBehaviour
 
     private void HandleBossDied()
     {
-        // 1) First, handle the Cookie - this will automatically trigger Level3CookieUI.Refresh
-        if (resetCookiesOnWin && CookiesInventory.Instance != null)
+        if (HasWon) return;   // Avoid multiple triggers
+        HasWon = true;
+
+        // ★ Play victory sound
+        PlayWinSfx();
+
+        // 0) Clean up minions and projectiles so they stop attacking the player
+        CleanupOnWin();
+
+        // 1) Force clear cookies (no longer depends on any bool flag)
+        if (CookiesInventory.Instance != null)
         {
             CookiesInventory.Instance.Clear();   // cookies = 0; OnChanged(0)
         }
@@ -77,12 +99,18 @@ public class BossWinUI : MonoBehaviour
             }
         }
 
-        // 3) Open the victory panel & freeze the game
+        // 3) Show win panel & pause the game
         ShowPanel(true);
     }
 
     private void Continue()
     {
+        // Double-check: clear cookies again before leaving the level
+        if (CookiesInventory.Instance != null)
+        {
+            CookiesInventory.Instance.Clear();
+        }
+
         // Restore time and controls, then change scene
         Time.timeScale = 1f;
         Cursor.visible = false;
@@ -104,6 +132,7 @@ public class BossWinUI : MonoBehaviour
 
         if (show)
         {
+            // Real pause
             Time.timeScale = 0f;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
@@ -111,6 +140,13 @@ public class BossWinUI : MonoBehaviour
             // Disable movement/attack/camera
             SetScriptsEnabled(_disabledPlayerScripts, false);
             SetScriptsEnabled(_disabledCameraScripts, false);
+
+            // Extra safety: disable all FeatherShooter so no new feathers are spawned
+            var shooters = FindObjectsOfType<FeatherShooter>();
+            foreach (var s in shooters)
+            {
+                if (s) s.enabled = false;
+            }
         }
         else
         {
@@ -120,6 +156,55 @@ public class BossWinUI : MonoBehaviour
 
             SetScriptsEnabled(_disabledPlayerScripts, true);
             SetScriptsEnabled(_disabledCameraScripts, true);
+        }
+    }
+
+    /// <summary>
+    /// Victory cleanup: destroy minions and projectiles so they stop hitting the player / stop playing hit sounds.
+    /// </summary>
+    private void CleanupOnWin()
+    {
+        if (destroyAllMinionsOnWin)
+        {
+            var minions = FindObjectsOfType<MinionAnchor>();
+            foreach (var m in minions)
+            {
+                if (m != null) Destroy(m.gameObject);
+            }
+        }
+
+        if (destroyAllProjectilesOnWin)
+        {
+            // Feather projectiles
+            var feathers = FindObjectsOfType<FeatherProjectile>();
+            foreach (var f in feathers)
+            {
+                if (f != null) Destroy(f.gameObject);
+            }
+
+            // Other projectiles (poison etc.), if they exist
+            var poison = FindObjectsOfType<PoisonProjectile>();
+            foreach (var p in poison)
+            {
+                if (p != null) Destroy(p.gameObject);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Play the victory sound once at the camera position.
+    /// </summary>
+    private void PlayWinSfx()
+    {
+        if (winSfx == null) return;
+
+        if (Camera.main != null)
+        {
+            AudioSource.PlayClipAtPoint(winSfx, Camera.main.transform.position);
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(winSfx, Vector3.zero);
         }
     }
 

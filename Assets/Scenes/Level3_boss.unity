@@ -4060,15 +4060,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95edc1fd12f304223bc1790fef4d01b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boss: {fileID: 0}
+  boss: {fileID: 1969380615}
   panel: {fileID: 0}
   hintText: {fileID: 0}
   hideOnWin: []
-  resetCookiesOnWin: 1
+  destroyAllMinionsOnWin: 1
+  destroyAllProjectilesOnWin: 1
   hint: 'You defeated the pigeon!
 
     Left click to continue'
   sceneToLoad: StartScene
+  winSfx: {fileID: 8300000, guid: f00a9445cbf95411a8b1af58d375a448, type: 3}
 --- !u!1 &851147157
 GameObject:
   m_ObjectHideFlags: 0
