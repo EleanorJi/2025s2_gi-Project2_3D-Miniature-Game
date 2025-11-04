@@ -162,7 +162,7 @@ The game employs a dynamic third-person perspective. Players control an ant char
     -   **Summoning Resources:** Food scraps need to be collected as the summoning energy. Each summoning consumes one scrap.
     -   **Type of helper ants:**
         -   **Wall-Crawlers:** Jet-black ants. They can defy gravity to scurry quickly across specific vertical surfaces (e.g., walls, cabinet sides), used to activate out-of-reach switches or open new paths for the protagonist.
-        -   **Soldiers:** Jet-black ants, sturdier than workers. They are the primary units summoned for the final boss fight. Once summoned, Soldiers will automatically lock onto and charge towards the Pigeon boss to attack, providing constant distraction and damage without requiring player manual control.
+        -   **Soldiers:** Browny-yellow ants, sturdier than workers. They are the primary units summoned for the final boss fight. Once summoned, Soldiers will automatically lock onto and charge towards the Pigeon boss to attack, providing constant distraction and damage without requiring player manual control.
     -   The summoning point is fixed at a specific location and requires sufficient debris to be gathered before it can be summoned.
 -   **Physical system:**
     -   Implementing the standard gravity model and collision detection
