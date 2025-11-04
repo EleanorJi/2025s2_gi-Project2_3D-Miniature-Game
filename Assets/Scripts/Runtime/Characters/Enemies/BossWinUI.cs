@@ -16,10 +16,10 @@ public class BossWinUI : MonoBehaviour
     public GameObject[] hideOnWin;      // Drag PlayerHealthBar (or other HUD) here
 
     [Header("Cleanup on Win")]
-    [Tooltip("胜利时是否清掉所有召唤小兵（Minion）")]
+
     public bool destroyAllMinionsOnWin = true;
 
-    [Tooltip("胜利时是否清掉所有羽毛子弹等投射物")]
+
     public bool destroyAllProjectilesOnWin = true;
 
     [Header("Copy")]
