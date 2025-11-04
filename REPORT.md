@@ -286,7 +286,8 @@ The poison spray particle system is a core combat mechanic in Level 2, allowing 
 * **Integrated Audio System:** Dedicated AudioSource with configurable fade timing (0.05s fade-in, 0s immediate fade-out) that perfectly matches spray activation
 * **Runtime Configurability:** Spray angle (3° default) and emission rate (220 particles/sec) can be adjusted in real-time through inspector or code
 
-**Technical Context:**
+**Technical Context**
+
 The particle system leverages Unity's built-in collision detection system through 'ParticlePhysicsExtensions.GetCollisionEvents' to efficiently detect collisions between particles and enemy colliders. This approach eliminates the performance overhead of traditional raycasting while providing accurate hit detection for gameplay mechanics. The system demonstrates advanced integration patterns by maintaining separate control over emission modules, shape parameters, and rendering components.
 
 The implementation follows Unity's component-based architecture, where the 'PlayerPoisonShooter' script coordinates between:
@@ -300,7 +301,7 @@ The implementation follows Unity's component-based architecture, where the 'Play
   <img src="images/report/poisonSprayParticles.gif" alt="Poison Spray Particle System" width="600">
 </p>
 
-### 1.4 Integration with Unity's Rendering Pipeline
+#### 1.4 Integration with Unity's Rendering Pipeline
 The particle system utilizes Unity's built-in ParticleSystem component within the standard rendering pipeline, configured for optimal performance and visual quality:
 * **Render Queue Management:** Particles are rendered in the Transparent queue with proper depth sorting alongside other transparent game objects
 * **Performance Optimization:** Controlled emission rates (max 220 particles/sec) and efficient collision detection maintain stable frame rates
