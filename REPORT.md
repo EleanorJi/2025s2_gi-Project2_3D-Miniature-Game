@@ -14,7 +14,6 @@ placeholder for it [here](README.md).
 - [Evaluation Plan](#evaluation-plan)
 - [Evaluation Report](#evaluation-report)
 - [Shaders and Special Effects](#shaders-and-special-effects)
-- [Particle Systems](#particle-systems)
 - [Summary of Contributions](#summary-of-contributions)
 - [References and External Resources](#references-and-external-resources)
 
@@ -180,6 +179,7 @@ The iterative process of testing, analyzing, and refining based on user feedback
 
 ## Shaders and Special Effects
 
+### Shaders
 This section documents the two custom Cg/HLSL shaders implemented for our game that are marked for assessment. Both shaders are custom vertex/fragment shaders written entirely in Cg/HLSL with non-trivial implementations. These shaders use `#pragma vertex vert` and `#pragma fragment frag`, giving us complete control over the rendering pipeline.
 
 ### 1. Custom Water Shader for Kitchen Sink ⭐ (Marked for Assessment)
@@ -251,7 +251,7 @@ The mesh generation system allows the water body to adapt to different container
 </p>
 
 
-## Particle Systems
+### Particle Systems
 
 Our game implements several custom particle systems that provide visual feedback and enhance gameplay mechanics across different levels. These particle systems are integrated with gameplay scripts to create dynamic, responsive effects that respond to player actions and game events.
 
