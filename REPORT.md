@@ -548,6 +548,79 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
 ##### 2.4 Reporting
 * Wrote technical documentation for the HoneyWater shader system and Dissolve shader system.
 
+### Personal Contribution Report - [Zixin Xia]
+
+#### 1. Overview of Contributions
+I was mainly responsible for all aspects related to the tutorial levels and the final levels (level 0 and level 3 dock), including level design, Boss system, health bar control for players and bosses, player mechanics, camera system and visual effects, random item generation in the scene, summoner system, etc. My contributions also include the design of particle systems for player and enemy attacks, as well as the selection of scenes and models.
+
+#### 2. Key Contributions
+
+##### 2.1 Level 0 (Tutorial) Design & Implementation
+* The entire teaching level was designed and constructed, including: the design of obstacles enables players to learn to rotate the perspective, basic movement and jumping; The candy moving puzzle enables players to better adapt to the first level.
+* Scene copywriting design: Use the simplest copywriting to guide players step by step to familiarize themselves with the game's operations
+* Real scene model: The scene is built by using lockers that conform to real-world logic and the items placed on them
+Unique level transition system: Displays a countdown and automatically transitions to the next level
+* Relevant files
+  * Scene
+    * [Assets/Scenes/tut-environment.unity](Assets/Scenes/tut-environment.unity)
+  * Level unique UI and success system
+    * [FinishOnPressurePlate.cs](Assets/Scripts/Runtime/checkPoint/FinishOnPressurePlate.cs)
+
+##### 2.2 Level 3 (Dock) Design & Implementation
+* The entire final level for attacking the Boss was designed and constructed, including: the camera movement design at the beginning of the level, the automatic attack system of enemies, the player's injury and health recovery effects, the random drop of health packs and cookies in the scene, the interaction effects between enemies and players, and the summoner system.
+* Tracking design: Real-time record of the player's position, allowing the feathers attacked by the Boss to automatically chase after the player.
+* Interactive design: The Boss will, based on the player's movement, shift the perspective to the position the player has recently moved to before each attack.
+* Summoning System: Connect to the second level and summon Allies to help attack the Boss by consuming cookies obtained from the second level
+* Drop item design: Health packs will be randomly dropped when the player's health drops below 50, and cookies will also be generated when the player's cookies are cleared to facilitate the player's summoning of new Allies.
+* Visual design: The feathers used in Boss attacks will have a trailing effect. The homemade health bar will also show a gradient effect when it loses blood. When players and bosses take damage, there will be a red effect for the damage. Meanwhile, the blood packs also have special effects within the scene, ensuring that the dropped items are not empty.
+* Game design: It is linked with the previous level, giving meaning to the cookie pick-up in the previous level, and the opening animation effect more realistically shows the process of ants crawling from the road to the beach.
+* Relevant files
+  * Scene
+    * [Assets/Scenes/Level3_dock.unity](Assets/Scenes/Level3_dock.unity)
+  * Attack
+    * [FeatherProjectile.cs](Assets/Scripts/Runtime/Attack/FeatherProjectile.cs)
+    * [PoisonProjectile.cs](Assets/Scripts/Runtime/Attack/PoisonProjectile.cs)
+    * [FeatherShooter.cs](Assets/Scripts/Runtime/Characters/Enemies/FeatherShooter.cs)
+    * [PlayerCombat.cs](Assets/Scripts/Runtime/Player/PlayerCombat.cs)
+  * Camera
+    * [Camera/CameraIntroThird.cs](Assets/Scripts/Runtime/Camera/CameraIntroThird.cs)
+  * Character
+    * [BossPigeon.cs](Assets/Scripts/Runtime/Characters/Enemies/BossPigeon.cs)
+    * [BillboardUIFollow.cs](Assets/Scripts/Runtime/Player/BillboardUIFollow.cs)
+    * [PlayerPositionRecorder.cs](Assets/Scripts/Runtime/Player/PlayerPositionRecorder.cs)
+  * Health Related
+    * [BossHealthBarControl.cs](Assets/Scripts/Runtime/Characters/Enemies/BossHealthBarControl.cs)
+    * [BossHealthBarUI.cs](Assets/Scripts/Runtime/Characters/Enemies/BossHealthBarUI.cs)
+    * [Health.cs](Assets/Scripts/Runtime/Characters/Enemies/Health.cs)
+    * [ResetBossOnRespawn.cs](Assets/Scripts/Runtime/Characters/Enemies/ResetBossOnRespawn.cs)
+    * [PlayerHealth.cs](Assets/Scripts/Runtime/Player/PlayerHealth.cs)
+    * [PlayerHealthBarFill.cs](Assets/Scripts/Runtime/Player/PlayerHealthBarFill.cs)
+  * Game Foundation
+    * [DeathUI_AutoWire.cs](Assets/Scripts/Runtime/UI/DeathUI_AutoWire.cs)
+    * [BossWinUI.cs](Assets/Scripts/Runtime/Characters/Enemies/BossWinUI.cs)
+  * Minion System
+    * [MinionAnchor.cs](Assets/Scripts/Runtime/Characters/Minion/MinionAnchor.cs)
+    * [MinionShooter.cs](Assets/Scripts/Runtime/Characters/Minion/MinionShooter.cs)
+  * Drop Items
+    * [HealingItem.cs](Assets/Scripts/Runtime/Player/HealingItem.cs)
+    * [ItemRefresh.cs](Assets/Scripts/Runtime/Player/ItemRefresh.cs)
+  * Cookies
+    * [ThirdCoockie.cs](Assets/Scripts/Runtime/Player/ThirdCoockie.cs)
+    * [Level3CookieUI.cs](Assets/Scripts/Runtime/UI/Level3_cookies/Level3CookieUI.cs)
+    * [NoCookieUI.cs](Assets/Scripts/Runtime/UI/Level3_cookies/NoCookieUI.cs)
+    * [ResetCookiesOnGameStart.cs](Assets/Scripts/Runtime/UI/Level3_cookies/ResetCookiesOnGameStart.cs)
+
+
+##### 2.3 Particle Systems Development
+* Design and implement particle effects for game feedback and visual polishing in Level 3.
+A particle system has been added to the trailing effects of player attacks, boss attacks, and dropped items
+The main particle systems implemented:
+** * Venom Spray effect: ** Track the venom attacks of ants in the particle system and provide clear visual feedback for the shooting mechanism.
+** * Feather Trailing effect: ** It gives the feather the feeling of wind passing through when it flies in the air, making it more realistic and as lethal as sword qi, allowing players to identify and dodge it more quickly.
+** * Effect of blood pack drop items: ** Make the blood packs in the scene attractive to players. Since the blood pack generation is triggered only when the player's health is below half, adding a particle system to the blood pack can make it more attractive.
+
+##### 2.4 Unique UI Design
+* Since this is the final level, the UI has been designed with different effects from the previous levels. For instance, the instructional UI prompt at the beginning deliberately uses a more independent UI display interface to make players pay more attention to the difficulty of this level and have a passionate feeling of going to fight the Boss.
 
 ## References and External Resources
 

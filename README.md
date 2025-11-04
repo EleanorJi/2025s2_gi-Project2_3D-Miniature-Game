@@ -257,14 +257,14 @@ The game is set in a fully 3D environment, but with level design that encourages
     </p>
     
     -   **Player Actions**
-        -   Manual Attack (P)
+        -   Manual Attack (left click)
             Shoots a straight-line poison projectile (no auto-aim). Requires line-of-sight and positioning.
             Damage: 5 per hit. Cooldown: ~0.3s.
         -   Special Summon (K)
-            Instantly spawns 3 Ant Minions around the player. Minions stay near the player and auto-target the Boss, firing their own projectiles.
-            Damage: 1 per minion hit. Lifetime / fire interval: short, then despawn (cannot exceed 3 active).
+            Instantly spawns 1 Ant Minions around the player by costing 1 cookie collected from level 2. Minions stay near the player and auto-target the Boss, firing their own projectiles.
+            Damage: 1 per minion hit. Lifetime / fire interval: short, then despawn.
     -   **Boss (Pigeon):**
-        -   Health: 100 HP with a visible boss health bar.
+        -   Health: 200 HP with a visible boss health bar.
         -   Takes damage from both the player’s poison shots and minion projectiles.
 
     -   **Win Condition:**
@@ -355,14 +355,19 @@ The game is set in a fully 3D environment, but with level design that encourages
 
     - Garden Resources (Gardens, Soil, Insect NPCs including Red Ladybugs and Black Beetles, Water Pipes, Leaves for Parachute, Matches, Brick Obstacles)
     - Road Resources (Vehicles, Traffic Signs, Trash Cans, Trees, Buildings)
+    
     - Beach Assets (Wooden Boat, Sea Surface, Beach, Pigeon Boss Model)
     <p align="center">
-      <img src="images/beach.png" alt="Honey block" width="400">
+      <img src="images/beach.png" alt="Beach" width="400">
     </p>  
+
+    <p align="center">
+      <img src="images/feather.png" alt="Feather" width="400">
+    </p> 
 
     - Enemies (Spider, Pigeon Boss)
     <p align="center">
-      <img src="images/pigeon.png" alt="Honey block" width="400">
+      <img src="images/pigeon_white.png" alt="Pigeon" width="400">
     </p> 
     
     - Collectibles (Food Scraps)
