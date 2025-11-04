@@ -187,7 +187,7 @@ This shader, named KitchenSinkFoam, is a custom fragment shader written in Cg/HL
 
 #### 1.2 Shader File Link
 
-* [KitchenSinkFoam.shader](Assets/_Project/shader/KitchenSinkFoam.shader)
+* [KitchenSinkFoam.shader](Assets/Art/Shader/KitchenSinkFoam.shader)
 
 
 #### 1.3 Key Features and Implementation
