@@ -269,14 +269,31 @@ The poison spray particle system is a core combat mechanic in Level 2, allowing 
 * Uses `ParticleSystem.EmissionModule` to set `rateOverTime` to 220 particles/second when spraying
 * Uses `ParticleSystem.ShapeModule` to configure a cone-shaped spray pattern with adjustable angle (default 3 degrees)
 
+**Specific Parameter Control Mechanism:**
+* **Module Access:** In 'Awake()', the script obtains references to critical particle system modules using 'poisonPS.emission' and 'poisonPS.shape'
+* **Emission Rate Control:** 'StartSpray()' sets '_emission.rateOverTime = sprayRate' (220 particles/sec), while 'StopSpray()' resets it to 0
+* **Real-time Parameter Adjustment:** The 'Update()' method continuously synchronizes '_shape.angle = coneAngle', enabling runtime adjustments to spray spread
+* **Precise Lifecycle Management:** Uses 'ParticleSystemStopBehavior.StopEmitting' to ensure already-emitted particles complete their natural lifecycle while stopping new emission
+
+**Audio-Particle Synchronization System:**
+* **State Synchronization:** Audio playback and stopping are perfectly synchronized with particle emission states
+* **Smooth Transition Control:** Implements audio fade-in/out using 'Mathf.SmoothDamp' to match the particle system's instant on/off characteristics
+* **Spatial Audio Integration:** Dynamically configures audio spatial blending parameters based on the 'sprayAs2D' setting, supporting both 2D and 3D audio scenarios
+
 **Key Features:**
-* **Dynamic Emission Control:** Particles only emit when the player holds the left mouse button, controlled via `_emission.rateOverTime` in the script
-* **Collision Detection:** Uses `OnParticleCollision()` callback to detect when particles hit enemy objects, triggering death logic
-* **Audio Synchronization:** Integrated audio source with fade-in/fade-out that matches particle emission timing
-* **Spatial Audio Support:** Configurable 2D or 3D audio positioning
+* **Dynamic Emission Control:** Particles emit only during left mouse button press, with instant response through '_emission.rateOverTime' control
+* **Precise Collision Detection:** Utilizes 'OnParticleCollision()' callback with 'ParticlePhysicsExtensions.GetCollisionEvents' for efficient enemy hit detection
+* **Integrated Audio System:** Dedicated AudioSource with configurable fade timing (0.05s fade-in, 0s immediate fade-out) that perfectly matches spray activation
+* **Runtime Configurability:** Spray angle (3° default) and emission rate (220 particles/sec) can be adjusted in real-time through inspector or code
 
 **Technical Context:**
-The particle system uses Unity's built-in collision detection system (`ParticlePhysicsExtensions.GetCollisionEvents`) to efficiently detect collisions between particles and enemy colliders. This approach avoids the performance overhead of raycasting and provides accurate hit detection for gameplay mechanics.
+The particle system leverages Unity's built-in collision detection system through 'ParticlePhysicsExtensions.GetCollisionEvents' to efficiently detect collisions between particles and enemy colliders. This approach eliminates the performance overhead of traditional raycasting while providing accurate hit detection for gameplay mechanics. The system demonstrates advanced integration patterns by maintaining separate control over emission modules, shape parameters, and rendering components.
+
+The implementation follows Unity's component-based architecture, where the 'PlayerPoisonShooter' script coordinates between:
+* Particle system modules (Emission, Shape)
+* Audio system components (AudioSource, AudioMixerGroup)  
+* Gameplay logic (InsectDeath components)
+* Input system (Mouse button events)  
 
 #### 1.3 Visual Demonstration
 <p align="center">
@@ -284,14 +301,13 @@ The particle system uses Unity's built-in collision detection system (`ParticleP
 </p>
 
 ### 1.4 Integration with Unity's Rendering Pipeline
+The particle system utilizes Unity's built-in ParticleSystem component within the standard rendering pipeline, configured for optimal performance and visual quality:
+* **Render Queue Management:** Particles are rendered in the Transparent queue with proper depth sorting alongside other transparent game objects
+* **Performance Optimization:** Controlled emission rates (max 220 particles/sec) and efficient collision detection maintain stable frame rates
+* **Material Pipeline:** Particle materials integrate with Unity's standard shader pipeline while maintaining visual consistency with other game effects
+* **Collision System Integration:** Particle collision detection leverages Unity's physics system through 'ParticlePhysicsExtensions', enabling efficient collision queries without manual raycasting
 
-The particle system utilizes Unity's built-in ParticleSystem component, which is part of Unity's rendering pipeline. The system is configured to:
-
-* **Render Queue Integration:** Particles are rendered in the appropriate queue (typically Transparent) to ensure proper depth sorting with other game objects
-* **Performance Optimization:** Systems use appropriate `maxParticles` limits and emission rates to maintain stable frame rates
-* **Collision System:** Particle collision detection is handled by Unity's physics system, allowing efficient collision queries via `ParticlePhysicsExtensions`
-
-The particle systems work in conjunction with our custom shaders (water effects, dissolve effects) to create a cohesive visual experience that enhances gameplay feedback and immersion.
+The system demonstrates sophisticated integration with multiple Unity subsystems, showcasing how particle effects can serve both visual and gameplay purposes while maintaining performance standards. The tight coupling between visual feedback, audio cues, and game mechanics creates a cohesive and responsive player experience that enhances the core combat loop in Level 2.
 
 ## Summary of Contributions
 
