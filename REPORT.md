@@ -255,7 +255,7 @@ The mesh generation system allows the water body to adapt to different container
 
 Our game implements several custom particle systems that provide visual feedback and enhance gameplay mechanics across different levels. These particle systems are integrated with gameplay scripts to create dynamic, responsive effects that respond to player actions and game events.
 
-### 1. Poison Spray Particle System (Level 2)
+### 1. Poison Spray Particle System (Level 2) ⭐ (Marked for Assessment)
 
 #### 1.1 Overview
 
@@ -283,7 +283,7 @@ The particle system uses Unity's built-in collision detection system (`ParticleP
   <img src="images/report/poisonSprayParticles.gif" alt="Poison Spray Particle System" width="600">
 </p>
 
-### 2. Enemy Death Ember Particle System (Level 2)
+### 2. Enemy Death Ember Particle System (Level 2) (Documentation Only)
 
 #### 2.1 Overview
 
