@@ -1,4 +1,4 @@
-﻿using UnityEditor;
+using UnityEditor;
 using UnityEngine;
 
 namespace HoneyShaderSystem.Editor
@@ -111,3 +111,5 @@ namespace HoneyShaderSystem.Editor
         }
     }
 }
+
+
