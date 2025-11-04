@@ -14,6 +14,7 @@ placeholder for it [here](README.md).
 - [Evaluation Plan](#evaluation-plan)
 - [Evaluation Report](#evaluation-report)
 - [Shaders and Special Effects](#shaders-and-special-effects)
+- [Particle Systems](#particle-systems)
 - [Summary of Contributions](#summary-of-contributions)
 - [References and External Resources](#references-and-external-resources)
 
@@ -179,7 +180,9 @@ The iterative process of testing, analyzing, and refining based on user feedback
 
 ## Shaders and Special Effects
 
-### 1. Custom Water Shader for Kitchen Sink
+This section documents the two custom Cg/HLSL shaders implemented for our game that are marked for assessment. Both shaders are custom vertex/fragment shaders written entirely in Cg/HLSL with non-trivial implementations. These shaders use `#pragma vertex vert` and `#pragma fragment frag`, giving us complete control over the rendering pipeline.
+
+### 1. Custom Water Shader for Kitchen Sink ⭐ (Marked for Assessment)
 
 #### 1.1 Shader Overview
 
@@ -205,7 +208,7 @@ This shader operates in the Transparent render queue with Alpha Blending, which 
 </p>
 
 
-### 2. Dynamic Water System with Reflection and Refraction for Level 2
+### 2. Dynamic Water System with Reflection and Refraction for Level 2 ⭐ (Marked for Assessment)
 
 #### 2.1 Shader Overview
 
@@ -248,53 +251,129 @@ The mesh generation system allows the water body to adapt to different container
 </p>
 
 
-### 3. Dissolve and Collapse Shader for Enemy Death Effect
+## Particle Systems
 
-#### 3.1 Shader Overview
+Our game implements several custom particle systems that provide visual feedback and enhance gameplay mechanics across different levels. These particle systems are integrated with gameplay scripts to create dynamic, responsive effects that respond to player actions and game events.
 
-The DissolveShader is a custom Surface Shader combining **vertex deformation** and **pixel dissolution** techniques. It creates a dramatic three-stage death animation for insect enemies in Level 2: first, the mesh collapses toward its center; then it gradually dissolves and disappears; finally, particle effects are triggered at a specific dissolution threshold. The entire sequence lasts approximately 3 seconds, precisely controlled by the `DissolveSphere.cs` script's timeline system.
+### 1. Poison Spray Particle System (Level 2)
 
-#### 3.2 Shader File Links
+#### 1.1 Overview
 
-* [DissolveEmission.shader](Assets/Art/Shader/DissolveEmissionShader/DissolveEmission.shader) - Main shader
-* [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs) - Animation controller script
+The poison spray particle system is a core combat mechanic in Level 2, allowing the player ant to shoot venom at insect enemies. The system uses Unity's ParticleSystem component with custom scripting to control emission rate, cone angle, and collision detection.
 
-#### 3.3 Key Features and Implementation
+#### 1.2 Implementation Details
 
-**Vertex Deformation (Collapse Effect):**
-* **Custom Vertex Function:** Declares a vertex processing function via `#pragma vertex vert`, executed before the Surface Shader
-* **Z-Axis Compression:** Uses the `_AnimationPrompt` parameter (0-1 range) to remap vertex Z-coordinates to 40%-100% of their original values, creating a collapsing-toward-center visual effect
-* **Noise Perturbation:** Samples color values from the main texture as noise, applying varying degrees of deformation to different vertices to produce an uneven crumbling sensation
-* **Remap Function:** Custom value range remapping function that transforms `_AnimationPrompt` from [0,1] to the ranges needed for deformation
+**Script Integration:**
+* Script File: [PlayerPoisonShooter.cs](Assets/Scripts/Runtime/Level2/PlayerPoisonShooter.cs)
+* The script dynamically controls particle emission based on player input (left mouse button)
+* Uses `ParticleSystem.EmissionModule` to set `rateOverTime` to 220 particles/second when spraying
+* Uses `ParticleSystem.ShapeModule` to configure a cone-shaped spray pattern with adjustable angle (default 3 degrees)
 
-**Pixel Dissolution (Dissolve Effect):**
-* **Noise Mask Sampling:** Uses `_DissolveMap` texture as the dissolution pattern; pixels with values below the `_DissolveAmount` threshold are discarded via `discard`
-* **Edge Glow:** Pixels within the dissolution boundary (between `_DissolveAmount` and `_DissolveAmount + _DissolveWidth`) are set to `_DissolveColor` with emission added, forming a flame-like edge effect
-* **Progressive Dissolution:** As `_DissolveAmount` increases from 0 to 1, more pixels are discarded until the entire model completely disappears
+**Key Features:**
+* **Dynamic Emission Control:** Particles only emit when the player holds the left mouse button, controlled via `_emission.rateOverTime` in the script
+* **Collision Detection:** Uses `OnParticleCollision()` callback to detect when particles hit enemy objects, triggering death logic
+* **Audio Synchronization:** Integrated audio source with fade-in/fade-out that matches particle emission timing
+* **Spatial Audio Support:** Configurable 2D or 3D audio positioning
 
-**Multi-Stage Animation Control:**
-* **Phase 1 (0-1s):** Only increases `_AnimationPrompt` from 0 to 0.4, producing initial collapse
-* **Phase 2 (1-3s):** Simultaneously increases `_AnimationPrompt` to 1.0 and `_DissolveAmount` to 1.0, continuing collapse while beginning dissolution
-* **Particle Trigger:** When `_DissolveAmount` reaches 0.45, `DissolveSphere.cs` triggers the `Ember_Particles` particle system to play fire/smoke effects
+**Technical Context:**
+The particle system uses Unity's built-in collision detection system (`ParticlePhysicsExtensions.GetCollisionEvents`) to efficiently detect collisions between particles and enemy colliders. This approach avoids the performance overhead of raycasting and provides accurate hit detection for gameplay mechanics.
 
-#### 3.4 Integration with Unity and Technical Context
-
-This shader uses Unity's **Surface Shader framework** but injects custom vertex processing through `#pragma vertex vert`. This hybrid approach allows us to leverage Surface Shader's lighting calculation convenience while implementing low-level vertex deformation.
-
-In the game logic, when `InsectDeath.cs` detects an insect hit by poison:
-1. Disables all colliders (preventing repeated hits)
-2. Switches to the death model and calls `DissolveSphere.StartDissolve()`
-3. `DissolveSphere.cs` updates shader parameters frame-by-frame in `Update()`
-4. Automatically finds and plays the particle system when dissolution reaches 0.45
-5. Destroys the entire GameObject after 3.5 seconds
-
-This design decouples visual effects (Shader), animation control (DissolveSphere.cs), game logic (InsectDeath.cs), and particle systems, facilitating adjustment and reuse. The `tex2Dlod` sampling in the vertex shader reads textures during the vertex stage; while performance-intensive, it provides each vertex with a unique noise value, avoiding the rigidity of uniform deformation.
-
-#### 3.5 Visual Demonstration
+#### 1.3 Visual Demonstration
 <p align="center">
-  <img src="images/report/dissolveShader.gif" alt="Enemy Dissolve Shader" width="600">
+  <img src="images/report/poisonSprayParticles.gif" alt="Poison Spray Particle System" width="600">
 </p>
 
+### 2. Enemy Death Ember Particle System (Level 2)
+
+#### 2.1 Overview
+
+The enemy death ember particle system creates a dramatic fire and smoke effect that triggers automatically when enemies die. It is synchronized with the dissolve shader animation to create a cohesive death sequence.
+
+#### 2.2 Implementation Details
+
+**Script Integration:**
+* Shader Script: [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
+* Game Logic Script: [InsectDeath.cs](Assets/Scripts/Runtime/Level2/InsectDeath.cs)
+* The particle system is automatically found and triggered by name ("Ember_Particles") when the dissolve animation reaches a threshold value (0.45)
+
+**Key Features:**
+* **Precise Timing:** Particle effect triggers exactly when `_DissolveAmount` reaches 0.45, creating a synchronized explosion effect with the collapsing and dissolving animation
+* **Automatic Discovery:** The system automatically searches child objects for a particle system named "Ember_Particles", making it easy to attach to different enemy prefabs
+* **Multi-Stage Animation:** Works in conjunction with the three-stage death animation:
+  1. Phase 1 (0-1s): Mesh collapse begins
+  2. Phase 2 (1-3s): Collapse continues + dissolution begins
+  3. Particle Trigger (at 0.45 dissolve): Fire/smoke explosion bursts
+
+**Technical Context:**
+The particle system is integrated with Unity's GameObject hierarchy system. The `DissolveSphere.cs` script uses `GetComponentsInChildren<ParticleSystem>()` to locate the particle system at runtime, ensuring flexibility in prefab structure. The particle effect adds visual impact to the death sequence without requiring manual timing coordination.
+
+#### 2.3 Visual Demonstration
+<p align="center">
+  <img src="images/report/enemyDeathParticles.gif" alt="Enemy Death Ember Particles" width="600">
+</p>
+
+### 3. Boss Sand Burst Particle System (Level 3)
+
+#### 3.1 Overview
+
+The boss sand burst particle system is used in Level 3's boss battle to create the pigeon's primary attack. The system emits a burst of sand particles that visually represent the boss's wind attack.
+
+#### 3.2 Implementation Details
+
+**Script Integration:**
+* Script File: [BossPigeon.cs](Assets/Scripts/Runtime/Characters/Enemies/BossPigeon.cs)
+* The system supports two firing modes: burst-based emission (using Unity's built-in burst system) or manual `Emit()` calls with configurable particle count
+
+**Key Features:**
+* **Flexible Emission Modes:** 
+  - Burst Mode: Uses Unity's `Emission.Bursts` system for automatic timing
+  - Manual Mode: Calls `ParticleSystem.Emit(emitCount)` for precise control (default 88 particles)
+* **Dynamic Positioning:** Particle system transform is updated to match the `fireOrigin` transform before each attack, ensuring accurate spawning position
+* **Animation Synchronization:** Particle emission is synchronized with boss animation triggers ("Flap" animation)
+* **Timing Control:** Configurable windup time (0.6s default) and attack intervals (3-5s random) for balanced gameplay
+
+**Technical Context:**
+The particle system is positioned at runtime using `SetPositionAndRotation()` to match the boss's attack origin point. This allows the particle system to be positioned correctly even if the boss moves or rotates. The system can be configured to either use Unity's automatic burst system or manual emission control, providing flexibility for different visual effects.
+
+#### 3.3 Visual Demonstration
+<p align="center">
+  <img src="images/report/bossSandBurst.gif" alt="Boss Sand Burst Particles" width="600">
+</p>
+
+### 4. Cookie Collection Sparkle Effect (Level 2)
+
+#### 4.1 Overview
+
+The cookie collection sparkle effect provides visual feedback when players collect cookies, making collectibles more noticeable and rewarding to collect.
+
+#### 4.2 Implementation Details
+
+**Script Integration:**
+* Script File: [CookiePickup.cs](Assets/Scripts/Runtime/Level2/CookiePickup.cs)
+* The particle system is attached to cookie prefabs and plays automatically when collected
+
+**Key Features:**
+* **Attractive Visual Feedback:** Small star-like particles create a glowing effect that draws player attention
+* **Automatic Triggering:** Particle system plays when the cookie is collected via trigger collision
+* **UI Integration:** Cookie collection triggers UI updates and audio feedback simultaneously
+
+**Technical Context:**
+The particle system enhances the game's feedback loop by providing immediate visual confirmation of successful collection. This is particularly important in Level 2 where cookie collection is a core mechanic for unlocking summoning abilities in Level 3.
+
+#### 4.3 Visual Demonstration
+<p align="center">
+  <img src="images/report/cookieSparkleParticles.gif" alt="Cookie Collection Sparkle Effect" width="600">
+</p>
+
+### 5. Integration with Unity's Rendering Pipeline
+
+All particle systems in our game utilize Unity's built-in ParticleSystem component, which is part of Unity's rendering pipeline. The systems are configured to:
+
+* **Render Queue Integration:** Particles are rendered in the appropriate queue (typically Transparent) to ensure proper depth sorting with other game objects
+* **Performance Optimization:** Systems use appropriate `maxParticles` limits and emission rates to maintain stable frame rates
+* **Collision System:** Particle collision detection is handled by Unity's physics system, allowing efficient collision queries via `ParticlePhysicsExtensions`
+
+The particle systems work in conjunction with our custom shaders (water effects, dissolve effects) to create a cohesive visual experience that enhances gameplay feedback and immersion.
 
 ## Summary of Contributions
 
@@ -364,7 +443,7 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 ##### 2.3 Shader Development
 * Wrote and implemented the water shader used in Level 1 (sink area).
 * Relevant files
-  * [KitchenSinkFoam.shader](Assets/_Project/shader/KitchenSinkFoam.shader)
+  * [KitchenSinkFoam.shader](Assets/Art/Shader/KitchenSinkFoam.shader)
 ##### 2.4 Reporting
 * Authored the Evaluation Report for the project.
 * Wrote the Water Shader Technical Report.

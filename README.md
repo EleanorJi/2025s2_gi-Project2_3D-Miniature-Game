@@ -108,7 +108,7 @@ The ultimate adversary is the tyrannical seagull—a “dragon” in the ant wor
         1. **Collapse Phase:** The insect's body begins to crumple inward toward its center
         2. **Dissolution Phase:** The body progressively dissolves and becomes transparent
         3. **Dissipation Phase:** Fire and ember particle effects burst from the body, simulating the corrosive melting effect of the venom
-        -   This sophisticated death animation combines custom vertex deformation shaders with dissolve shaders and particle systems, replacing the original simple explosion effect with a more realistic and visually compelling representation of poison's corrosive action.
+        -   This sophisticated death animation combines vertex deformation shaders with dissolve effects and particle systems, replacing the original simple explosion effect with a more realistic and visually compelling representation of poison's corrosive action.
 
 ---
 
@@ -225,7 +225,7 @@ The game is set in a fully 3D environment, but with level design that encourages
             -   **Red Ladybugs:** Carry cookie crumbs on their backs. These are the primary targets for cookie collection. The spawn rate of ladybugs is dynamically linked to the number of cookies already collected in this area—once five cookies are collected, no more cookie-carrying ladybugs will appear.
             -   **Black Beetles:** Do not carry cookies and serve as additional obstacles.
         -   **Brick Barriers:** Strategically placed brick cube obstacles prevent players from bypassing the flower bed challenge, ensuring engagement with the insect mechanics.
-        -   **Death Effect:** When hit by venom, insects undergo a dramatic multi-stage death animation: the body first collapses inward, then dissolves and dissipates, simulating the corrosive melting effect of the poison. This effect combines custom shaders with particle systems for a visually compelling result, replacing the original explosion effect with a more realistic toxin interaction.
+        -   **Death Effect:** When hit by venom, insects undergo a dramatic multi-stage death animation: the body first collapses inward, then dissolves and dissipates, simulating the corrosive melting effect of the poison. This effect combines shaders with particle systems for a visually compelling result, replacing the original explosion effect with a more realistic toxin interaction.
 
             <p align="center">
               <img src="images/FlowerBed.png" alt="Flower Bed design Level 2" width="400">
@@ -366,7 +366,7 @@ The game is set in a fully 3D environment, but with level design that encourages
     </p> 
     
     - Collectibles (Food Scraps)
-    - Special Effects (Dissolve Shader with Particle System, Venom Particles, Water Reflection/Refraction Shader)
+    - Special Effects (Venom Particles, Water Reflection/Refraction Shader, Dissolve Shader with Particle System)
     <p align="center">
       <img src="images/InsectDeath_Collapse.png" alt="Insect Death Phase 1: Collapse" width="250">
       <img src="images/InsectDeath_Dissolve.png" alt="Insect Death Phase 2: Dissolve" width="250">
@@ -501,8 +501,8 @@ We primarily use WeChat for daily communication and quick updates, while Slack i
     -   Creating custom insect models (ladybugs, beetles) with appropriate detail levels for both gameplay clarity and visual appeal required significant iteration.
 
 -   **Technical Implementation Complexity:**
-    -   **Shader Development:** Implementing the dissolve shader with vertex deformation for enemy death effects required combining Surface Shader framework with custom vertex manipulation, which was technically demanding.
     -   **Dynamic Water System:** Creating real-time reflection and refraction for the water shader with acceptable performance on various hardware configurations required careful optimization.
+    -   **Shader Development:** Implementing the dissolve shader with vertex deformation for enemy death effects required combining Surface Shader framework with custom vertex manipulation, which was technically demanding. (Note: The dissolve shader uses Unity's Surface Shader framework for visual effects only. The two shaders submitted for assessment are custom vertex/fragment shaders: KitchenSinkFoam and HoneyWater.)
     -   **Insect AI Behavior:** Developing the five-lane randomized movement system for insects while maintaining performance with multiple active entities was challenging.
 
 -   **Level Design and Gameplay Balance:**
