@@ -180,7 +180,7 @@ The iterative process of testing, analyzing, and refining based on user feedback
 
 ## Shaders and Special Effects
 
-This section documents the custom Cg/HLSL shaders implemented for our game. **The two shaders marked for assessment are Shader 1 (KitchenSinkFoam) and Shader 2 (HoneyWater)**, both of which are custom vertex/fragment shaders with non-trivial implementations. Shader 3 (DissolveEmission) is documented for completeness as it demonstrates integration with our particle systems, though it uses Unity's Surface Shader framework.
+This section documents the two custom Cg/HLSL shaders implemented for our game that are marked for assessment. Both shaders are custom vertex/fragment shaders written entirely in Cg/HLSL with non-trivial implementations. These shaders use `#pragma vertex vert` and `#pragma fragment frag`, giving us complete control over the rendering pipeline.
 
 ### 1. Custom Water Shader for Kitchen Sink ⭐ (Marked for Assessment)
 
@@ -248,54 +248,6 @@ The mesh generation system allows the water body to adapt to different container
 #### 2.5 Visual Demonstration
 <p align="center">
   <img src="images/report/honeyWaterShader.gif" alt="Honey Water Shader Level 2" width="600">
-</p>
-
-
-### 3. Dissolve and Collapse Shader for Enemy Death Effect (Documentation Only)
-
-#### 3.1 Shader Overview
-
-The DissolveShader is a custom Surface Shader combining **vertex deformation** and **pixel dissolution** techniques. It creates a dramatic three-stage death animation for insect enemies in Level 2: first, the mesh collapses toward its center; then it gradually dissolves and disappears; finally, particle effects are triggered at a specific dissolution threshold. The entire sequence lasts approximately 3 seconds, precisely controlled by the `DissolveSphere.cs` script's timeline system.
-
-#### 3.2 Shader File Links
-
-* [DissolveEmission.shader](Assets/Art/Shader/DissolveEmissionShader/DissolveEmission.shader) - Main shader
-* [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs) - Animation controller script
-
-#### 3.3 Key Features and Implementation
-
-**Vertex Deformation (Collapse Effect):**
-* **Custom Vertex Function:** Declares a vertex processing function via `#pragma vertex vert`, executed before the Surface Shader
-* **Z-Axis Compression:** Uses the `_AnimationPrompt` parameter (0-1 range) to remap vertex Z-coordinates to 40%-100% of their original values, creating a collapsing-toward-center visual effect
-* **Noise Perturbation:** Samples color values from the main texture as noise, applying varying degrees of deformation to different vertices to produce an uneven crumbling sensation
-* **Remap Function:** Custom value range remapping function that transforms `_AnimationPrompt` from [0,1] to the ranges needed for deformation
-
-**Pixel Dissolution (Dissolve Effect):**
-* **Noise Mask Sampling:** Uses `_DissolveMap` texture as the dissolution pattern; pixels with values below the `_DissolveAmount` threshold are discarded via `discard`
-* **Edge Glow:** Pixels within the dissolution boundary (between `_DissolveAmount` and `_DissolveAmount + _DissolveWidth`) are set to `_DissolveColor` with emission added, forming a flame-like edge effect
-* **Progressive Dissolution:** As `_DissolveAmount` increases from 0 to 1, more pixels are discarded until the entire model completely disappears
-
-**Multi-Stage Animation Control:**
-* **Phase 1 (0-1s):** Only increases `_AnimationPrompt` from 0 to 0.4, producing initial collapse
-* **Phase 2 (1-3s):** Simultaneously increases `_AnimationPrompt` to 1.0 and `_DissolveAmount` to 1.0, continuing collapse while beginning dissolution
-* **Particle Trigger:** When `_DissolveAmount` reaches 0.45, `DissolveSphere.cs` triggers the `Ember_Particles` particle system to play fire/smoke effects
-
-#### 3.4 Integration with Unity and Technical Context
-
-This shader uses Unity's **Surface Shader framework** but injects custom vertex processing through `#pragma vertex vert`. This hybrid approach allows us to leverage Surface Shader's lighting calculation convenience while implementing low-level vertex deformation.
-
-In the game logic, when `InsectDeath.cs` detects an insect hit by poison:
-1. Disables all colliders (preventing repeated hits)
-2. Switches to the death model and calls `DissolveSphere.StartDissolve()`
-3. `DissolveSphere.cs` updates shader parameters frame-by-frame in `Update()`
-4. Automatically finds and plays the particle system when dissolution reaches 0.45
-5. Destroys the entire GameObject after 3.5 seconds
-
-This design decouples visual effects (Shader), animation control (DissolveSphere.cs), game logic (InsectDeath.cs), and particle systems, facilitating adjustment and reuse. The `tex2Dlod` sampling in the vertex shader reads textures during the vertex stage; while performance-intensive, it provides each vertex with a unique noise value, avoiding the rigidity of uniform deformation.
-
-#### 3.5 Visual Demonstration
-<p align="center">
-  <img src="images/report/dissolveShader.gif" alt="Enemy Dissolve Shader" width="600">
 </p>
 
 
