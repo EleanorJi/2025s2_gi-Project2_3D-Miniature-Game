@@ -47,7 +47,7 @@ Shader "Custom/KitchenSinkFoam" {
             float _NoiseScale;
             float _EdgeFoam;
 
-            // 噪声函数
+            // noise function
             float noise(float2 uv) {
                 return frac(sin(dot(uv, float2(12.9898, 78.233))) * 43758.5453);
             }
@@ -88,7 +88,7 @@ Shader "Custom/KitchenSinkFoam" {
             fixed4 frag (v2f i) : SV_Target {
                 float2 uv = i.uv;
                 
-                // 创建泡沫噪声图案
+                // Create a foam noise pattern
                 float2 foamUV1 = uv * _NoiseScale + _Time.x * _FoamSpeed;
                 float2 foamUV2 = uv * _NoiseScale * 1.7 + _Time.x * _FoamSpeed * 1.3;
                 
@@ -96,33 +96,33 @@ Shader "Custom/KitchenSinkFoam" {
                 float foamNoise2 = fbm(foamUV2);
                 float combinedFoam = (foamNoise1 + foamNoise2) * 0.5;
                 
-                // 边缘泡沫 - 在Quad边缘产生泡沫
+                // Edge foam - Foaming occurs at the Quad edge
                 float edgeFoam = 1.0 - smoothstep(0.0, 0.2, min(min(uv.x, uv.y), min(1.0 - uv.x, 1.0 - uv.y)));
                 edgeFoam *= _EdgeFoam;
                 
-                // 涟漪效果
+                // Ripple effect
                 float2 rippleUV = uv * _RippleFrequency;
                 float ripple = sin(rippleUV.x + _Time.y * _RippleSpeed) * 
                               sin(rippleUV.y + _Time.y * _RippleSpeed * 1.3) * 0.1;
                 
-                // 泡沫遮罩
+                // Foam mask
                 float foamMask = combinedFoam * _FoamDensity + edgeFoam + ripple;
                 foamMask = saturate(foamMask);
                 
-                // 泡沫厚度控制
+                // Control of foam thickness
                 float foamArea = step(1.0 - _FoamThickness, foamMask);
                 
-                // 颜色混合
+                // Color blending
                 fixed4 col = _WaterColor;
                 
-                // 泡沫颜色（在泡沫区域使用泡沫颜色）
+                // Bubble color (use bubble color in the bubble area)
                 col = lerp(col, _FoamColor, foamArea);
                 
-                // 半透明泡沫效果
+                // Translucent foam effect
                 float foamAlpha = foamMask * _FoamColor.a;
                 col.a = max(_WaterColor.a, foamAlpha);
                 
-                // 添加一些泡沫细节变化
+                // Add some details of foam to enhance the variation.
                 col.rgb += (combinedFoam - 0.5) * 0.1 * foamArea;
                 
                 return col;
