@@ -576,114 +576,114 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
 
 #### Level 1 (Kitchen) Models
 6. **Ant (Sketchfab)**  
-   `https://sketchfab.com/3d-models/ant-dab7080251674ef98fc83b7604be2ffc`  
+   [https://sketchfab.com/3d-models/ant-dab7080251674ef98fc83b7604be2ffc](https://sketchfab.com/3d-models/ant-dab7080251674ef98fc83b7604be2ffc)
    Ant character base model used as a reference for proportions and topology.
 
 7. **Pigeon (Sketchfab)**  
-   `https://sketchfab.com/3d-models/pigeon-5884a0f5200c44ceaa7d0399bea577f9`  
+   [https://sketchfab.com/3d-models/pigeon-5884a0f5200c44ceaa7d0399bea577f9](https://sketchfab.com/3d-models/pigeon-5884a0f5200c44ceaa7d0399bea577f9)  
    Pigeon visual reference used for the Level 3 boss appearance.
 
 8. **Kitchen Scene (Sketchfab)**  
-   `https://sketchfab.com/3d-models/kitchen-0b9b61c4dd7741f094dd0effc83a57af`  
+   [https://sketchfab.com/3d-models/kitchen-0b9b61c4dd7741f094dd0effc83a57af](https://sketchfab.com/3d-models/kitchen-0b9b61c4dd7741f094dd0effc83a57af)  
    Kitchen props and layout reference for Level 1 scene dressing.
 
 9. **Free Fire VFX (Unity Asset Store, URP)**  
-   `https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-urp-266226`  
+   [https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-urp-266226](https://assetstore.unity.com/packages/vfx/particles/fire-explosions/free-fire-vfx-urp-266226)
    Used for stove/fire visual effects in the kitchen level.
 
 10. **Salmon Knife (Poly Pizza / MilkAndBanana)**  
-    `https://poly.pizza/m/LZbSfxvxPQ`  
+    [https://poly.pizza/m/LZbSfxvxPQ](https://poly.pizza/m/LZbSfxvxPQ)
     Large spatula/knife prop used as the bridge element. Attribution: "Salmon Knife by MilkAndBanana (https://poly.pizza/m/LZbSfxvxPQ)".
 
 11. **Sponge (Poly Pizza / Google)**  
-    `https://poly.pizza/m/9BIIMAjPXOJ`  
+    [https://poly.pizza/m/9BIIMAjPXOJ](https://poly.pizza/m/9BIIMAjPXOJ)
     Washing sponge prop near the sink. Attribution: "Sponge by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza".
 
-12. **Cutting Board (Sketchfab)**  
-    `https://sketchfab.com/3d-models/cutting-board-ce34c8bf389d4053aae98b9d2752a7b9`  
+12. **Cutting Board (Sketchfab)**   
+    [https://sketchfab.com/3d-models/cutting-board-ce34c8bf389d4053aae98b9d2752a7b9](https://sketchfab.com/3d-models/cutting-board-ce34c8bf389d4053aae98b9d2752a7b9)
     Cutting board surface used for the rolling cucumber obstacle.
 
 13. **Sugar Cube (Sketchfab)**  
-    `https://sketchfab.com/3d-models/sugar-cube-1f8134f651de4e21acb1f4d2b9400f5a`  
+    [https://sketchfab.com/3d-models/sugar-cube-1f8134f651de4e21acb1f4d2b9400f5a](https://sketchfab.com/3d-models/sugar-cube-1f8134f651de4e21acb1f4d2b9400f5a)
     Pickup prop for the stove puzzle.
 
 14. **Honeycomb (Poly Pizza / Google)**  
-    `https://poly.pizza/m/fcOXf3x_LgH`  
+    [https://poly.pizza/m/fcOXf3x_LgH](https://poly.pizza/m/fcOXf3x_LgH)
     Honey visual element. Attribution: "Honeycomb by Poly by Google [CC-BY] (https://creativecommons.org/licenses/by/3.0/) via Poly Pizza".
 
 15. **Cucumber (Poly Pizza / Google)**  
-    `https://poly.pizza/m/6tIy7yd7SPa`  
+    [https://poly.pizza/m/6tIy7yd7SPa](https://poly.pizza/m/6tIy7yd7SPa)
     Moving hazard for the rolling obstacle. Attribution: "Cucumber by Poly by Google [CC-BY]".
 
 16. **Milk Carton (Unity Asset Store)**  
-    `https://assetstore.unity.com/packages/3d/props/food/carton-of-milk-4k-pbr-162383`  
+    [https://assetstore.unity.com/packages/3d/props/food/carton-of-milk-4k-pbr-162383](https://assetstore.unity.com/packages/3d/props/food/carton-of-milk-4k-pbr-162383)
     Used to construct the milk carton maze in Level 1.
 
 #### Level 2 (Outdoor / Street) Models
 17. **Animated Ladybug (Sketchfab)**  
-    `https://sketchfab.com/3d-models/ladybug-with-animated-walk-cycle-only-c9a31f4e28b74d5698b483cb358de269`  
+    [https://sketchfab.com/3d-models/ladybug-with-animated-walk-cycle-only-c9a31f4e28b74d5698b483cb358de269](https://sketchfab.com/3d-models/ladybug-with-animated-walk-cycle-only-c9a31f4e28b74d5698b483cb358de269)
     Animated NPC used for enemy/collectible carrier behavior in the flower bed.
 
 18. **Flowers and Garden Assets (Unity Asset Store)**  
-    `https://assetstore.unity.com/packages/3d/vegetation/flowers/flowers-and-garden-assets-241214`  
+    [https://assetstore.unity.com/packages/3d/vegetation/flowers/flowers-and-garden-assets-241214](https://assetstore.unity.com/packages/3d/vegetation/flowers/flowers-and-garden-assets-241214) 
     Flower bed composition and vegetation set dressing.
 
 19. **Low Poly City Building Kit (Unity Asset Store)**  
-    `https://assetstore.unity.com/packages/3d/environments/urban/city-building-kit-100-low-poly-city-assets-308526`  
+    [https://assetstore.unity.com/packages/3d/environments/urban/city-building-kit-100-low-poly-city-assets-308526](https://assetstore.unity.com/packages/3d/environments/urban/city-building-kit-100-low-poly-city-assets-308526) 
     Street backdrop and urban props for the outdoor section.
 
 20. **Leaf (Poly Pizza)**  
-    `https://poly.pizza/m/4_FetA14dDV`  
+    [https://poly.pizza/m/4_FetA14dDV](https://poly.pizza/m/4_FetA14dDV)  
     Leaf prop used for the parachute mechanic.
 
 21. **Spider (Poly Pizza)**  
-    `https://poly.pizza/m/cbFePDoI8yi`  
+    [https://poly.pizza/m/cbFePDoI8yi](https://poly.pizza/m/cbFePDoI8yi)
     Environmental enemy prop in Level 2.
 
 22. **Spider Web (Poly Pizza)**  
-    `https://poly.pizza/m/EHYNWew6JK`  
+    [https://poly.pizza/m/EHYNWew6JK](https://poly.pizza/m/EHYNWew6JK)
     Web obstacle/visual element for environmental storytelling.
 
 23. **Rocks (Poly Pizza)**  
-    `https://poly.pizza/m/3jql0qtape-`  
+    [https://poly.pizza/m/3jql0qtape-](https://poly.pizza/m/3jql0qtape-)   
     Rock platforms for the charged hop sequence.
 
 ### Development Tools and Documentation
-6. **Unity Documentation** - Engine reference  
+24. **Unity Documentation** - Engine reference  
    [https://docs.unity3d.com](https://docs.unity3d.com)  
    Official Unity engine documentation for scripting, shader programming, and engine features.
 
-7. **Microsoft C# Documentation**  
+25. **Microsoft C# Documentation**  
    [https://learn.microsoft.com/en-us/dotnet/csharp/](https://learn.microsoft.com/en-us/dotnet/csharp/)  
    C# language reference for gameplay scripting and system implementation.
 
 ### Shader Programming References
-8. **Unity Shader Reference**  
+26. **Unity Shader Reference**  
    [https://docs.unity3d.com/Manual/SL-Reference.html](https://docs.unity3d.com/Manual/SL-Reference.html)  
    Unity ShaderLab and HLSL programming documentation for custom shader development.
-
-### Learning Resources (Shader & Unity Workflow)
-24. **Toon Water (Roystan, article)**  
-    `https://roystan.net/articles/toon-water/`  
+27. **Toon Water (Roystan, article)**  
+    [https://roystan.net/articles/toon-water/](https://roystan.net/articles/toon-water/)
     Conceptual and implementation guidance for stylized water—served as inspiration for HoneyWater.
 
-25. **Water Shader Tutorial (YouTube)**  
-    `https://www.youtube.com/watch?v=x9-wbo-2Rk8`  
+28. **Water Shader Tutorial (YouTube)**  
+    [https://www.youtube.com/watch?v=x9-wbo-2Rk8](https://www.youtube.com/watch?v=x9-wbo-2Rk8) 
     Practical breakdown for water material creation and parameter tuning.
 
-26. **Unity Practices (Bilibili, 中文)**  
-    `https://www.bilibili.com/video/BV1TZ4y1o76s/`  
+### Learning Resources (Shader & Unity Workflow)
+
+29. **Unity Practices (Bilibili, chinese)**  
+    [https://www.bilibili.com/video/BV1TZ4y1o76s/](https://www.bilibili.com/video/BV1TZ4y1o76s/)
     Unity workflow tips and best practices (Chinese video tutorial).
 
-27. **Unity Practices Playlist (YouTube)**  
-    `https://www.youtube.com/watch?v=-wCZDcoGBeE&list=PL0eyrZgxdwhwQZ9zPUC7TnJ-S0KxqGlrN`  
+30. **Unity Practices Playlist (YouTube)**  
+    [https://www.youtube.com/watch?v=-wCZDcoGBeE&list=PL0eyrZgxdwhwQZ9zPUC7TnJ-S0KxqGlrN](https://www.youtube.com/watch?v=-wCZDcoGBeE&list=PL0eyrZgxdwhwQZ9zPUC7TnJ-S0KxqGlrN)
     General Unity techniques and patterns used during prototyping and polishing.
 
 ### Project Management and Collaboration
-9. **GitHub** - Version control  
+31. **GitHub** - Version control  
    [https://github.com](https://github.com)  
    Git repository hosting and version control for collaborative development.
 
-10. **Monday.com** - Project management  
+32. **Monday.com** - Project management  
     [https://monday.com](https://monday.com)  
     Task tracking, timeline management, and team collaboration platform.
