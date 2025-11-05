@@ -99,6 +99,19 @@ namespace Antventure.UI
         }
         
         /// <summary>
+        /// Get appropriate cursor mode based on platform
+        /// ForceSoftware for WebGL to avoid DPI scaling issues
+        /// </summary>
+        private CursorMode GetCursorMode()
+        {
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            return CursorMode.ForceSoftware;
+            #else
+            return CursorMode.Auto;
+            #endif
+        }
+        
+        /// <summary>
         /// Initialize cursor textures
         /// </summary>
         private void InitializeCursors()
@@ -201,13 +214,14 @@ namespace Antventure.UI
                         Cursor.visible = true;
                         Cursor.lockState = CursorLockMode.None;
                         
+                        CursorMode cursorMode = GetCursorMode();
                         if (useCustomCursors && defaultCursor != null)
                         {
-                            Cursor.SetCursor(defaultCursor, cursorHotspot, CursorMode.Auto);
+                            Cursor.SetCursor(defaultCursor, cursorHotspot, cursorMode);
                         }
                         else
                         {
-                            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                            Cursor.SetCursor(null, Vector2.zero, cursorMode);
                         }
                         
                         if (debugMode) Debug.Log("[UNIFIED CURSOR] Enforced Default state");
@@ -221,13 +235,14 @@ namespace Antventure.UI
                         Cursor.lockState = CursorLockMode.None;
                     }
                     
+                    CursorMode cursorMode = GetCursorMode();
                     if (useCustomCursors && hoverCursor != null)
                     {
-                        Cursor.SetCursor(hoverCursor, cursorHotspot, CursorMode.Auto);
+                        Cursor.SetCursor(hoverCursor, cursorHotspot, cursorMode);
                     }
                     else
                     {
-                        Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                        Cursor.SetCursor(null, Vector2.zero, cursorMode);
                     }
                     
                     if (debugMode) Debug.Log("[UNIFIED CURSOR] Enforced Hover state");

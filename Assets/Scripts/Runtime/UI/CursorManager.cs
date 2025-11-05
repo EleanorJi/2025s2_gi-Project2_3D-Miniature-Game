@@ -46,15 +46,16 @@ namespace Antventure.UI
             Cursor.lockState = CursorLockMode.None;
             
             // Use custom default cursor if available, otherwise system cursor
+            CursorMode cursorMode = GetCursorMode();
             if (defaultCursor != null && useCustomCursors)
             {
-                Cursor.SetCursor(defaultCursor, defaultHotspot, CursorMode.Auto);
+                Cursor.SetCursor(defaultCursor, defaultHotspot, cursorMode);
                 Debug.Log("[CURSOR] Setting custom default cursor: " + defaultCursor.name);
             }
             else
             {
                 // Use system default cursor
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                Cursor.SetCursor(null, Vector2.zero, cursorMode);
                 Debug.Log("[CURSOR] Using system default cursor");
             }
         }
@@ -79,7 +80,7 @@ namespace Antventure.UI
                 Debug.Log($"[CURSOR] Cursor size: {handCursor.width}x{handCursor.height}");
                 Debug.Log($"[CURSOR] Hotspot position: {handHotspot}");
                 
-                Cursor.SetCursor(handCursor, handHotspot, CursorMode.Auto);
+                Cursor.SetCursor(handCursor, handHotspot, GetCursorMode());
                 
                 // Verify if setting was successful
                 Debug.Log($"[CURSOR] After setting - Cursor.visible: {Cursor.visible}");
@@ -91,7 +92,7 @@ namespace Antventure.UI
                 Debug.LogWarning($"[CURSOR] useCustomCursors: {useCustomCursors}");
                 
                 // Fallback to system cursor
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                Cursor.SetCursor(null, Vector2.zero, GetCursorMode());
             }
         }
 
@@ -117,7 +118,7 @@ namespace Antventure.UI
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             // Also set cursor to null to remove any custom cursor
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(null, Vector2.zero, GetCursorMode());
             Debug.Log("[CURSOR] Cursor forcefully hidden");
         }
 
@@ -130,7 +131,7 @@ namespace Antventure.UI
             isGameplayMode = false;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(null, Vector2.zero, GetCursorMode());
         }
 
         // Cursor state tracking
@@ -205,6 +206,19 @@ namespace Antventure.UI
             }
         }
 
+        /// <summary>
+        /// Get appropriate cursor mode based on platform
+        /// ForceSoftware for WebGL to avoid DPI scaling issues
+        /// </summary>
+        private CursorMode GetCursorMode()
+        {
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            return CursorMode.ForceSoftware;
+            #else
+            return CursorMode.Auto;
+            #endif
+        }
+        
         /// <summary>
         /// Load cursor textures from the project assets
         /// </summary>

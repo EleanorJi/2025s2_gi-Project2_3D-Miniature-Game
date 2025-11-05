@@ -33,8 +33,21 @@ namespace Antventure.UI.Menus
                 // Fallback: Show system default cursor in main menu
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+                Cursor.SetCursor(null, Vector2.zero, GetCursorMode());
             }
+        }
+
+        /// <summary>
+        /// Get appropriate cursor mode based on platform
+        /// ForceSoftware for WebGL to avoid DPI scaling issues
+        /// </summary>
+        private CursorMode GetCursorMode()
+        {
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            return CursorMode.ForceSoftware;
+            #else
+            return CursorMode.Auto;
+            #endif
         }
 
         // Play Button Clicks

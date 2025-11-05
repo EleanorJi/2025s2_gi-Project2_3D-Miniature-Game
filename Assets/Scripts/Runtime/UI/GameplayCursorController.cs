@@ -98,7 +98,20 @@ namespace Antventure.UI
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            Cursor.SetCursor(null, Vector2.zero, GetCursorMode());
+        }
+        
+        /// <summary>
+        /// Get appropriate cursor mode based on platform
+        /// ForceSoftware for WebGL to avoid DPI scaling issues
+        /// </summary>
+        private CursorMode GetCursorMode()
+        {
+            #if UNITY_WEBGL && !UNITY_EDITOR
+            return CursorMode.ForceSoftware;
+            #else
+            return CursorMode.Auto;
+            #endif
         }
         
         private void OnApplicationFocus(bool hasFocus)
