@@ -145,31 +145,57 @@ public class StoveDangerZone : MonoBehaviour
 
     public void OnPlayerEnter(PlayerController player)
     {
+        Debug.Log($"[StoveDangerZone] OnPlayerEnter called! Player: {player != null}");
+        
         // check the current status
         bool isDangerousNow = IsCurrentlyDangerous();
+        Debug.Log($"[StoveDangerZone] Is dangerous: {isDangerousNow}");
         
         if (isDangerousNow)
         {
-            Debug.Log("The player encounters a dangerous stove!");
+            Debug.Log("[StoveDangerZone] The player encounters a dangerous stove!");
 
             // Play the death sound effect
             GlobalSfx.PlayDeathSfx();
 
-            // Display the configurable death UI
-            if (DeathUIOverlay.Instance != null)
-            {
-                if (deathHoldSeconds > 0f)
-                    DeathUIOverlay.Instance.Show(deathMessage, deathSprite, deathHoldSeconds);
-                else
-                    DeathUIOverlay.Instance.Show(deathMessage, deathSprite, null);
-            }
+            // Set custom death UI message and sprite before triggering death
+            // This will be used by DeathUI_AutoWire when it handles the death event
+            float displayDuration = deathHoldSeconds > 0f ? deathHoldSeconds : 4f;
+            
+            Debug.Log($"[StoveDangerZone] Setting custom death UI - Message: '{deathMessage}', Sprite: {deathSprite != null}, Sprite name: {(deathSprite != null ? deathSprite.name : "NULL")}, Duration: {displayDuration}");
+            DeathUI_AutoWire.SetCustomDeathUI(deathMessage, deathSprite, displayDuration);
+            Debug.Log("[StoveDangerZone] SetCustomDeathUI called");
 
-            // kill Player
-            player.Die();
+            // Trigger death through PlayerHealth, which will trigger DeathUI_AutoWire.HandleDied()
+            // DeathUI_AutoWire will use the custom message and sprite we just set
+            PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+            Debug.Log($"[StoveDangerZone] PlayerHealth found: {playerHealth != null}");
+            
+            if (playerHealth != null)
+            {
+                int currentHP = playerHealth.CurrentHealth;
+                Debug.Log($"[StoveDangerZone] Current HP: {currentHP}, calling TakeDamage...");
+                playerHealth.TakeDamage("StoveDangerZone", currentHP);
+                Debug.Log("[StoveDangerZone] TakeDamage called");
+            }
+            else
+            {
+                Debug.LogWarning("[StoveDangerZone] No PlayerHealth found, using fallback");
+                // Fallback: use player.Die() if no PlayerHealth
+                // In this case, use DeathUIOverlay directly
+                if (DeathUIOverlay.Instance != null)
+                {
+                    if (deathHoldSeconds > 0f)
+                        DeathUIOverlay.Instance.Show(deathMessage, deathSprite, deathHoldSeconds);
+                    else
+                        DeathUIOverlay.Instance.Show(deathMessage, deathSprite, null);
+                }
+                player.Die();
+            }
         }
         else
         {
-            Debug.Log("The stove is now safe.");
+            Debug.Log("[StoveDangerZone] The stove is now safe.");
         }
     }
 

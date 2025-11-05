@@ -41,7 +41,13 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(string source, int amount)
     {
-        if (_dead || amount <= 0) return;
+        Debug.Log($"[PlayerHealth] TakeDamage called - Source: {source}, Amount: {amount}, Dead: {_dead}, Current: {_currentHealth}");
+        
+        if (_dead || amount <= 0) 
+        {
+            Debug.Log($"[PlayerHealth] TakeDamage skipped - Dead: {_dead}, Amount: {amount}");
+            return;
+        }
 
         int before = _currentHealth;
         _currentHealth = Mathf.Max(0, _currentHealth - amount);
@@ -50,6 +56,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (_currentHealth == 0 && !_dead)
         {
+            Debug.Log("[PlayerHealth] Health reached 0, calling DieInternal...");
             DieInternal();
         }
     }

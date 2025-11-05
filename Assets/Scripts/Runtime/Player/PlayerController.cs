@@ -393,16 +393,37 @@ public class PlayerController : MonoBehaviour
         // If the PlayerHealth component is not present, then attempt to use the global/local death UI as a fallback display option.
         try
         {
+            // Check if there's a custom death UI set (e.g., from StoveDangerZone)
+            string customMessage = null;
+            Sprite customSprite = null;
+            float customDuration = 4f;
+            bool hasCustom = DeathUI_AutoWire.GetCustomDeathUI(out customMessage, out customSprite, out customDuration);
+            
+            if (hasCustom)
+            {
+                Debug.Log($"[PlayerController] Found custom death UI - Message: '{customMessage}', Sprite: {customSprite != null}, Duration: {customDuration}");
+            }
+            
             if (Antventure.UI.GlobalDeathUIController.Instance != null)
             {
-                Antventure.UI.GlobalDeathUIController.Instance.ShowDeathUI();
+                Antventure.UI.GlobalDeathUIController.Instance.ShowDeathUI(customMessage, customSprite, customDuration);
             }
             else if (DeathUIOverlay.Instance != null)
             {
-                DeathUIOverlay.Instance.Show();
+                if (hasCustom && (customMessage != null || customSprite != null))
+                {
+                    DeathUIOverlay.Instance.Show(customMessage, customSprite, customDuration > 0 ? customDuration : (float?)null);
+                }
+                else
+                {
+                    DeathUIOverlay.Instance.Show();
+                }
             }
         }
-        catch { /* Defensive fallback, without affecting the subsequent rebirth */ }
+        catch (System.Exception ex) 
+        { 
+            Debug.LogWarning($"[PlayerController] Error showing death UI: {ex.Message}");
+        }
 
         // Then, use the original logic
         PerformDirectRespawn();

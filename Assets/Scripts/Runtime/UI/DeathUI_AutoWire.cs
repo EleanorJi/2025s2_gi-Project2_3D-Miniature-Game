@@ -37,6 +37,12 @@ public class DeathUI_AutoWire : MonoBehaviour
     private bool _isShown;
     private readonly List<MonoBehaviour> _disabledPlayerScripts = new();
     private readonly List<MonoBehaviour> _disabledCameraScripts = new();
+    
+    // Temporary custom death UI settings (for specific death scenarios like fire)
+    private static string _tempDeathMessage;
+    private static Sprite _tempDeathSprite;
+    private static float _tempDeathDuration = 4f;
+    private static bool _hasCustomDeathUI = false;
 
     // ---------- Unity 6 / 2023+ safe finder ----------
     static T FindOne<T>() where T : Object
@@ -156,8 +162,46 @@ public class DeathUI_AutoWire : MonoBehaviour
 
     // =================== Event Handlers ===================
 
+    /// <summary>
+    /// Set temporary custom death UI (used by specific death triggers like StoveDangerZone)
+    /// </summary>
+    public static void SetCustomDeathUI(string message, Sprite sprite, float duration = 4f)
+    {
+        Debug.Log($"[DeathUI_AutoWire] SetCustomDeathUI called - Message: '{message}', Sprite: {sprite != null}, Duration: {duration}");
+        _tempDeathMessage = message;
+        _tempDeathSprite = sprite;
+        _tempDeathDuration = duration;
+        _hasCustomDeathUI = true;
+        Debug.Log($"[DeathUI_AutoWire] Custom death UI set - _hasCustomDeathUI: {_hasCustomDeathUI}");
+    }
+    
+    /// <summary>
+    /// Get current custom death UI settings (for use in fallback paths)
+    /// </summary>
+    public static bool GetCustomDeathUI(out string message, out Sprite sprite, out float duration)
+    {
+        message = _tempDeathMessage;
+        sprite = _tempDeathSprite;
+        duration = _tempDeathDuration;
+        return _hasCustomDeathUI;
+    }
+    
+    /// <summary>
+    /// Clear temporary custom death UI settings
+    /// </summary>
+    public static void ClearCustomDeathUI()
+    {
+        _hasCustomDeathUI = false;
+        _tempDeathMessage = null;
+        _tempDeathSprite = null;
+        _tempDeathDuration = 4f;
+    }
+
     private void HandleDied()
     {
+        Debug.Log("[DeathUI_AutoWire] HandleDied called!");
+        Debug.Log($"[DeathUI_AutoWire] Has custom UI: {_hasCustomDeathUI}, Message: '{_tempDeathMessage}', Sprite: {_tempDeathSprite != null}");
+        
         // 1) At the moment of death, all minions are instantly wiped out.
         ClearAllMinions();
 
@@ -167,12 +211,29 @@ public class DeathUI_AutoWire : MonoBehaviour
         string currentSceneName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
         bool isLevel3Boss = currentSceneName == "Level3_boss";
         
+        // Check if there's already a custom death UI showing (from DeathUIOverlay or other sources)
+        bool hasExternalUI = false;
         if (useGlobalController && GlobalDeathUIController.Instance != null && !isLevel3Boss)
         {
             try
             {
-                GlobalDeathUIController.Instance.ShowDeathUI(hint, deathSprite, 4f);
+                // Check if GlobalDeathUIController is already showing UI
+                // If custom death UI was set, use it; otherwise use default
+                string displayMessage = _hasCustomDeathUI && !string.IsNullOrEmpty(_tempDeathMessage) 
+                    ? _tempDeathMessage 
+                    : hint;
+                Sprite displaySprite = _hasCustomDeathUI && _tempDeathSprite != null 
+                    ? _tempDeathSprite 
+                    : deathSprite;
+                float displayDuration = _hasCustomDeathUI ? _tempDeathDuration : 4f;
+                
+                Debug.Log($"[DeathUI] Showing death UI - Message: '{displayMessage}', Sprite: {displaySprite != null}, Duration: {displayDuration}, HasCustom: {_hasCustomDeathUI}");
+                
+                GlobalDeathUIController.Instance.ShowDeathUI(displayMessage, displaySprite, displayDuration);
                 HandleGamePause(true);
+                
+                // Clear custom UI after use
+                ClearCustomDeathUI();
                 return;
             }
             catch (System.Exception ex)
@@ -182,9 +243,16 @@ public class DeathUI_AutoWire : MonoBehaviour
             }
         }
 
-        if (hintText) hintText.text = hint;
+        // Use custom message if available
+        string finalHint = _hasCustomDeathUI && !string.IsNullOrEmpty(_tempDeathMessage) 
+            ? _tempDeathMessage 
+            : hint;
+        if (hintText) hintText.text = finalHint;
         ShowPanel(true);
         ApplyTransparencySettings();
+        
+        // Clear custom UI after use
+        ClearCustomDeathUI();
     }
 
     private void HandleRespawned()

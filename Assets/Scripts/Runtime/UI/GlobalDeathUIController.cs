@@ -156,17 +156,47 @@ namespace Antventure.UI
             if (deathPanel == null)
                 deathPanel = GetComponentInChildren<CanvasGroup>();
 
-            if (deathImage == null)
-                deathImage = GetComponentInChildren<Image>();
-
             if (deathMessageText == null)
                 deathMessageText = GetComponentInChildren<TextMeshProUGUI>();
 
-            if (backgroundOverlay == null)
+            // Find all Image components and distinguish between background overlay and death image
+            Image[] allImages = GetComponentsInChildren<Image>(true);
+            
+            if (backgroundOverlay == null || deathImage == null)
             {
-                Image[] images = GetComponentsInChildren<Image>();
-                if (images.Length > 1)
-                    backgroundOverlay = images[0]; // First one is usually the background
+                foreach (Image img in allImages)
+                {
+                    if (img == null) continue;
+                    
+                    // Background overlay is usually the first child, full screen, and named "Background"
+                    if (backgroundOverlay == null && 
+                        (img.name.Contains("Background") || img.name.Contains("Overlay") || 
+                         img.rectTransform.anchorMin == Vector2.zero && img.rectTransform.anchorMax == Vector2.one))
+                    {
+                        backgroundOverlay = img;
+                    }
+                    // Death image is usually centered, has a specific size, and named "DeathImage" or similar
+                    else if (deathImage == null && 
+                             (img.name.Contains("DeathImage") || img.name.Contains("Image") ||
+                              (img.rectTransform.anchorMin.x == 0.5f && img.rectTransform.anchorMin.y == 0.5f)))
+                    {
+                        deathImage = img;
+                    }
+                }
+            }
+            
+            // Fallback: if still not found, use first image as background, second as death image
+            if (backgroundOverlay == null && allImages.Length > 0)
+            {
+                backgroundOverlay = allImages[0];
+            }
+            if (deathImage == null && allImages.Length > 1)
+            {
+                deathImage = allImages[1];
+            }
+            else if (deathImage == null && allImages.Length == 1 && allImages[0] != backgroundOverlay)
+            {
+                deathImage = allImages[0];
             }
 
             if (deathImage != null)
@@ -174,6 +204,17 @@ namespace Antventure.UI
                 imageRectTransform = deathImage.GetComponent<RectTransform>();
                 if (imageRectTransform != null)
                     originalImageSize = imageRectTransform.sizeDelta;
+                
+                Debug.Log($"[GlobalDeathUI] Found deathImage: {deathImage.name}, enabled: {deathImage.enabled}");
+            }
+            else
+            {
+                Debug.LogWarning("[GlobalDeathUI] deathImage component not found!");
+            }
+            
+            if (backgroundOverlay != null)
+            {
+                Debug.Log($"[GlobalDeathUI] Found backgroundOverlay: {backgroundOverlay.name}");
             }
 
             // If no UI components found, create them at runtime
@@ -256,19 +297,41 @@ namespace Antventure.UI
             if (deathMessageText != null)
             {
                 deathMessageText.text = string.IsNullOrEmpty(message) ? defaultDeathMessage : message;
+                Debug.Log($"[GlobalDeathUI] Set message text: '{deathMessageText.text}'");
             }
 
             // Set the death image
             if (deathImage != null)
             {
                 Sprite displaySprite = sprite != null ? sprite : defaultDeathSprite;
-                deathImage.sprite = displaySprite;
-
-                // Resize the image to fit within the central limit of the screen.
-                if (displaySprite != null && imageRectTransform != null)
+                
+                Debug.Log($"[GlobalDeathUI] Setting death image - sprite provided: {sprite != null}, default sprite: {defaultDeathSprite != null}, using: {displaySprite != null}");
+                
+                if (displaySprite != null)
                 {
-                    AdjustImageSize(displaySprite);
+                    deathImage.sprite = displaySprite;
+                    deathImage.enabled = true; // Ensure image is enabled
+                    deathImage.color = Color.white; // Ensure image is fully visible
+                    
+                    // Resize the image to fit within the central limit of the screen.
+                    if (imageRectTransform != null)
+                    {
+                        AdjustImageSize(displaySprite);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[GlobalDeathUI] imageRectTransform is null, cannot adjust image size");
+                    }
                 }
+                else
+                {
+                    Debug.LogWarning("[GlobalDeathUI] No sprite available (neither provided nor default), hiding death image");
+                    deathImage.enabled = false; // Hide image if no sprite
+                }
+            }
+            else
+            {
+                Debug.LogError("[GlobalDeathUI] deathImage component is null!");
             }
         }
 
