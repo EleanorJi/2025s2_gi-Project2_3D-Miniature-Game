@@ -387,7 +387,7 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 ### Personal Contribution Report - Naixin Zhang
 
 #### 1. Overview of Contributions
-I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts.
+I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts. I also created all death screen artwork for Level 1 and Level 2 using iPad Procreate, and handled the promotional video production including footage capture, editing, and sound design.
 
 #### 2. Key Contributions
 
@@ -480,8 +480,25 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
   * [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
   * [AutoDestroyParticle.cs](Assets/Scripts/Runtime/Level2/AutoDestroyParticle.cs)
 
-##### 2.4 Reporting
-* Wrote technical documentation for the HoneyWater shader system and Dissolve shader system.
+##### 2.4 Death Screen Artwork
+* Created all death screen artwork for Level 1 and Level 2 using iPad Procreate.
+* Designed custom hand-drawn death illustrations that match each level's aesthetic and thematic elements.
+* These artwork pieces are integrated into the game's death UI system to provide visual feedback when players fail.
+* Relevant files
+  * [GlobalDeathUIController.cs](Assets/Scripts/Runtime/UI/GlobalDeathUIController.cs)
+  * [DeathUI_AutoWire.cs](Assets/Scripts/Runtime/UI/DeathUI_AutoWire.cs)
+  * [DeathUIOverlay.cs](Assets/Scripts/Runtime/Level2/DeathUIOverlay.cs)
+  * Death screen sprites are referenced in Level 1 and Level 2 scenes
+
+##### 2.5 Promotional Video Production
+* Handled complete promotional video production including:
+  * **Footage Capture:** Recorded gameplay footage from all levels showcasing key mechanics, visual effects, and gameplay flow
+  * **Video Editing:** Assembled and edited footage to create a cohesive promotional video highlighting the game's features
+  * **Sound Design:** Integrated background music and sound effects to enhance the video's impact and maintain pacing
+* The promotional video serves as a key marketing asset for the project presentation.
+
+##### 2.6 Reporting
+* Wrote technical documentation for the HoneyWater shader system and all my work.
 
 ### Personal Contribution Report - Zixin Xia
 
