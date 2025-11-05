@@ -544,18 +544,130 @@ Unique level transition system: Displays a countdown and automatically transitio
     * [Level3CookieUI.cs](Assets/Scripts/Runtime/UI/Level3_cookies/Level3CookieUI.cs)
     * [NoCookieUI.cs](Assets/Scripts/Runtime/UI/Level3_cookies/NoCookieUI.cs)
     * [ResetCookiesOnGameStart.cs](Assets/Scripts/Runtime/UI/Level3_cookies/ResetCookiesOnGameStart.cs)
+### Personal Contribution Report - Ruonan Xiong
 
+#### 1. Overview of Contributions
+I was primarily responsible for the entire game's UI system architecture, including the main menu, hint UI system, audio management, and pause system. My contributions encompass the design and implementation of core UI infrastructure that supports all gameplay levels, ensuring consistent user experience across the entire game.
 
-##### 2.3 Particle Systems Development
-* Design and implement particle effects for game feedback and visual polishing in Level 3.
-A particle system has been added to the trailing effects of player attacks, boss attacks, and dropped items
-The main particle systems implemented:
-** * Venom Spray effect: ** Track the venom attacks of ants in the particle system and provide clear visual feedback for the shooting mechanism.
-** * Feather Trailing effect: ** It gives the feather the feeling of wind passing through when it flies in the air, making it more realistic and as lethal as sword qi, allowing players to identify and dodge it more quickly.
-** * Effect of blood pack drop items: ** Make the blood packs in the scene attractive to players. Since the blood pack generation is triggered only when the player's health is below half, adding a particle system to the blood pack can make it more attractive.
+#### 2. Key Contributions
 
-##### 2.4 Unique UI Design
-* Since this is the final level, the UI has been designed with different effects from the previous levels. For instance, the instructional UI prompt at the beginning deliberately uses a more independent UI display interface to make players pay more attention to the difficulty of this level and have a passionate feeling of going to fight the Boss.
+##### 2.1 Global UI System Architecture
+* Designed and implemented a comprehensive UI management framework that provides unified control across all game scenes.
+* Created a centralized UI manager system with singleton pattern for consistent UI behavior throughout the game.
+* Implemented scene-based UI state management and automatic UI initialization on scene loads.
+* Relevant files
+  * Core UI Management
+    * [UIManager.cs](Assets/Scripts/Runtime/UI/UIManager.cs)
+    * [GlobalDeathUIController.cs](Assets/Scripts/Runtime/UI/GlobalDeathUIController.cs)
+    * [GlobalDeathUIControllerEditor.cs](Assets/Scripts/Editor/GlobalDeathUIControllerEditor.cs)
+    * [SceneOrderManager.cs](Assets/Scripts/Runtime/Core/SceneOrderManager.cs)
+
+##### 2.2 Main Menu System
+* Designed and implemented the complete main menu interface with animated ant character.
+* Created interactive menu system with smooth transitions and audio feedback.
+* Implemented team panel display and settings integration.
+* Developed home page ant animator with breathing animations.
+* Relevant files
+  * Main Menu
+    * [MainMenuController.cs](Assets/Scripts/Runtime/UI/Menus/MainMenuController.cs)
+    * [TeamPanelController.cs](Assets/Scripts/Runtime/UI/Menus/TeamPanelController.cs)
+    * [HomeAntAnimator.cs](Assets/Scripts/Runtime/UI/HomeAntAnimator.cs)
+    * [SettingsUICreator.cs](Assets/Scripts/Runtime/UI/Menus/SettingsUICreator.cs)
+
+##### 2.3 Hint UI System
+* Developed a comprehensive hint display system with multiple trigger modes and display options.
+* Implemented local and global hint display components with fade animations and auto-hide functionality.
+* Created timed hint system for time-sensitive gameplay scenarios.
+* Built cookie requirement checking system integrated with hint triggers.
+* Designed custom canvas message system for special hint displays.
+* Relevant files
+  * Hint System
+    * [HintTrigger.cs](Assets/Scripts/Runtime/UI/HintTrigger.cs)
+    * [Checkpoints.cs](Assets/Scripts/Runtime/checkPoint/Checkpoint.cs)
+    * [LocalHintDisplay.cs](Assets/Scripts/Runtime/UI/LocalHintDisplay.cs)
+    * [GameTextManager.cs](Assets/Scripts/Runtime/UI/GameTextManager.cs)
+
+##### 2.4 Death UI System
+* Implemented unified death UI controller with global and local display modes.
+* Created automatic death UI wiring system that integrates with player health system.
+* Designed death UI with customizable images, messages, and fade animations.
+* Developed editor tools for runtime death UI creation and testing.
+* Integrated cookie preservation system for death/respawn mechanics.
+* Relevant files
+  * Death UI
+    * [DeathUI_AutoWire.cs](Assets/Scripts/Runtime/UI/DeathUI_AutoWire.cs)
+    * [GlobalDeathUIController.cs](Assets/Scripts/Runtime/UI/GlobalDeathUIController.cs)
+    * [GlobalDeathUIControllerEditor.cs](Assets/Scripts/Editor/GlobalDeathUIControllerEditor.cs)
+
+##### 2.5 Cursor Management System
+* Developed multi-layered cursor management system with unified control.
+* Implemented aggressive cursor hiding for gameplay scenes with continuous enforcement.
+* Created cursor state management for different game modes (gameplay, menu, hover).
+* Designed cursor texture loading system with fallback mechanisms.
+* Integrated cursor system with pause menu and UI interactions.
+* Relevant files
+  * Cursor Management
+    * [CursorManager.cs](Assets/Scripts/Runtime/UI/CursorManager.cs)
+    * [UnifiedCursorManager.cs](Assets/Scripts/Runtime/UI/UnifiedCursorManager.cs)
+    * [GameplayCursorController.cs](Assets/Scripts/Runtime/UI/GameplayCursorController.cs)
+
+##### 2.6 Font Management System
+* Implemented unified font management system for consistent typography across all UI.
+* Created automatic font application system that applies fonts on scene load.
+* Developed editor tools for font management and batch font operations.
+* Built font size and color standardization system based on component type.
+* Relevant files
+  * Font Management
+    * [FontManager.cs](Assets/Scripts/Runtime/UI/FontManager.cs)
+    * [FontManagerEditor.cs](Assets/Scripts/Editor/FontManagerEditor.cs)
+    * [GlobalFontApplier.cs](Assets/Scripts/Runtime/UI/GlobalFontApplier.cs)
+
+##### 2.7 Audio Management System
+* Designed and implemented comprehensive audio management architecture.
+* Created scene-based BGM system with automatic transitions and fade effects.
+* Implemented audio settings persistence and volume control system.
+* Developed audio manager with separate music and sound effect channels.
+* Created BGM setup helpers and scene-specific BGM controllers.
+* Relevant files
+  * Audio System
+    * [AudioManager.cs](Assets/Scripts/Runtime/Systems/Audio/AudioManager.cs)
+    * [BGMManager.cs](Assets/Scripts/Runtime/Systems/Audio/BGMManager.cs)
+    * [BGMSetupHelper.cs](Assets/Scripts/Runtime/Systems/Audio/BGMSetupHelper.cs)
+    * [SceneBGMController.cs](Assets/Scripts/Runtime/Systems/Audio/SceneBGMController.cs)
+
+##### 2.8 Pause System
+* Implemented comprehensive pause system with UI panel management.
+* Created pause menu with resume, settings, and exit functionality.
+* Integrated pause system with audio management and cursor control.
+* Developed pause menu with audio volume controls and settings persistence.
+* Implemented automatic pause state management across scene transitions.
+* Relevant files
+  * Pause System
+    * [GamePauseSystem.cs](Assets/Scripts/Runtime/UI/Menus/GamePauseSystem.cs)
+    * [PauseMenuController.cs](Assets/Scripts/Runtime/UI/Menus/PauseMenuController.cs)
+    * [GameSettingsManager.cs](Assets/Scripts/Runtime/UI/Menus/GameSettingsManager.cs)
+
+##### 2.9 Scene Management
+* Implemented scene order management system for sequential level progression.
+* Created scene transition system with automatic next/previous scene loading.
+* Developed scene information display and debugging tools.
+* Relevant files
+  * Scene Management
+    * [SceneOrderManager.cs](Assets/Scripts/Runtime/Core/SceneOrderManager.cs)
+
+##### 2.10 Evaluation Plan
+* Designed and finalized evaluation materials including interview scripts and consent forms for user testing.
+* Coordinated participant recruitment and scheduling for evaluation sessions.
+* Administered System Usability Scale (SUS) questionnaires and conducted semi-structured interviews with participants.
+* Collaborated with team members to collect quantitative and qualitative data for usability analysis.
+* Contributed to data analysis and synthesis to identify usability issues and prioritize improvements.
+* The evaluation plan utilized both observational (Cooperative Evaluation) and querying (SUS Questionnaire & Semi-Structured Interview) techniques with 10 total participants, resulting in an average SUS score of 85 and significant improvements to the game's usability.
+
+##### 2.11 Editor Tools and Utilities
+* Developed comprehensive editor tools for UI system setup and testing.
+* Created runtime UI creation tools for death UI and other dynamic UI elements.
+* Implemented editor windows for font management and UI component analysis.
+* Built context menu tools for quick UI setup and testing.
 
 ## References and External Resources
 
