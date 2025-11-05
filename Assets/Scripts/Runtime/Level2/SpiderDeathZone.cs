@@ -14,24 +14,24 @@ public class SpiderDeathZone : MonoBehaviour
     public float holdSeconds = 4f;
 
     [Header("Integrate with Water Area (optional)")]
-    [Tooltip("只在需要把这次死亡当作“大水域内死亡”时勾上；其他区域保持关闭")]
+    [Tooltip("Only enable when this death should be treated as 'death inside large water area'; keep disabled for other zones")]
     public bool enableWaterAreaIntegration = false;
 
-    [Tooltip("推荐手动指定对应的 FloodSequence；留空且启用自动查找时，会按包含关系自动寻找")]
+    [Tooltip("Recommended to manually specify the corresponding FloodSequence; if empty and auto-find is enabled, will auto-search by containment")]
     public FloodSequence waterArea;
 
-    [Tooltip("未手动指定时，是否自动查找“包含当前位置”的 FloodSequence.startZone")]
+    [Tooltip("When not manually specified, whether to auto-find FloodSequence.startZone that contains current position")]
     public bool autoFindContainingArea = true;
 
     [Header("Respawn Override (optional)")]
-    [Tooltip("若指定：本区死亡将强制在此点复活（优先于全局检查点）。留空：按正常 checkpoint 流程。")]
+    [Tooltip("If specified: deaths in this zone will force respawn at this point (overrides global checkpoint). Leave empty: use normal checkpoint flow.")]
     public Transform respawnOverride;
 
-    [Tooltip("若存在全局 RespawnManager，可在 Die() 前覆盖“下一次重生点”。留空则忽略。")]
-    public RespawnManager respawnManager; // 可选：你项目里的重生管理器（如果有）
+    [Tooltip("If a global RespawnManager exists, can override 'next respawn point' before Die(). Leave empty to ignore.")]
+    public RespawnManager respawnManager; // Optional: respawn manager in your project (if exists)
     
     [Header("Routing Preference")]
-    [Tooltip("勾上后，若命中水域，则直接调用 FloodSequence.HandleDeathInsideExternal()，由水域统一处理传送/清零。")]
+    [Tooltip("If enabled, when hitting water area, directly calls FloodSequence.HandleDeathInsideExternal(), letting water area handle teleport/reset uniformly.")]
     public bool preferFloodAreaHandle = true;
 
     bool _busy;
@@ -53,13 +53,13 @@ public class SpiderDeathZone : MonoBehaviour
 
         _busy = true;
 
-        // —— 优先检查：如果设置了专属重生点，直接使用（优先于水域和checkpoint）—— //
+        // —— Priority check: if dedicated respawn point is set, use it directly (overrides water area and checkpoint) —— //
         if (respawnOverride)
         {
-            // 直接传送到指定重生点
+            // Directly teleport to specified respawn point
             SafeWarpImmediate(root, respawnOverride);
             
-            // 播放死亡效果
+            // Play death effect
             GlobalSfx.PlayDeathSfx();
             if (DeathUIOverlay.Instance)
             {
@@ -73,7 +73,7 @@ public class SpiderDeathZone : MonoBehaviour
             return;
         }
 
-        // —— 尝试定位当前所在的大水域（若开启集成）—— //
+        // —— Try to locate current large water area (if integration enabled) —— //
         FloodSequence area = null;
         if (enableWaterAreaIntegration)
         {
@@ -82,14 +82,14 @@ public class SpiderDeathZone : MonoBehaviour
                 area = FindFloodAreaContaining(root.position);
         }
 
-        // —— Strategy A：优先交给 FloodSequence 自己"内部处理死亡" —— //
-        // 条件：已开启集成且确实在该水域里，并且你更偏好水域处理（避免被全局 checkpoint 传到别处）
+        // —— Strategy A: Priority to let FloodSequence handle "internal death processing" —— //
+        // Condition: integration enabled and actually inside the water area, and prefer water area handling (avoid being teleported elsewhere by global checkpoint)
         if (preferFloodAreaHandle && area != null && area.IsPlayerInsideZonePublic())
         {
-            // 让大水域执行：标记这次死在水域 + 清零饼干 + 复位涨水 + 传送到 waterArea.respawnPoint
+            // Let large water area execute: mark death in water + reset cookies + reset flood + teleport to waterArea.respawnPoint
             area.HandleDeathInsideExternal();
 
-            // 只做演出（SFX + 死亡UI），不调用 pc.Die()，以免触发全局 checkpoint 再干预
+            // Only perform effects (SFX + death UI), don't call pc.Die() to avoid triggering global checkpoint intervention
             GlobalSfx.PlayDeathSfx();
             if (DeathUIOverlay.Instance)
             {
@@ -103,7 +103,7 @@ public class SpiderDeathZone : MonoBehaviour
             return;
         }
 
-        // —— Strategy B：执行通用"死亡"流程（交给全局生命周期处理）—— //
+        // —— Strategy B: Execute general "death" flow (handled by global lifecycle) —— //
         pc.Die();
         GlobalSfx.PlayDeathSfx();
 
@@ -115,7 +115,7 @@ public class SpiderDeathZone : MonoBehaviour
                 DeathUIOverlay.Instance.Show(overrideMessage, overrideSprite, null);
         }
 
-        // —— 若开启水域集成但未采用 Strategy A，也至少把“这轮死过”记到水域里（不负责传送）—— //
+        // —— If water area integration is enabled but Strategy A was not used, at least record "died this round" in water area (not responsible for teleport) —— //
         if (enableWaterAreaIntegration && area != null && area.IsPlayerInsideZonePublic())
         {
             area.NotifyPlayerDiedInside();
@@ -126,7 +126,7 @@ public class SpiderDeathZone : MonoBehaviour
 
     IEnumerator ClearBusyNextFrame() { yield return null; _busy = false; }
 
-    // 在场景里按“包含关系”自动找到 FloodSequence（基于 startZone 的 ClosestPoint）
+    // Auto-find FloodSequence in scene by "containment relationship" (based on startZone's ClosestPoint)
     FloodSequence FindFloodAreaContaining(Vector3 pos)
     {
         var all = FindObjectsByType<FloodSequence>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -134,12 +134,12 @@ public class SpiderDeathZone : MonoBehaviour
         {
             if (!fs || fs.startZone == null) continue;
             var cp = fs.startZone.ClosestPoint(pos);
-            if ((cp - pos).sqrMagnitude < 1e-6f) return fs; // 点在该触发体内
+            if ((cp - pos).sqrMagnitude < 1e-6f) return fs; // Point is inside the trigger
         }
         return null;
     }
 
-    // 安全瞬移（处理 RB / CC / Agent），用于 Strategy B 的“先搬后死”兜底
+    // Safe teleport (handles RB / CC / Agent), used as fallback for Strategy B's "move first then die"
     void SafeWarpImmediate(Transform t, Transform target)
     {
         if (!t || !target) return;
@@ -173,12 +173,12 @@ public class SpiderDeathZone : MonoBehaviour
     }
 }
 
-// —— 只是一个示例接口；若你项目已有不同名字/签名的管理器，请在 Inspector 里拖入并适配 —— //
+// —— Just an example interface; if your project already has a manager with different name/signature, drag it in Inspector and adapt —— //
 public class RespawnManager : MonoBehaviour
 {
-    // 供 SpiderDeathZone 可选调用的“下一次重生点覆盖”接口
+    // Interface for SpiderDeathZone to optionally call "next respawn point override"
     public void OverrideNextRespawn(Vector3 pos, Quaternion rot)
     {
-        // TODO: 实现你项目里的“下次重生点”设置（例如存到一个静态字段，复活后清空）
+        // TODO: Implement your project's "next respawn point" setting (e.g., store in static field, clear after respawn)
     }
 }

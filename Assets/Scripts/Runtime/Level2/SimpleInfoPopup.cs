@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SimpleInfoPopup : MonoBehaviour
 {
-    public static SimpleInfoPopup I; // 简单单例（也可不跨场景，用当前场景里的）
+    public static SimpleInfoPopup I; // Simple singleton (can also not cross-scene, use current scene's)
 
     [Header("UI Refs")]
-    public CanvasGroup root;            // 给 Canvas 根加个 CanvasGroup 方便显隐
-    public TextMeshProUGUI bodyText;    // 只显示一句话
-    public AudioSource typingAudio;     // 循环打字音效（Loop=✔）
+    public CanvasGroup root;            // Add CanvasGroup to Canvas root for easy show/hide
+    public TextMeshProUGUI bodyText;    // Display only one sentence
+    public AudioSource typingAudio;     // Looping typing sound effect (Loop=✔)
 
     [Header("Typing")]
     public float secondsPerChar = 0.03f;
@@ -21,7 +21,7 @@ public class SimpleInfoPopup : MonoBehaviour
     {
         I = this;
         HideImmediate();
-        // 让“暂停全局声音”时，本Audio不受影响（我们要在暂停里继续播放打字音）
+        // Make this Audio unaffected when "pause global sound" (we want to continue playing typing sound during pause)
         if (typingAudio) typingAudio.ignoreListenerPause = true;
     }
 
@@ -33,16 +33,16 @@ public class SimpleInfoPopup : MonoBehaviour
         bodyText.text = "";
         root.blocksRaycasts = true;
 
-        // —— 暂停全局 —— //
+        // —— Pause global —— //
         _prevTimeScale = Time.timeScale;
         Time.timeScale = 0f;
-        AudioListener.pause = true; // 暂停场景里其它声音（可选）
-        // 我们的 typingAudio 会继续，因为 ignoreListenerPause=true
+        AudioListener.pause = true; // Pause other sounds in scene (optional)
+        // Our typingAudio will continue, because ignoreListenerPause=true
 
-        // 显示 UI
+        // Show UI
         root.alpha = 1f;
 
-        // 开始打字
+        // Start typing
         if (typingAudio) typingAudio.Play();
         StartCoroutine(TypeRoutine(text));
     }
@@ -53,7 +53,7 @@ public class SimpleInfoPopup : MonoBehaviour
         foreach (char c in full)
         {
             bodyText.text += c;
-            // 用不受 timeScale 影响的时间
+            // Use time unaffected by timeScale
             float t = 0f;
             while (t < spc)
             {
@@ -62,20 +62,20 @@ public class SimpleInfoPopup : MonoBehaviour
             }
         }
 
-        // 打完：停音效 → 直接关闭并恢复游戏
+        // Finished typing: stop sound effect → directly close and resume game
         if (typingAudio) typingAudio.Stop();
         CloseAndResume();
     }
 
     void CloseAndResume()
     {
-        // 隐藏 UI
+        // Hide UI
         root.alpha = 0f;
         root.blocksRaycasts = false;
         _busy = false;
         gameObject.SetActive(false);
 
-        // —— 恢复全局 —— //
+        // —— Resume global —— //
         AudioListener.pause = false;
         Time.timeScale = _prevTimeScale;
     }

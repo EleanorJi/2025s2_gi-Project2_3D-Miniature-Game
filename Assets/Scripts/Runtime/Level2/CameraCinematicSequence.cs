@@ -296,21 +296,21 @@ public class CameraCinematicSequence : MonoBehaviour
             //    _leafInstance.transform.SetParent(null, true); _leafInstance.transform.position = stage2End.position;
             //}
 
-            // 结尾确保叶子保持可见，不再在结束时销毁
+            // Ensure leaf remains visible at end, no longer destroy at finish
             SetVisualVisible(_leafInstance, true);
 
-            // 不再销毁叶子，直接解除父子关系
+            // No longer destroy leaf, directly unparent
             _leafInstance.transform.SetParent(null, true);
             _leafInstance.transform.position = stage2End.position;
         }
 
-        // 在结束阶段重新生成叶子
+        // Regenerate leaf at end stage
         if (leafCarryVisualPrefab)
         {
             Vector3 spawnWorldPos = new Vector3(71f, 1.29f, -339.618073f);
 
             GameObject newLeaf = Instantiate(leafCarryVisualPrefab, spawnWorldPos, Quaternion.identity);
-            // 重置大小为 1,1,1
+            // Reset size to 1,1,1
             newLeaf.transform.localScale = Vector3.one;
 
             newLeaf.transform.rotation = Quaternion.identity;
@@ -376,7 +376,7 @@ public class CameraCinematicSequence : MonoBehaviour
             //if (holdAtPoint6BeforeLoad > 0f)
             //    yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
 
-            //if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: 使用场景顺序跳转");
+            //if (debugLogs) Debug.Log($"[Cinematic] Loading next scene: using scene order transition");
             //SceneOrderManager.Instance.LoadNextScene();
             //yield break; // scene switched, end coroutine
 
@@ -385,7 +385,7 @@ public class CameraCinematicSequence : MonoBehaviour
             else
             {
                 if (holdAtPoint6BeforeLoad > 0f) yield return new WaitForSeconds(holdAtPoint6BeforeLoad);
-                if (debugLogs) Debug.Log("[Cinematic] Loading next scene: 使用场景顺序跳转");
+                if (debugLogs) Debug.Log("[Cinematic] Loading next scene: using scene order transition");
                 SceneOrderManager.Instance.LoadNextScene();
             }
             yield break;

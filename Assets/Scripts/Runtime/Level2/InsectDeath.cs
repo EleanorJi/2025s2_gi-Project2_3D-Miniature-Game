@@ -55,11 +55,11 @@ public class InsectDeath : MonoBehaviour
 
     private void Awake()
     {
-        // 注释掉自动查找粒子系统，避免与DissolveSphere的Ember_Particles冲突
+        // Disable auto-finding particle system to avoid conflict with DissolveSphere's Ember_Particles
         // ResolveExplosionChild();                // Auto-find the disabled particle child
         if (explosionChild && explosionChild.activeSelf)
         {
-            Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid开场播放。");
+            Debug.LogWarning($"[InsectDeath] '{explosionChild.name}' is active at start, forced to be disabled to avoid auto-play.");
             explosionChild.SetActive(false);    // Don’t let it play at scene start
         }
 
@@ -69,7 +69,7 @@ public class InsectDeath : MonoBehaviour
     /// <summary> Standard death: explode once at the insect's current position. </summary>
     public void Kill()
     {
-        // 防止重复死亡
+        // Prevent duplicate death
         if (isDead) return;
         isDead = true;
         
@@ -85,11 +85,11 @@ public class InsectDeath : MonoBehaviour
     /// <summary> Death with hit info (but we don't alter FX by that normal/pos anymore). </summary>
     public void KillAt(Vector3 hitPos, Vector3 hitNormal)
     {
-        // 隐藏原模型，显示死亡模型
+        // Hide original model, show death model
         gameObjects[0].SetActive(false);
         gameObjects[1].SetActive(true);
 
-        // 启动死亡动画
+        // Start death animation
         DissolveSphere[] dissolves = GetComponentsInChildren<DissolveSphere>();
         foreach (DissolveSphere diss in dissolves)
         {
@@ -99,7 +99,7 @@ public class InsectDeath : MonoBehaviour
         
         //PlayExplosion(hitPos, hitNormal);
 
-        // Drop the same cookie (only once) - 先掉落饼干，再禁用碰撞器
+        // Drop the same cookie (only once) - drop cookie first, then disable colliders
         if (!dropped && carryCookie && cookieOnBack)
         {
             dropped = true;
@@ -109,7 +109,7 @@ public class InsectDeath : MonoBehaviour
                 cookieOnBack.transform.position = carryPoint.position;
                 cookieOnBack.transform.rotation = carryPoint.rotation;
             }
-            // 将饼干从虫子分离出来
+            // Detach cookie from insect
             cookieOnBack.transform.SetParent(null);
 
             var rb = cookieOnBack.GetComponent<Rigidbody>();
@@ -122,13 +122,13 @@ public class InsectDeath : MonoBehaviour
                 rb.AddTorque(Random.onUnitSphere * dropTorque, ForceMode.Impulse);
             }
             
-            // 将掉落饼干移到专门的Layer，避免与粒子系统碰撞
-            // 注意：需要在粒子系统的Collision模块中排除"Cookie" Layer
+            // Move dropped cookie to dedicated layer to avoid particle collision
+            // Note: Need to exclude "Cookie" layer in particle system's Collision module
             int cookieLayer = LayerMask.NameToLayer("Cookie");
             if (cookieLayer == -1)
             {
-                // 如果"Cookie" Layer不存在，使用"Default" Layer但设置为Trigger
-                // 这样粒子系统不会碰撞（因为粒子系统默认不碰撞Trigger）
+                // If "Cookie" layer doesn't exist, use "Default" layer but set as Trigger
+                // This prevents particle collision (particles don't collide with triggers by default)
                 Collider[] cookieColliders = cookieOnBack.GetComponentsInChildren<Collider>();
                 foreach (Collider col in cookieColliders)
                 {
@@ -137,9 +137,9 @@ public class InsectDeath : MonoBehaviour
             }
             else
             {
-                // 使用专门的Cookie Layer
+                // Use dedicated Cookie layer
                 cookieOnBack.layer = cookieLayer;
-                // 同时设置所有子物体的Layer
+                // Also set layer for all child objects
                 Transform[] cookieChildren = cookieOnBack.GetComponentsInChildren<Transform>();
                 foreach (Transform child in cookieChildren)
                 {
@@ -148,21 +148,21 @@ public class InsectDeath : MonoBehaviour
             }
         }
 
-        // 饼干已经分离，现在禁用虫子身上的所有碰撞器，防止再次被击中
+        // Cookie is detached, now disable all colliders on insect to prevent being hit again
         Collider[] colliders = GetComponentsInChildren<Collider>();
         foreach (Collider col in colliders)
         {
             col.enabled = false;
         }
         
-        // 设置刚体为运动学模式，停止物理模拟
+        // Set rigidbody to kinematic mode, stop physics simulation
         Rigidbody bugRb = GetComponent<Rigidbody>();
         if (bugRb != null)
         {
             bugRb.isKinematic = true;
         }
        
-        // 延长销毁时间以完整播放死亡动画（坍塌+消散约3秒）
+        // Extend destroy time to fully play death animation (collapse + dissolve ~3 seconds)
         Destroy(gameObject, 3.5f);
     }
 
@@ -211,7 +211,7 @@ public class InsectDeath : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[InsectDeath] 未设置 explosionChild 或 explosionFxPrefab，无法显示爆炸。");
+            Debug.LogWarning("[InsectDeath] explosionChild or explosionFxPrefab not set, cannot display explosion.");
         }
 
         // —— Audio —— //
@@ -268,7 +268,7 @@ public class InsectDeath : MonoBehaviour
 
     private void OnCollisionEnter(Collision c)
     {
-        // 已经死亡，不再杀死玩家
+        // Already dead, don't kill player again
         if (isDead) return;
         if (!killPlayerOnTouch) return;
         if (c.collider.CompareTag("Player"))
@@ -286,7 +286,7 @@ public class InsectDeath : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Test Kill 需要在 Play 模式下运行。");
+            Debug.LogWarning("Test Kill needs to run in Play mode.");
         }
     }
 

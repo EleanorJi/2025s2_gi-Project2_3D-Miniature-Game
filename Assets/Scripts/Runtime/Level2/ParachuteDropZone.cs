@@ -1,4 +1,4 @@
-// ParachuteDropZone.cs  新建脚本并挂到“重生点区域”的触发体上
+// ParachuteDropZone.cs - Attach this script to the trigger collider at the respawn zone
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]

@@ -10,7 +10,7 @@ public class HoneyLifeResetTrigger : MonoBehaviour
 
     void Reset() { GetComponent<Collider>().isTrigger = true; }
 
-    void LateUpdate() { _doneThisFrame = false; } // 允许下一帧再次触发一次
+    void LateUpdate() { _doneThisFrame = false; } // Allow triggering again next frame
 
     void OnTriggerEnter(Collider other) { TryReset(other); }
     void OnTriggerStay(Collider other)  { TryReset(other); }

@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class BugCookieHandler : MonoBehaviour
 {
-    public GameObject cookie; // 需要在虫子被销毁时将该饼干从父对象脱离并落下
+    public GameObject cookie; // Cookie to detach from parent and drop when bug is destroyed
 
     void OnDestroy()
     {
         if (cookie != null)
         {
-            // 脱离父物体，使其在场景中独立
+            // Unparent, make it independent when bug is destroyed
             cookie.transform.parent = null;
 
-            // 确保有 Rigidbody，启用重力让其落下
+            // Ensure Rigidbody exists and enable physics
             Rigidbody rb = cookie.GetComponent<Rigidbody>();
             if (rb == null)
             {

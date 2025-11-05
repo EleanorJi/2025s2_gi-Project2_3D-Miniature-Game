@@ -34,7 +34,7 @@ Shader "Particles/CloudFresnelSimple"
             {
                 float4 vertex : POSITION;
                 float3 normal : NORMAL;
-                float4 color  : COLOR;   // 粒子顶点色
+                float4 color  : COLOR;   // Particle vertex color
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -60,7 +60,7 @@ Shader "Particles/CloudFresnelSimple"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                // Fresnel：以 1 - dot(N,V) 的幂做插值因子
+                // Fresnel: use power of 1 - dot(N,V) as interpolation factor
                 float3 N = normalize(i.nrmWS);
                 float3 V = normalize(_WorldSpaceCameraPos.xyz - i.posWS);
                 float  t = pow(saturate(1.0 - saturate(dot(N, V))), _FresnelPower);
@@ -69,7 +69,7 @@ Shader "Particles/CloudFresnelSimple"
                 // Lerp(CenterColor, FresnelColor, t)
                 fixed4 col = lerp(_CenterColor, _FresnelColor, saturate(t));
 
-                // 乘上粒子顶点色（接粒子系统 Start/Over Lifetime 的颜色和透明）
+                // Multiply by particle vertex color (connects to particle system Start/Over Lifetime color and transparency)
                 col *= i.color;
 
                 #if _ALPHAPREMULTIPLY_ON

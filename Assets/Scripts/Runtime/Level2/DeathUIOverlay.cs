@@ -23,7 +23,7 @@ public class DeathUIOverlay : MonoBehaviour
 
     [Header("Global Controller Integration")]
     [SerializeField] private bool useGlobalController = true;
-    [Tooltip("如果启用，将使用GlobalDeathUIController来显示死亡UI，否则使用本地UI")]
+    [Tooltip("If enabled, will use GlobalDeathUIController to display death UI, otherwise use local UI")]
 
     Coroutine _co;
 
@@ -54,7 +54,7 @@ public class DeathUIOverlay : MonoBehaviour
 
     void ShowInternal(float hold, string msgOverride, Sprite spriteOverride)
     {
-        // 如果启用全局控制器且存在，则使用全局控制器
+        // If global controller is enabled and exists, use global controller
         if (useGlobalController && GlobalDeathUIController.Instance != null)
         {
             string finalMessage = string.IsNullOrEmpty(msgOverride) ? defaultMessage : msgOverride;
@@ -65,7 +65,7 @@ public class DeathUIOverlay : MonoBehaviour
             return;
         }
 
-        // 否则使用本地UI
+        // Otherwise use local UI
         if (_co != null) StopCoroutine(_co);
         _co = StartCoroutine(Run(hold, msgOverride, spriteOverride));
     }
