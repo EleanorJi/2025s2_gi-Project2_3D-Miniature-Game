@@ -65,7 +65,6 @@ Step into the ant's world through their eyes!
 
 -   **Summoning Mechanics:** Collecting cookie crumbs summons ant helpers (worker ants assist in combat, while nest-building ants construct bridges/ladders). This introduces strategy and variety within the game's short playtime.
 -   **Creative Environmental Interaction:** Each level features unique obstacles: kitchen stovetops, milk cartons, curbside stone paths, flower beds requiring hopping over, and docks coveted by the street's dominant seagulls.
--   **Science Micro-Facts (Edutainment):** Bite-sized ant facts (pheromone trails, swarm intelligence, venom/acid spray, adhesive pads, living bridges/ant ladders) are unlocked as you play; presented as optional HUD tips and loading-screen cards for “learn-while-playing.”
 
 ---
 
@@ -94,7 +93,7 @@ The ultimate adversary is the tyrannical seagull—a “dragon” in the ant wor
     -   **Role:** The final boss and the greedy thief who stole the cookie.
     -   **Personality & Motivation:** Arrogant and possessive, it views the ant's world as its personal pantry, plundering at will.
     -   **Appearance:** From the ant's perspective, it is a massive and intimidating grey pigeon, with detailed feathers and threatening animations.
-    -   **Role in Gameplay:** Appears as the boss in the dock level. Its attack patterns include: a fast pecking motion with its beak, and periodically flapping its wings to create strong gusts of wind that can push the ant back or create obstacles.
+    -   **Role in Gameplay:** Appears as the boss in the dock level. Its attack is flapping its wings. Each wing flap also releases three homing feathers that track and attack the player.
 -   **Helper Ants (Worker, Builder, etc.)**
     -   **Role:** AI-controlled allies summoned by the protagonist ant, crucial for solving puzzles and overcoming level challenges. 
 -   **Insects (Environmental Enemies)**
@@ -126,7 +125,7 @@ The game employs a dynamic third-person perspective. Players control an ant char
 -   **Environmental Interaction:** The "E" key is used for interacting with scene objects and summoning points.
 -   **Launch attack:** Left mouse button is used to shoot venom.
 -   **Viewpoint control:** Adjust the camera direction by moving the mouse.
--   **Special operation:** The "J" key is used to escape from a trapped situation. The "V" key is used for some special gameplay methods.
+-   **Special operation:** The "Space" key is also used to escape from a trapped situation. The "V" key is used for some special gameplay methods.
 
 ### Progression
 
@@ -144,9 +143,7 @@ The game employs a dynamic third-person perspective. Players control an ant char
     -   Using the checkpoint respawn system, after death, one can quickly restart from the most recent node.
     -   Simplify the health system and adopt a one-hit-death mechanism but combine it with quick respawn to maintain the game pace.
 -   **Continuous play motivation comes from:**
-    -   Collect food scraps to unlock the skin color of the new ant character.
     -   Each level features multiple hidden food scraps to encourage exploration (linked to the summoning mechanism for the final boss battle).
-    -   The time record function for completing the game can be considered to encourage repeated challenges.
 
 ### Gameplay Mechanics
 
