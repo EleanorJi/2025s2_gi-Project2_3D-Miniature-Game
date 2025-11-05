@@ -107,49 +107,7 @@ namespace HoneyShaderSystem
             }
             else
             {
-                // Draw sufrace normal
-                //var vertices = this.meshWorldVertices;
-                //var triangles = this.Mesh.triangles;
-                //for (int i = 0; i < triangles.Length; i += 3)
-                //{
-                //    Gizmos.color = Color.white;
-                //    Gizmos.DrawLine(vertices[triangles[i + 0]], vertices[triangles[i + 1]]);
-                //    Gizmos.DrawLine(vertices[triangles[i + 1]], vertices[triangles[i + 2]]);
-                //    Gizmos.DrawLine(vertices[triangles[i + 2]], vertices[triangles[i + 0]]);
 
-                //    Vector3 center = MathfUtils.GetAveratePoint(vertices[triangles[i + 0]], vertices[triangles[i + 1]], vertices[triangles[i + 2]]);
-                //    Vector3 normal = this.GetSurfaceNormal(center);
-
-                //    Gizmos.color = Color.green;
-                //    Gizmos.DrawLine(center, center + normal);
-                //}
-
-                // Draw mesh vertices
-                //if (this.meshWorldVertices != null)
-                //{
-                //    for (int i = 0; i < this.meshWorldVertices.Length; i++)
-                //    {
-                //        DebugUtils.DrawPoint(this.meshWorldVertices[i], Color.red);
-                //    }
-                //}
-
-                // Test GetSurroundingTrianglePolygon(Vector3 worldPoint);
-                //if (debugTrans != null)
-                //{
-                //    Gizmos.color = Color.blue;
-                //    Gizmos.DrawSphere(debugTrans.position, 0.1f);
-
-                //    var point = debugTrans.position;
-                //    var triangle = this.GetSurroundingTrianglePolygon(point);
-                //    if (triangle != null)
-                //    {
-                //        Gizmos.color = Color.red;
-
-                //        Gizmos.DrawLine(triangle[0], triangle[1]);
-                //        Gizmos.DrawLine(triangle[1], triangle[2]);
-                //        Gizmos.DrawLine(triangle[2], triangle[0]);
-                //    }
-                //}
             }
         }
 
