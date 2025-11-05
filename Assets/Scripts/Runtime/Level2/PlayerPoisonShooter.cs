@@ -163,9 +163,26 @@ public class PlayerPoisonShooter : MonoBehaviour
     // Hit callback: keep your previous kill check
     void OnParticleCollision(GameObject other)
     {
-        int count = ParticlePhysicsExtensions.GetCollisionEvents(poisonPS, other, _events);
+        // First check if this is an insect (including if we hit the cookie on its back)
         var death = other.GetComponent<InsectDeath>() ?? other.GetComponentInParent<InsectDeath>();
-        if (death != null) death.Kill();
+        if (death != null)
+        {
+            // This is an insect, kill it
+            int count = ParticlePhysicsExtensions.GetCollisionEvents(poisonPS, other, _events);
+            death.Kill();
+            _events.Clear();
+            return;
+        }
+        
+        // If not an insect, check if it's a dropped cookie (has CookiePickup but no InsectDeath parent)
+        // If so, ignore it - dropped cookies shouldn't block poison attacks
+        if (other.GetComponent<CookiePickup>() != null)
+        {
+            return; // Skip dropped cookie collisions
+        }
+        
+        // For any other object, clear events but don't process
+        int count2 = ParticlePhysicsExtensions.GetCollisionEvents(poisonPS, other, _events);
         _events.Clear();
     }
 }

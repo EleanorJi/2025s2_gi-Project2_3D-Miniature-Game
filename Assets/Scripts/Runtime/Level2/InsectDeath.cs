@@ -121,6 +121,31 @@ public class InsectDeath : MonoBehaviour
                 rb.AddForce(Vector3.up * dropImpulse, ForceMode.Impulse);
                 rb.AddTorque(Random.onUnitSphere * dropTorque, ForceMode.Impulse);
             }
+            
+            // 将掉落饼干移到专门的Layer，避免与粒子系统碰撞
+            // 注意：需要在粒子系统的Collision模块中排除"Cookie" Layer
+            int cookieLayer = LayerMask.NameToLayer("Cookie");
+            if (cookieLayer == -1)
+            {
+                // 如果"Cookie" Layer不存在，使用"Default" Layer但设置为Trigger
+                // 这样粒子系统不会碰撞（因为粒子系统默认不碰撞Trigger）
+                Collider[] cookieColliders = cookieOnBack.GetComponentsInChildren<Collider>();
+                foreach (Collider col in cookieColliders)
+                {
+                    col.isTrigger = true;
+                }
+            }
+            else
+            {
+                // 使用专门的Cookie Layer
+                cookieOnBack.layer = cookieLayer;
+                // 同时设置所有子物体的Layer
+                Transform[] cookieChildren = cookieOnBack.GetComponentsInChildren<Transform>();
+                foreach (Transform child in cookieChildren)
+                {
+                    child.gameObject.layer = cookieLayer;
+                }
+            }
         }
 
         // 饼干已经分离，现在禁用虫子身上的所有碰撞器，防止再次被击中
