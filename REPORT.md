@@ -259,7 +259,7 @@ Our game implements several custom particle systems that provide visual feedback
 
 #### 1.1 Overview
 
-The poison spray particle system is a core combat mechanic in Level 2, allowing the player ant to shoot venom at insect enemies. The system uses Unity's ParticleSystem component with custom scripting to control emission rate, cone angle, and collision detection.
+The poison spray particle system is a core combat mechanic in Level 2, allowing the player ant to shoot venom at insect enemies. The system creates a distinctive black-purple cone-shaped trail effect that provides clear visual feedback for the venom attack. The system uses Unity's ParticleSystem component with custom scripting to control emission rate, cone angle, and collision detection.
 
 #### 1.2 Implementation Details
 
@@ -387,7 +387,7 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 ### Personal Contribution Report - Naixin Zhang
 
 #### 1. Overview of Contributions
-I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts.
+I was primarily responsible for all aspects related to Level 2 (Outdoor Street Environment), including level design, enemy systems, player mechanics, camera systems, and visual effects. My contributions also included developing two custom shader systems (water reflection/refraction and enemy death effects) and their integration with gameplay scripts. I also created all death screen artwork for Level 1 and Level 2 using iPad Procreate, and handled the promotional video production including footage capture, editing, and sound design.
 
 #### 2. Key Contributions
 
@@ -469,7 +469,7 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
 * Created particle systems for combat mechanics, collectible interactions, and enemy death effects.
 * Integrated particle systems with gameplay scripts for dynamic triggering and animation synchronization.
 * Key particle systems implemented:
-  * **Poison Spray Effect:** Trail particle system for the ant's venom attack, providing clear visual feedback for the shooting mechanic. Features a green toxic trail with fade-out effects.
+  * **Poison Spray Effect:** Black-purple cone-shaped trail particle system for the ant's venom attack, providing clear visual feedback for the shooting mechanic. Features dynamic emission control, precise collision detection with enemies, and audio synchronization. The system uses script-controlled emission rate (220 particles/sec) and adjustable cone angle (3° default) to create a distinctive toxic trail effect.
   * **Cookie Sparkle Effect:** Attractive glowing particle system for cookie collectibles, using small star particles to draw player attention and indicate interactable objects.
   * **Enemy Death Ember Effect:** Fire and smoke particle burst triggered by the dissolve shader at specific dissolution threshold (0.45), creating a dramatic explosion effect synchronized with the enemy's collapse animation.
 * Relevant files
@@ -480,8 +480,25 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
   * [DissolveSphere.cs](Assets/Art/Shader/DissolveEmissionShader/DissolveSphere.cs)
   * [AutoDestroyParticle.cs](Assets/Scripts/Runtime/Level2/AutoDestroyParticle.cs)
 
-##### 2.4 Reporting
-* Wrote technical documentation for the HoneyWater shader system and Dissolve shader system.
+##### 2.4 Death Screen Artwork
+* Created all death screen artwork for Level 1 and Level 2 using iPad Procreate.
+* Designed custom hand-drawn death illustrations that match each level's aesthetic and thematic elements.
+* These artwork pieces are integrated into the game's death UI system to provide visual feedback when players fail.
+* Relevant files
+  * [GlobalDeathUIController.cs](Assets/Scripts/Runtime/UI/GlobalDeathUIController.cs)
+  * [DeathUI_AutoWire.cs](Assets/Scripts/Runtime/UI/DeathUI_AutoWire.cs)
+  * [DeathUIOverlay.cs](Assets/Scripts/Runtime/Level2/DeathUIOverlay.cs)
+  * Death screen sprites are referenced in Level 1 and Level 2 scenes
+
+##### 2.5 Promotional Video Production
+* Handled complete promotional video production including:
+  * **Footage Capture:** Recorded gameplay footage from all levels showcasing key mechanics, visual effects, and gameplay flow
+  * **Video Editing:** Assembled and edited footage to create a cohesive promotional video highlighting the game's features
+  * **Sound Design:** Integrated background music and sound effects to enhance the video's impact and maintain pacing
+* The promotional video serves as a key marketing asset for the project presentation.
+
+##### 2.6 Reporting
+* Wrote technical documentation for the HoneyWater shader system and all my work.
 
 ### Personal Contribution Report - Zixin Xia
 

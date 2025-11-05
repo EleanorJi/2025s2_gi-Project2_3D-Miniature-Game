@@ -18,6 +18,8 @@ TagManager:
   - leafCheck
   - Traffic
   - Wall
+  - PoisonParticle
+  - Water Volume
   layers:
   - Default
   - TransparentFX
@@ -30,7 +32,7 @@ TagManager:
   - ButtonTrigger
   - Ground
   - Cookie
-  - 
+  - Bug
   - 
   - 
   - 
