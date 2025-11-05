@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class BugDestory : MonoBehaviour
 {
-    // 可以被销毁的物体（例如饼干、糖果等）
+    // Prefab to drop when destroyed (e.g., cookie, parachute, etc.)
     public GameObject dropPrefab;
 
-    // 防止重复销毁，确保一个对象只销毁一次
+    // Prevent duplicate drops, ensure each bug only drops once
     private bool isDying = false;
 
     void OnTriggerEnter(Collider other)
@@ -14,7 +14,7 @@ public class BugDestory : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        // 检测与PlayerPoisonShooter粒子的碰撞
+        // Collision with PlayerPoisonShooter's poison particles
         else if (other.CompareTag("PoisonParticle"))
         {
           
@@ -23,34 +23,34 @@ public class BugDestory : MonoBehaviour
         }
     }
 
-    // 判断敌人是否应该掉落物品
+    // Determine if the bug should drop an item
     bool ShouldDropOnDeath()
     {
-        // 查找名为"Cookie"的子对象
+        // Find child object named "Cookie"
         Transform cookie = transform.Find("Cookie");
         if (cookie != null)
         {
-            // 只有当Cookie子对象处于激活状态时才掉落物品
+            // Only drop item when Cookie child is in active state
             return cookie.gameObject.activeInHierarchy;
         }
 
-        // 如果没有名为Cookie的子对象，默认掉落物品
+        // If no child named Cookie, default to dropping item
         return true;
     }
 
-    // 统一的销毁处理方法，用于生成掉落物品等
+    // Unified death handler: destroy bug and generate dropped item if needed
     public void Die()
     {
         if (isDying) return;
         isDying = true;
 
-        // 检查是否应该掉落物品
+        // Check if should drop item
         if (ShouldDropOnDeath() && dropPrefab != null)
         {
             Instantiate(dropPrefab, transform.position, Quaternion.identity);
         }
 
-        // 销毁对象
+        // Destroy bug
         Destroy(gameObject);
     }
 }

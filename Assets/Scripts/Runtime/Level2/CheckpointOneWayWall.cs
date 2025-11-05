@@ -9,44 +9,44 @@ public class CheckpointOneWayWall : MonoBehaviour
     public string playerTag = "Player";
 
     [Header("The air wall to enable")]
-    [Tooltip("两者选其一：直接启用这个 Collider…")]
+    [Tooltip("Choose one: directly enable this Collider…")]
     public Collider wallCollider;
-    [Tooltip("…或者激活这整个墙体 GameObject")]
+    [Tooltip("…or activate this entire wall GameObject")]
     public GameObject wallObject;
 
     [Header("Behavior")]
-    [Tooltip("只在本轮（本次运行）触发一次")]
+    [Tooltip("Trigger only once per session (this run)")]
     public bool oncePerSession = true;
-    [Tooltip("本触发器的全局唯一ID（空则自动用层级路径）")]
+    [Tooltip("Globally unique ID for this trigger (empty will auto-use hierarchy path)")]
     public string checkpointId = "";
 
-    [Tooltip("启用墙体前，临时忽略玩家与墙体的碰撞，避免把玩家夹进墙里")]
+    [Tooltip("Temporarily ignore collision between player and wall before enabling wall, to avoid trapping player in wall")]
     public float ignoreCollisionSeconds = 0.2f;
 
-    // === 前进方向设置 ===
+    // === Forward Direction Settings ===
     public enum DirectionMode { UseTransformForward, UseAxis, UseCustomVector }
     [Header("Forward Direction")]
     public DirectionMode directionMode = DirectionMode.UseTransformForward;
 
-    [Tooltip("当选择 UseAxis 时生效")]
+    [Tooltip("Effective when UseAxis is selected")]
     public Axis axis = Axis.Z;
     public enum Axis { X, Y, Z }
 
-    [Tooltip("轴向为正(+1)还是负(-1)")]
+    [Tooltip("Axis is positive (+1) or negative (-1)")]
     public bool positive = true;
 
-    [Tooltip("当选择 UseCustomVector 时生效（世界坐标系）。例如 (1,0,0) 表示世界+X 为前进方向。")]
+    [Tooltip("Effective when UseCustomVector is selected (world coordinates). E.g., (1,0,0) means world +X is forward direction.")]
     public Vector3 customWorldDirection = Vector3.forward;
 
-    [Tooltip("整体反向（相当于把前进/后退对调）")]
+    [Tooltip("Invert overall direction (equivalent to swapping forward/backward)")]
     public bool invertDirection = false;
 
-    // 会话内记忆
+    // Session memory
     static HashSet<string> activatedIds = new HashSet<string>();
 
-    // 内部
-    bool _armed = true;     // 允许触发
-    int _lastSide = 0;      // 进入/离开时记录玩家在哪一侧（-1/ +1）
+    // Internal
+    bool _armed = true;     // Allow triggering
+    int _lastSide = 0;      // Record which side player is on when entering/leaving (-1 / +1)
 
     void Reset()
     {
@@ -61,11 +61,11 @@ public class CheckpointOneWayWall : MonoBehaviour
         if (string.IsNullOrEmpty(checkpointId))
             checkpointId = BuildAutoId();
 
-        // 如果本轮已经触发过，就直接把墙体启用（按需可改为保持关闭）
+        // If already triggered this session, directly enable wall (can change to keep closed if needed)
         if (oncePerSession && activatedIds.Contains(checkpointId))
             ActivateWallImmediate();
         else
-            DeactivateWallImmediate(); // 确保初始是关闭的
+            DeactivateWallImmediate(); // Ensure initially closed
     }
 
     void OnTriggerEnter(Collider other)
@@ -79,14 +79,14 @@ public class CheckpointOneWayWall : MonoBehaviour
         if (!_armed || !other.CompareTag(playerTag)) return;
         int nowSide = SideOf(other.transform.position);
 
-        // 只在“从后侧(-1) → 前侧(+1)”穿过时触发上锁
+        // Only trigger lock when crossing from "back side (-1) → front side (+1)"
         if (_lastSide < 0 && nowSide > 0)
         {
             LockBackPath(other);
         }
     }
 
-    // 计算玩家相对“存档线”的侧：>0 表示在 forward 方向一侧，<0 在后侧
+    // Calculate player's side relative to "checkpoint line": >0 means on forward direction side, <0 means on back side
     int SideOf(Vector3 worldPos)
     {
         Vector3 fwd = GetForward();
@@ -111,7 +111,7 @@ public class CheckpointOneWayWall : MonoBehaviour
 
             case DirectionMode.UseCustomVector:
                 fwd = customWorldDirection;
-                if (fwd.sqrMagnitude < 1e-6f) fwd = Vector3.forward; // 兜底
+                if (fwd.sqrMagnitude < 1e-6f) fwd = Vector3.forward; // Fallback
                 break;
 
             default:
@@ -128,15 +128,15 @@ public class CheckpointOneWayWall : MonoBehaviour
 
         ActivateWallImmediate();
 
-        // 短暂忽略玩家与墙体的碰撞，避免立刻被卡住
+        // Briefly ignore collision between player and wall, avoid getting stuck immediately
         if (wallCollider)
         {
-            var playerCol = player; // 如需精确可抓玩家的 CapsuleCollider/CharacterController
+            var playerCol = player; // For precision can grab player's CapsuleCollider/CharacterController
             Physics.IgnoreCollision(playerCol, wallCollider, true);
             StartCoroutine(ReenableCollisionLater(playerCol));
         }
 
-        _armed = false; // 不再重复触发
+        _armed = false; // No longer trigger repeatedly
     }
 
     IEnumerator ReenableCollisionLater(Collider playerCol)
@@ -144,7 +144,7 @@ public class CheckpointOneWayWall : MonoBehaviour
         float t = 0f;
         while (t < ignoreCollisionSeconds)
         {
-            t += Time.unscaledDeltaTime; // 暂停也计时
+            t += Time.unscaledDeltaTime; // Count time even when paused
             yield return null;
         }
         if (wallCollider && playerCol)
@@ -178,7 +178,7 @@ public class CheckpointOneWayWall : MonoBehaviour
         return sb.ToString();
     }
 
-    // —— 方向可视化 —— //
+    // —— Direction Visualization —— //
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.cyan;
@@ -190,7 +190,7 @@ public class CheckpointOneWayWall : MonoBehaviour
 
     Vector3 PreviewForwardInEditor()
     {
-        // 运行前也能根据 inspector 预览方向
+        // Can preview direction in inspector before runtime
         Vector3 fwd;
         switch (directionMode)
         {

@@ -34,7 +34,7 @@ public class ParachuteCarrier : MonoBehaviour
     private PlayerController playerController;
 
 
-    //bug修复：落到蜂蜜处仍然能捡起叶子
+    //Bug fix: can still pick up leaf when landing on honey
     bool CanTouchleaf = true;
     void Awake()
     {
@@ -45,8 +45,8 @@ public class ParachuteCarrier : MonoBehaviour
             if (!carryPoint) carryPoint = pc.carryPoint;
             if (!dropPoint) dropPoint = pc.dropPoint;
         }
-        if (!carryPoint) Debug.LogWarning("[ParachuteCarrier] 缺少 carryPoint");
-        if (!dropPoint) Debug.LogWarning("[ParachuteCarrier] 缺少 dropPoint");
+        if (!carryPoint) Debug.LogWarning("[ParachuteCarrier] Missing carryPoint");
+        if (!dropPoint) Debug.LogWarning("[ParachuteCarrier] Missing dropPoint");
     }
 
     void Update()
@@ -132,7 +132,7 @@ public class ParachuteCarrier : MonoBehaviour
 
         //SFX: play once on successful attach (same sound as pickup/drop)
         GlobalSfx.PlayLeafPickupSfx(transform.position);
-        // 通知PlayerController更新动画状态
+        // Notify PlayerController to update animation state
         RefreshPlayerAnimation();
     }
 
@@ -188,11 +188,11 @@ public class ParachuteCarrier : MonoBehaviour
 
         //SFX: play the same sound on drop
         GlobalSfx.PlayLeafPickupSfx(transform.position);
-        // 通知PlayerController更新动画状态
+        // Notify PlayerController to update animation state
         RefreshPlayerAnimation();
     }
 
-    // 更新玩家动画状态
+    // Update player animation state
     private void RefreshPlayerAnimation()
     {
         if (playerController != null)
@@ -201,7 +201,7 @@ public class ParachuteCarrier : MonoBehaviour
         }
         else
         {
-            // 备用方案：直接获取Animator（如果PlayerController不存在）
+            // Fallback: directly get Animator (if PlayerController doesn't exist)
             Animator animator = GetComponentInChildren<Animator>();
             if (animator != null)
             {

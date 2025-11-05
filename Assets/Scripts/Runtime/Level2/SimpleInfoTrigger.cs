@@ -6,13 +6,13 @@ public class SimpleInfoTrigger : MonoBehaviour
     public string playerTag = "Player";
 
     [TextArea(2, 5)]
-    public string message;          // 一句科普
+    public string message;          // One sentence of information
 
     [Header("Once-per-session")]
-    [Tooltip("给这个触发器一个全局唯一ID；相同ID在本次游戏运行中只会播放一次")]
-    public string infoId = "";      // 建议自己填：比如 "L1_bridge_tip" / "L2_pheromone"
+    [Tooltip("Give this trigger a globally unique ID; same ID will only play once in this game run")]
+    public string infoId = "";      // Recommended to fill manually: e.g., "L1_bridge_tip" / "L2_pheromone"
 
-    [Tooltip("不手填ID时，自动用层级路径生成（场景名/父子层级/物体名）")]
+    [Tooltip("When ID not manually filled, auto-generate from hierarchy path (scene name/parent-child hierarchy/object name)")]
     public bool autoIdFromHierarchy = true;
 
     void Reset()
@@ -30,7 +30,7 @@ public class SimpleInfoTrigger : MonoBehaviour
 
     string BuildAutoId()
     {
-        // 用场景名 + 层级路径，保证稳定（层级/命名别改的话）
+        // Use scene name + hierarchy path, ensures stability (if hierarchy/naming doesn't change)
         return $"{gameObject.scene.name}/{GetHierarchyPath(transform)}";
     }
 
@@ -50,13 +50,13 @@ public class SimpleInfoTrigger : MonoBehaviour
         if (!other.CompareTag(playerTag)) return;
         if (string.IsNullOrEmpty(message)) return;
 
-        // —— 本轮已播过？直接跳过 —— //
+        // —— Already played this session? Skip directly —— //
         if (SimpleInfoSession.I.Has(infoId)) return;
 
-        // 记为已播（防止刚弹出就死亡反复触发）
+        // Mark as played (prevent repeated triggering when death occurs right after popup)
         SimpleInfoSession.I.MarkShown(infoId);
 
-        // 播放一次
+        // Play once
         if (SimpleInfoPopup.I != null)
         {
             SimpleInfoPopup.I.ShowOnce(message);

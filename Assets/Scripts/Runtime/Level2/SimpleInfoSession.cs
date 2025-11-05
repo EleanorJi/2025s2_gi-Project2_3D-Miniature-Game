@@ -18,7 +18,7 @@ public class SimpleInfoSession : MonoBehaviour
     }
     static SimpleInfoSession _i;
 
-    HashSet<string> shown = new HashSet<string>(); // 本次运行已展示过的ID
+    HashSet<string> shown = new HashSet<string>(); // IDs already shown in this run
 
     public bool Has(string id) => !string.IsNullOrEmpty(id) && shown.Contains(id);
     public void MarkShown(string id)

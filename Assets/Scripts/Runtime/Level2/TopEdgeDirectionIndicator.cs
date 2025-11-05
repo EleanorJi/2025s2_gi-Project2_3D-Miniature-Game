@@ -4,32 +4,32 @@ using UnityEngine.UI;
 public class TopEdgeDirectionIndicator : MonoBehaviour
 {
     [Header("Refs")]
-    public Camera cam;                    // 不设就用 Camera.main
-    public Transform target;              // 关卡终点/Boss
-    public RectTransform indicator;       // 顶部的箭头 Image/TMP等
+    public Camera cam;                    // If not set, use Camera.main
+    public Transform target;              // Level end/Boss
+    public RectTransform indicator;       // Top arrow Image/TMP etc.
 
     [Header("Layout (UI anchored at Top-Center)")]
-    public float topMargin = 24f;         // 距离顶边的内边距（像素）
-    public float sidePadding = 32f;       // 左右内边距，防止顶到屏幕边缘
+    public float topMargin = 24f;         // Inner padding from top edge (pixels)
+    public float sidePadding = 32f;       // Left/right inner padding, prevent touching screen edge
 
     [Header("Mapping")]
-    [Tooltip("把水平夹角[-max,+max]映射到屏幕左右，常设90度")]
-    public float maxAngle = 90f;          // 视线±90°映射到左右边界
+    [Tooltip("Map horizontal angle [-max,+max] to screen left/right, commonly set to 90 degrees")]
+    public float maxAngle = 90f;          // View ±90° mapped to left/right boundaries
     public bool hideWhenVeryBehind = true;
-    [Tooltip("目标在身后多少角度(度)开始淡出/隐藏")]
+    [Tooltip("Angle (degrees) behind target to start fading/hiding")]
     public float behindFadeAngle = 120f;
 
     [Header("Feel")]
-    public float followLerp = 12f;        // 水平移动/旋转平滑（越大越快）
+    public float followLerp = 12f;        // Horizontal movement/rotation smoothing (larger = faster)
 
     public enum RotationMode { None, Tilt, Exact }
     [Header("Rotation")]
-    public RotationMode rotationMode = RotationMode.Exact; // 默认精准指向
-    [Tooltip("Tilt模式下的最大倾角")]
+    public RotationMode rotationMode = RotationMode.Exact; // Default precise pointing
+    [Tooltip("Maximum tilt angle in Tilt mode")]
     public float rotateMaxDeg = 25f;
-    [Tooltip("贴图不是正朝上时的修正(度)，贴图朝右一般填-90")]
+    [Tooltip("Correction (degrees) when texture is not facing straight up, texture facing right usually fill -90")]
     public float rotationOffsetDeg = 0f;
-    [Tooltip("在身后时是否强制掉头继续指向（Exact模式）")]
+    [Tooltip("Whether to force flip and continue pointing when behind (Exact mode)")]
     public bool flipWhenBehind = false;
 
     Canvas _canvas;
@@ -45,7 +45,7 @@ public class TopEdgeDirectionIndicator : MonoBehaviour
 
         if (indicator)
         {
-            // 要求：indicator锚点=Top Middle（X=0.5, Y=1）
+            // Requirement: indicator anchor = Top Middle (X=0.5, Y=1)
             indicator.anchorMin = new Vector2(0.5f, 1f);
             indicator.anchorMax = new Vector2(0.5f, 1f);
             indicator.pivot     = new Vector2(0.5f, 0.5f);
@@ -59,34 +59,34 @@ public class TopEdgeDirectionIndicator : MonoBehaviour
     {
         if (!cam || !indicator || !target || _canvasRT == null) return;
 
-        // 目标在相机空间坐标（右x、上y、前z）
+        // Target in camera space coordinates (right x, up y, forward z)
         Vector3 toTargetWS = (target.position - cam.transform.position);
         Vector3 toTargetCS = cam.transform.InverseTransformDirection(toTargetWS.normalized);
 
-        // 水平角：右为正、左为负；正前方为0°
+        // Horizontal angle: right is positive, left is negative; directly ahead is 0°
         float angle = Mathf.Atan2(toTargetCS.x, toTargetCS.z) * Mathf.Rad2Deg;
 
-        // —— 顶端水平位置映射 —— //
+        // —— Top horizontal position mapping —— //
         float t = Mathf.Clamp(angle / Mathf.Max(1f, maxAngle), -1f, 1f);
         float halfW = (_canvasRT.rect.width * 0.5f) - sidePadding;
         float targetX = t * halfW;
 
-        // 平滑移动（不受 timeScale 影响）
+        // Smooth movement (unaffected by timeScale)
         _curX = Mathf.Lerp(_curX, targetX, 1f - Mathf.Exp(-followLerp * Time.unscaledDeltaTime));
-        indicator.anchoredPosition = new Vector2(_curX, -topMargin); // 保持顶边间距
+        indicator.anchoredPosition = new Vector2(_curX, -topMargin); // Maintain top edge spacing
 
-        // —— 旋转 —— //
+        // —— Rotation —— //
         switch (rotationMode)
         {
             case RotationMode.None:
-                // 不转
+                // No rotation
                 break;
 
             case RotationMode.Tilt:
             {
-                // 轻微倾斜：更像顶栏指示条
+                // Slight tilt: more like top bar indicator
                 float rz = Mathf.Clamp(angle / Mathf.Max(1f, maxAngle), -1f, 1f) * rotateMaxDeg;
-                float targetZ = -rz + rotationOffsetDeg; // 贴图朝上时取负号
+                float targetZ = -rz + rotationOffsetDeg; // Negative when texture faces up
                 float z = Mathf.LerpAngle(indicator.localEulerAngles.z, targetZ,
                                           1f - Mathf.Exp(-followLerp * Time.unscaledDeltaTime));
                 indicator.localEulerAngles = new Vector3(0, 0, z);
@@ -95,10 +95,10 @@ public class TopEdgeDirectionIndicator : MonoBehaviour
 
             case RotationMode.Exact:
             {
-                // 精准指向：箭头真实朝向目标（仅用水平角）
+                // Precise pointing: arrow truly points toward target (only uses horizontal angle)
                 float yaw = angle;
-                if (flipWhenBehind && toTargetCS.z < 0f) yaw += 180f; // 身后时掉头继续指向
-                float targetZ = -(yaw + rotationOffsetDeg);           // 贴图默认朝上
+                if (flipWhenBehind && toTargetCS.z < 0f) yaw += 180f; // Flip and continue pointing when behind
+                float targetZ = -(yaw + rotationOffsetDeg);           // Texture defaults to facing up
                 float z = Mathf.LerpAngle(indicator.localEulerAngles.z, targetZ,
                                           1f - Mathf.Exp(-followLerp * Time.unscaledDeltaTime));
                 indicator.localEulerAngles = new Vector3(0, 0, z);
@@ -106,7 +106,7 @@ public class TopEdgeDirectionIndicator : MonoBehaviour
             }
         }
 
-        // —— 身后淡出/隐藏（可选） —— //
+        // —— Fade/hide when behind (optional) —— //
         float absYaw = Mathf.Abs(angle);
         bool veryBehind = absYaw > behindFadeAngle || toTargetCS.z < -0.1f;
 
@@ -116,13 +116,13 @@ public class TopEdgeDirectionIndicator : MonoBehaviour
         }
         else if (!hideWhenVeryBehind)
         {
-            // 渐隐：90°后开始淡，120°全隐（你也可以按需改范围）
+            // Gradual fade: start fading after 90°, fully hidden at 120° (you can adjust range as needed)
             float a = Mathf.InverseLerp(behindFadeAngle, 90f, absYaw);
             _grp.alpha = Mathf.Clamp01(a);
         }
         else
         {
-            // flipWhenBehind=true 时通常保持可见
+            // When flipWhenBehind=true, usually keep visible
             _grp.alpha = 1f;
         }
     }
