@@ -112,7 +112,7 @@ Following the evaluation plan, we conducted comprehensive user testing with 10 p
 #### 3.1 SUS Results
 *   **Average SUS Score:** 85
 *   **Score Range:** 73-90
-*   **Interpretation:** The game demonstrates "good" usability with room for improvement in specific areas.
+*   **Interpretation:** The score indicates that the game has "good" usability and is at the top of the "good" range, approaching "excellent". However, subsequent qualitative interviews revealed that there is still significant room for improvement in certain aspects.
 #### 3.2 Major Usability Issues Identified
 *   **Navigation Difficulties:** 8/10 participants struggled to find the correct path, particularly in Level 2
 *   **Lack of Visual Feedback:** 7/10 participants wanted better indicators for interactive elements and objectives
@@ -320,9 +320,12 @@ I was primarily responsible for all aspects related to Level 1 (Kitchen) and all
 #### 2. Key Contributions
 
 ##### 2.1 Level 1 (Kitchen) Design & Implementation
-* Designed and built the entire Kitchen level environment.
-* Implemented interactive objects and obstacles (e.g., rolling cucumber, sugar cube puzzle, milk carton maze, cake spatula bridge).
-* Scripted level mechanics and puzzle logic.
+* Designed and implemented complete kitchen environment with interactive gameplay elements
+* Developed core puzzle mechanics
+  * Dynamic obstacles (rolling cucumber, milk carton maze)
+  * Environmental puzzles (sugar cube system, cake spatula bridge)
+  * Hazard systems (stove danger zones with fire mechanics)
+* Implemented progression systems (checkpoints, level completion)
 * Relevant files
   * Global Scripts
     * [cameraFollow.cs](Assets/Scripts/Runtime/Camera/cameraFollow.cs)
