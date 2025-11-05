@@ -259,7 +259,7 @@ Our game implements several custom particle systems that provide visual feedback
 
 #### 1.1 Overview
 
-The poison spray particle system is a core combat mechanic in Level 2, allowing the player ant to shoot venom at insect enemies. The system uses Unity's ParticleSystem component with custom scripting to control emission rate, cone angle, and collision detection.
+The poison spray particle system is a core combat mechanic in Level 2, allowing the player ant to shoot venom at insect enemies. The system creates a distinctive black-purple cone-shaped trail effect that provides clear visual feedback for the venom attack. The system uses Unity's ParticleSystem component with custom scripting to control emission rate, cone angle, and collision detection.
 
 #### 1.2 Implementation Details
 
@@ -469,7 +469,7 @@ I was primarily responsible for all aspects related to Level 2 (Outdoor Street E
 * Created particle systems for combat mechanics, collectible interactions, and enemy death effects.
 * Integrated particle systems with gameplay scripts for dynamic triggering and animation synchronization.
 * Key particle systems implemented:
-  * **Poison Spray Effect:** Trail particle system for the ant's venom attack, providing clear visual feedback for the shooting mechanic. Features a green toxic trail with fade-out effects.
+  * **Poison Spray Effect:** Black-purple cone-shaped trail particle system for the ant's venom attack, providing clear visual feedback for the shooting mechanic. Features dynamic emission control, precise collision detection with enemies, and audio synchronization. The system uses script-controlled emission rate (220 particles/sec) and adjustable cone angle (3° default) to create a distinctive toxic trail effect.
   * **Cookie Sparkle Effect:** Attractive glowing particle system for cookie collectibles, using small star particles to draw player attention and indicate interactable objects.
   * **Enemy Death Ember Effect:** Fire and smoke particle burst triggered by the dissolve shader at specific dissolution threshold (0.45), creating a dramatic explosion effect synchronized with the enemy's collapse animation.
 * Relevant files
