@@ -200,6 +200,7 @@ namespace Antventure.UI
             switch (currentState)
             {
                 case CursorState.Hidden:
+                {
                     if (Cursor.visible || Cursor.lockState != CursorLockMode.Locked)
                     {
                         Cursor.visible = false;
@@ -207,8 +208,10 @@ namespace Antventure.UI
                         if (debugMode) Debug.Log("[UNIFIED CURSOR] Enforced Hidden state");
                     }
                     break;
+                }
                     
                 case CursorState.Default:
+                {
                     if (!Cursor.visible || Cursor.lockState != CursorLockMode.None)
                     {
                         Cursor.visible = true;
@@ -227,8 +230,10 @@ namespace Antventure.UI
                         if (debugMode) Debug.Log("[UNIFIED CURSOR] Enforced Default state");
                     }
                     break;
+                }
                     
                 case CursorState.Hover:
+                {
                     if (!Cursor.visible || Cursor.lockState != CursorLockMode.None)
                     {
                         Cursor.visible = true;
@@ -247,6 +252,7 @@ namespace Antventure.UI
                     
                     if (debugMode) Debug.Log("[UNIFIED CURSOR] Enforced Hover state");
                     break;
+                }
             }
         }
         
