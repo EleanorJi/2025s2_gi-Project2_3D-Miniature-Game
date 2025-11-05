@@ -65,7 +65,7 @@ Step into the ant's world through their eyes!
 
 -   **Summoning Mechanics:** Collecting cookie crumbs summons ant helpers (worker ants assist in combat, while nest-building ants construct bridges/ladders). This introduces strategy and variety within the game's short playtime.
 -   **Creative Environmental Interaction:** Each level features unique obstacles: kitchen stovetops, milk cartons, curbside stone paths, flower beds requiring hopping over, and docks coveted by the street's dominant seagulls.
-
+-   **Expressive & Humorous Death UI:** Our game rewards failure with a gallery of stylized, darkly comic death screens, each a unique illustration for creative demises like being flattened by a cucumber or swarmed by bugs.
 ---
 
 ## Story and Narrative
@@ -470,6 +470,53 @@ Accessible during gameplay by pressing ESC:
 - **Hover:** 105% scale, 90% opacity, hand cursor
 - **Click:** 95% scale, audio feedback
 - **Audio:** Subtle sounds for hover/click/slider adjustments
+
+### Death UI
+The Death UI features unique, hand-illustrated screens that correspond to the specific cause of death, providing immediate and darkly humorous feedback. Upon dying, the player is presented with a custom illustration and title for scenarios such as being crushed by a cucumber, falling from a platform, drowning, burning, being submerged in honey, swarmed by bugs, flushed down a sewer, eaten by a spider, or pecked by the Level 3 pigeon. This system reinforces the game's tone and makes each failure feel distinct.
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Cucamber.jpeg" alt="Cucamber Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Drop.jpeg" alt="Drop Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Fire.jpeg" alt="Fire Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Honey.jpeg" alt="Honey Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Insect.jpeg" alt="Insec Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Level1Drop.jpeg" alt="Level1Drop Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Level1Water.jpeg" alt="Level1Wate Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Sewer.jpeg" alt="Sewer Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Spider.jpeg" alt="Spider Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/Water.jpeg" alt="Water Death" width="500">  
+</p>
+
+<p align="center">
+  <img src="Assets/Art/Sprite/DeathImage/DeathSmallImage/final_death.png" alt="final_death Death" width="500">  
+</p>
 
 ---
 
